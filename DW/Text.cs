@@ -7,6 +7,12 @@ using System.Drawing;
 
 namespace DW
 {
+
+    public enum TypePos
+    {
+        Normal,
+        Center
+    }
     //<summary>affiche du texte à l'écran</summary>
     class Text
     {
@@ -15,6 +21,7 @@ namespace DW
         private int x;
         private int y;
         private String value;
+        private TypePos pos;
 
         //<summary>
         //créer la surface sur laquelle sera affichée le texte
@@ -27,13 +34,13 @@ namespace DW
         //<param name="r">couleur rouge du texte</param>
         //<param name="v">couleur vert du texte</param>
         //<param name="b">couleur bleu du texte</param>
-        public Text(String par1file,int par2size,int par3x,int par4y,String par5text,int r=255,int v=255,int b=255)
+        public Text(String par1file,int par2size,int par3x,int par4y,String par5text,int r=255,int v=255,int b=255,TypePos par6type=TypePos.Normal)
         {
-            x = par3x;
-            y = par4y;
+            pos = par6type;
             value = par5text;
             font = new SdlDotNet.Graphics.Font(Directory.GetCurrentDirectory()+"\\Data\\"+par1file, par2size);
             text = font.Render(par5text, Color.FromArgb(r,v,b));
+            setPos(par3x, par4y);
         }
 
         //<summary>
@@ -81,8 +88,17 @@ namespace DW
         //<param name="par2y">position y du texte dans la fenetre du jeu</param>
         public void setPos(int par1x, int par2y)
         {
-            x = par1x;
-            y = par2y;
+            if (pos == TypePos.Normal)
+            {
+                x = par1x;
+                y = par2y;
+            }
+            else
+            {
+                    x = par1x - text.Width / 2;
+                    y = par2y - text.Height / 2;
+            }
+
         }
 
         //<summary>

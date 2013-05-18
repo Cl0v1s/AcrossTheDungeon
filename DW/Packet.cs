@@ -48,7 +48,19 @@ namespace DW
         public static Packet Receive(UdpClient link)
         {
             IPEndPoint i = null;
-            byte[] dtmp = link.Receive(ref i);
+            byte[] dtmp;
+            try
+            {
+                dtmp = link.Receive(ref i);
+            }
+            catch (SocketException)
+            {
+                DW.close(DW.dungeon);
+                DW.close(DW.client);
+                DW.changeScene("GameMenu", "Impossible de joindre l'hote distant");
+                return null;
+            }
+
             byte[] tmp = Zip.Decompress(dtmp);
             try
             {

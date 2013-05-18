@@ -89,6 +89,8 @@ namespace DW
                 ipMenu = new IpMenu();
             else if (par1 == "Client" && par2 != null)
                 client = new Client(par2);
+            else if (par1 == "GameMenu")
+                gameMenu = new GameMenu(par2);
             Scene = par1;
         }
 

@@ -88,6 +88,7 @@ namespace DW
                 else
                     break;
             }
+            Thread.Sleep(200);
         }
 
         public bool isConnected()
@@ -114,6 +115,27 @@ namespace DW
 
         }
 
+        private void getChatMsg()
+        {
+            Packet.Send(new CommandPacket("getchatmsg"), server);
+            while (true)
+            {
+                Packet p = Packet.Receive(server);
+                if (p is DataPacket && ((DataPacket)p).get() is string[])
+                {
+                    string[] s = (string[])((DataPacket)p).get();
+                    for (int i = 0; i < s.Length; i++)
+                    {
+                        if(s[i] != null && s[i] != "")
+                            chat.add(s[i]);
+                    }
+                    break;
+                }
+                else 
+                    break;
+            }
+        }
+
         public UdpClient getServer()
         {
             return server;
@@ -130,21 +152,10 @@ namespace DW
             while (true)
             {
                 updateStair();
-                //updateChat();
+                getChatMsg();
                 Thread.Sleep(100);
             }
         }
-
-        private void updateChat()
-        {
-            if (chat != null)
-            {
-                Packet.Send(new CommandPacket("updatechat"), server);
-
-            }
-        }
-
-
 
         private void sendPlayer()
         {

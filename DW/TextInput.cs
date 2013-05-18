@@ -103,6 +103,8 @@ namespace DW
                     {
                         this.text = this.text + (e.Scancode - 1);
                     }
+                    else if(e.Scancode==11)
+                        this.text = this.text + "0";
                     else if (e.Scancode == 51)
                         this.text = this.text + ".";
 

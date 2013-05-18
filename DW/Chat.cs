@@ -20,7 +20,7 @@ namespace DW
             for (int i = 0; i < values.Length; i++)
             {
                 history[i] = "";
-                values[i] = new Text("pixel.ttf", 15, 10, 100 - i * 15, "");
+                values[i] = new Text("pixel.ttf", 20, 10, 100 - i * 15, "");
             }
             input = new TextInput(10, 115, 100, 20, 100);
             input.activate(false);

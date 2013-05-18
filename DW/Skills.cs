@@ -28,7 +28,7 @@ namespace DW
                 cheating = 5;
         }
 
-        public bool tryAction(string par1skill,int par2amount)
+        public bool tryAction(string par1skill,float par2amount)
         {
             bool v = true;
             if (par1skill == "wizardry")

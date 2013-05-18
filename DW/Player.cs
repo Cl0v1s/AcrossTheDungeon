@@ -93,7 +93,7 @@ namespace DW
             else if (DW.input.equals(Key.KeypadEnter))
             {
                 interact();
-                Thread.Sleep(100);
+                Thread.Sleep(200);
             }
             else if (DW.input.equals(Key.L))
                 lap();
@@ -129,7 +129,7 @@ namespace DW
             if (DW.client != null)
                 DW.client.showMsg(par1);
             else
-                DW.dungeon.showMsg(par1);
+                DW.dungeon.showMsg(par1,this);
         }
 
         //<summary>
@@ -184,8 +184,8 @@ namespace DW
                     s[x, y + 1].interact(this);
                     return;
                 }
-                turn();
-                stair.roll();
+                    turn();
+                    stair.roll();
                 
             }
         }

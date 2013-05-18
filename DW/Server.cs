@@ -14,13 +14,15 @@ namespace DW
         private Stair[] stairs;
         private int stairNb = -1;
         IPEndPoint send;
-        IPEndPoint listen = new IPEndPoint(IPAddress.Any, 1212);
+        IPEndPoint listen = new IPEndPoint(Dns.GetHostByName(Dns.GetHostName()).AddressList[0], 1212);
         private Thread exchange;
         private UdpClient client;
         private bool connected = false;
         private bool online;
         OtherPlayer other;
         private Chat chat;
+        private string[] otherChatMsg = new string[6];
+        private int otherChatMsgIndex = 0;
 
         public Server(bool par1 = false)
         {
@@ -87,6 +89,7 @@ namespace DW
         private void createConnexion()
         {
             client = new UdpClient(listen);
+            showMsg("Serveur lancé à l'adresse locale "+listen.Address.ToString(),DW.player);
             exchange = new Thread(new ThreadStart(exchangeData));
             exchange.Start();
         }
@@ -96,9 +99,18 @@ namespace DW
             return client;
         }
 
-        public void showMsg(string par1)
+        public void showMsg(string par1,Player par2receiver)
         {
-            chat.add(par1);
+            if (par2receiver == DW.player)
+                chat.add(par1);
+            else
+            {
+                otherChatMsg[otherChatMsgIndex] = par1;
+                otherChatMsgIndex += 1;
+                if (otherChatMsgIndex > 5)
+                    otherChatMsgIndex = 0;
+            }
+
         }
 
         public void exchangeData()
@@ -162,6 +174,11 @@ namespace DW
                 case "interactplayer":
                     other.interact();
                     Packet.Send(new DataPacket(other), client);
+                    break;
+                case "getchatmsg":
+                    Packet.Send(new DataPacket(otherChatMsg), client);
+                    otherChatMsg = new string[6];
+                    otherChatMsgIndex = 0;
                     break;
 
             }

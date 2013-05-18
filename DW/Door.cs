@@ -35,14 +35,17 @@ namespace DW
             if (open == false)
             {
                 par1.showMsg("Vous essayez d'ouvrir cette porte manifestement vérouillée...");
-                if (par1.skills.tryAction("cheating", 2))
+                if (par1.skills.tryAction("cheating", (float)1))
                 {
                     open = true;
                     value = ".";
                     par1.showMsg("Grace à votre talent, vous avez ouvert la porte !");
                 }
                 else
+                {
                     par1.showMsg("Apres de nombreux essais vous n'arrivez pas à ouvrir la porte...");
+                    Console.WriteLine("fail");
+                }
             }
             else
             {
