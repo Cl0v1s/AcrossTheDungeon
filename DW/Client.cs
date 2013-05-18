@@ -34,9 +34,6 @@ namespace DW
                 chat.update();
             }
 
-           /* if (DW.input.equals(Key.T))
-                isWriting = true;*/
-
             if (isWriting == false)
             {
                 if (DW.input.equals(Key.UpArrow) == true)
@@ -47,6 +44,10 @@ namespace DW
                     changePlayerPos(DW.player.getX() + 1, DW.player.getY());
                 else if (DW.input.equals(Key.LeftArrow) == true)
                     changePlayerPos(DW.player.getX() - 1, DW.player.getY());
+                else if (DW.input.equals(Key.L))
+                    ((OtherPlayer)DW.player).lap();
+                else if (DW.input.equals(Key.KeypadEnter))
+                    interactPlayer();
                 DW.render.move(DW.player.getX() * -30 + 640 / 2, DW.player.getY() * -30 + 480 / 2);
             }
             else
@@ -65,6 +66,23 @@ namespace DW
                 if (p is DataPacket && ((DataPacket)p).get() is OtherPlayer)
                 {
                     DW.player = (OtherPlayer)((DataPacket)p).get();
+                    break;
+                }
+                else
+                    break;
+            }
+        }
+
+        private void interactPlayer()
+        {
+            Packet.Send(new CommandPacket("interactplayer"), server);
+            while (true)
+            {
+                Packet p = Packet.Receive(server);
+                if (p is DataPacket && ((DataPacket)p).get() is OtherPlayer)
+                {
+                    DW.player = (OtherPlayer)((DataPacket)p).get();
+                    Console.WriteLine("reussi");
                     break;
                 }
                 else

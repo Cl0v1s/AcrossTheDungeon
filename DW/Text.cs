@@ -46,6 +46,7 @@ namespace DW
         public Surface changeText(String par1,int r=255,int v=255,int b=255)
         {
             text = font.Render(par1, Color.FromArgb(r, v, b));
+            value = par1;
             return text;
         }
 

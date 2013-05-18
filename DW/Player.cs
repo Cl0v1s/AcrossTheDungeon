@@ -11,7 +11,8 @@ namespace DW
     class Player : Entity
     {
         public StatUI statUI;
-        private String pclass;
+        protected String pclass;
+        public Skills skills;
         private int stairId = -1;
 
         //<summary>
@@ -35,6 +36,12 @@ namespace DW
             life = force * endurance * rand.Next(1, par1name.Length);
             lifeTmp = life;
             statUI = new StatUI(this);
+            skills = new Skills(this);
+        }
+
+        public string getClass()
+        {
+            return pclass;
         }
 
         //<summary>
@@ -67,7 +74,28 @@ namespace DW
         //</summary>
         private void inputUpdate()
         {
-            if (DW.input.equals(Key.L))
+            if (DW.input.equals(Key.UpArrow) == true)
+            {
+                move(0, -1);
+            }
+            else if (DW.input.equals(Key.DownArrow) == true)
+            {
+                move(0, 1);
+            }
+            else if (DW.input.equals(Key.RightArrow) == true)
+            {
+                move(1, 0);
+            }
+            else if (DW.input.equals(Key.LeftArrow) == true)
+            {
+                move(-1, 0);
+            }
+            else if (DW.input.equals(Key.KeypadEnter))
+            {
+                interact();
+                Thread.Sleep(100);
+            }
+            else if (DW.input.equals(Key.L))
                 lap();
         }
 
@@ -92,11 +120,16 @@ namespace DW
             if (isOn(3) == true)
             {
                 lifeTmp -= 5;
-                if (DW.client != null)
-                    DW.client.showMsg("Vous marchez sur un piège !");
-                else
-                    DW.dungeon.showMsg("Vous marchez sur un piège !");
+                showMsg("Vous marchez sur un piège !");
             }
+        }
+
+        public void showMsg(string par1)
+        {
+            if (DW.client != null)
+                DW.client.showMsg(par1);
+            else
+                DW.dungeon.showMsg(par1);
         }
 
         //<summary>
@@ -117,28 +150,44 @@ namespace DW
                 stair.update();
             //Fait avancer le joueur en fonction de la touche choisie
             //Note: L'axe est inversé !
-            if (DW.input.equals(Key.UpArrow) == true)
-            {
-                move(0, -1);
-            }
-            else if (DW.input.equals(Key.DownArrow) == true)
-            {
-                move(0, 1);
-            }
-            else if (DW.input.equals(Key.RightArrow) == true)
-            {
-                move(1, 0);
-            }
-            else if (DW.input.equals(Key.LeftArrow) == true)
-            {
-                move(-1, 0);
-            }
+
 
             DW.render.renderEntityVision(this);
             statUI.update();
             if (lifeTmp <= 0)
                 dead = true;
             return dead; 
+        }
+
+        public void interact()
+        {
+            if (isFighting == false)
+            {
+                Special[,] s = stair.getSpecial();
+                if (s[x - 1, y] != null)
+                {
+                    s[x - 1, y].interact(this);
+                    return;
+                }
+                else if (s[x + 1, y] != null)
+                {
+                    s[x + 1, y].interact(this);
+                    return;
+                }
+                else if (s[x, y - 1] != null)
+                {
+                    s[x, y - 1].interact(this);
+                    return;
+                }
+                else if (s[x, y + 1] != null)
+                {
+                    s[x, y + 1].interact(this);
+                    return;
+                }
+                turn();
+                stair.roll();
+                
+            }
         }
 
         //<summary>

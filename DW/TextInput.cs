@@ -24,6 +24,7 @@ namespace DW
         private int width;
         private int maxText;
         private bool active;
+        private bool number;
 
         //<summary>
         //constructeur de l'entrée de texte
@@ -35,7 +36,7 @@ namespace DW
         //<param name="par6maxText">longueur maximimum de la chaine de caractères</param>
         //<param name="par5text">texte par défaut</param>
         //<param name="par7active">true si l'entrée de texte est active(chaque touche préssée entrainera l'édition du texte de l'entrée)</param> 
-        public TextInput(int par1x, int par2y, int par3width, int par4height,int par6maxText=100,string par5text="",bool par7active=true)
+        public TextInput(int par1x, int par2y, int par3width, int par4height,int par6maxText=100,string par5text="",bool par7active=true,bool par8number=false)
         {
             x = par1x;
             y = par2y;
@@ -45,6 +46,7 @@ namespace DW
             oldText = text;
             maxText = par6maxText;
             active = par7active;
+            number = par8number;
             renderText = new Text("pixel.ttf", 20, x + 2, y + 2, text,0,0,0);
             Events.KeyboardDown += new EventHandler<KeyboardEventArgs>(this.examine);
         }
@@ -56,46 +58,61 @@ namespace DW
         {
             if (text.Length < maxText && active == true || (string)e.KeyboardCharacter == "backspace")
             {
-                if ((e.Scancode >= 16 && e.Scancode <= 25) || (e.Scancode >= 30 && e.Scancode <= 39) || (e.Scancode >= 44 && e.Scancode <= 49))
+                if (number == false)
                 {
-                    if ((string)e.KeyboardCharacter == "q")
+                    if ((e.Scancode >= 16 && e.Scancode <= 25) || (e.Scancode >= 30 && e.Scancode <= 39) || (e.Scancode >= 44 && e.Scancode <= 49))
                     {
-                        this.text = this.text + "a";
-                        return;
-                    }
-                    else if ((string)e.KeyboardCharacter == "w")
-                    {
-                        this.text = this.text + "z";
-                        return;
-                    }
-                    else if ((string)e.KeyboardCharacter == ";")
-                    {
-                        this.text = this.text + "m";
-                        return;
-                    }
-                    else if ((string)e.KeyboardCharacter == "a")
-                    {
-                        this.text = this.text + "q";
-                        return;
-                    }
-                    else if ((string)e.KeyboardCharacter == "z")
-                    {
-                        this.text = this.text + "w";
-                        return;
-                    }
-                    else if ((string)e.KeyboardCharacter == "m")
-                        return;
+                        if ((string)e.KeyboardCharacter == "q")
+                        {
+                            this.text = this.text + "a";
+                            return;
+                        }
+                        else if ((string)e.KeyboardCharacter == "w")
+                        {
+                            this.text = this.text + "z";
+                            return;
+                        }
+                        else if ((string)e.KeyboardCharacter == ";")
+                        {
+                            this.text = this.text + "m";
+                            return;
+                        }
+                        else if ((string)e.KeyboardCharacter == "a")
+                        {
+                            this.text = this.text + "q";
+                            return;
+                        }
+                        else if ((string)e.KeyboardCharacter == "z")
+                        {
+                            this.text = this.text + "w";
+                            return;
+                        }
+                        else if ((string)e.KeyboardCharacter == "m")
+                            return;
 
-                    this.text = this.text + (string)e.KeyboardCharacter;
+                        this.text = this.text + (string)e.KeyboardCharacter;
+                    }
+                    else if ((string)e.KeyboardCharacter == "space")
+                    {
+                        this.text = this.text + " ";
+                    }
                 }
-                else if ((string)e.KeyboardCharacter == "space")
+                else
                 {
-                    this.text = this.text + " ";
+                    if (e.Scancode >= 2 && e.Scancode <= 10)
+                    {
+                        this.text = this.text + (e.Scancode - 1);
+                    }
+                    else if (e.Scancode == 51)
+                        this.text = this.text + ".";
+
                 }
-                else if ((string)e.KeyboardCharacter == "backspace")
+                
+                
+                if ((string)e.KeyboardCharacter == "backspace")
                 {
-                    if(text.Length >= 1)
-                     this.text = this.text.Remove(this.text.Length - 1);
+                    if (text.Length >= 1)
+                        this.text = this.text.Remove(this.text.Length - 1);
                 }
             }
         }

@@ -63,6 +63,14 @@ namespace DW
                         entities[i] = null;
                 }
             }
+            for (int i = 0; i < width; i++)
+            {
+                for (int u = 0; u < height; u++)
+                {
+                    if (special[i, u] != null)
+                        special[i, u].update();
+                }
+            }
         }
 
         public void roll()

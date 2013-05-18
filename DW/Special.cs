@@ -70,5 +70,15 @@ namespace DW
         {
             return false;
         }
+
+        public virtual void interact(Player par1)
+        {
+
+        }
+
+        public virtual void update()
+        {
+
+        }
     }
 }

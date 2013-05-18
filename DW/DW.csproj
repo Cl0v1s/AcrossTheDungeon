@@ -97,6 +97,7 @@
     <Compile Include="CommandPacket.cs" />
     <Compile Include="DataPacket.cs" />
     <Compile Include="Door.cs" />
+    <Compile Include="IpMenu.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="OtherPlayer.cs" />
     <Compile Include="Packet.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Pot.cs" />
     <Compile Include="Render.cs" />
     <Compile Include="Room.cs" />
+    <Compile Include="Skills.cs" />
     <Compile Include="Special.cs" />
     <Compile Include="Stair.cs" />
     <Compile Include="StatUI.cs" />

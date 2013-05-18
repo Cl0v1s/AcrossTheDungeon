@@ -16,6 +16,7 @@ namespace DW
         public static Render render = new Render(0, 0);
         public static EditorMenu editorMenu;
         public static GameMenu gameMenu = new GameMenu();
+        public static IpMenu ipMenu;
         public static Server dungeon;
         public static Client client;
         public static String Scene;
@@ -71,6 +72,8 @@ namespace DW
                 dungeon.update();
             else if (Scene == "Client")
                 client.update();
+            else if (Scene == "IpMenu")
+                ipMenu.update();
             //on met à jour l'écran
             Video.Screen.Update();
         }
@@ -82,8 +85,10 @@ namespace DW
                 dungeon = new Server(true);
             else if (par1 == "EditorMenu" && par2 != null)
                 editorMenu = new EditorMenu(par2);
-            else if (par1 == "Client")
-                client = new Client("192.168.1.19");
+            else if (par1 == "IpMenu")
+                ipMenu = new IpMenu();
+            else if (par1 == "Client" && par2 != null)
+                client = new Client(par2);
             Scene = par1;
         }
 

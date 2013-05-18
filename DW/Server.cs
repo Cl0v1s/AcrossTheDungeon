@@ -86,11 +86,9 @@ namespace DW
 
         private void createConnexion()
         {
-
             client = new UdpClient(listen);
             exchange = new Thread(new ThreadStart(exchangeData));
             exchange.Start();
-
         }
 
         public UdpClient getClient()
@@ -132,6 +130,7 @@ namespace DW
                         client.Connect(send);
                         chat.setOther(client);
                         setConnected(true);
+                        Console.WriteLine("Client (" + par2args.ToString() + ") est connecté.");
                     }
                     break;
                 case "getstair":
@@ -159,6 +158,10 @@ namespace DW
                     break;
                 case "updatechat":
                     Packet.Send(new DataPacket(chat.getValues()), client);
+                    break;
+                case "interactplayer":
+                    other.interact();
+                    Packet.Send(new DataPacket(other), client);
                     break;
 
             }
