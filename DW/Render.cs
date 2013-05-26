@@ -32,6 +32,9 @@ namespace DW
         public object[] animated = new object[]{
             "_",Color.Blue,
             "-",Color.Blue,
+            "_",Color.Red,
+            "-",Color.Red,
+
         };
 
         private int frame;
@@ -144,9 +147,9 @@ namespace DW
             try
             {
                 if (frame < 40 / 2)
-                    Video.Screen.Blit(font.Render((string)animated[par1map[par2x, par3y] - 100], (Color)animated[par1map[par2x, par3y] - 100 + 1]), new Point(x + par2x * 30, y + par3y * 30));
+                    Video.Screen.Blit(font.Render((string)animated[(par1map[par2x, par3y] - 100)*4], (Color)animated[(par1map[par2x, par3y] - 100)*4 + 1]), new Point(x + par2x * 30, y + par3y * 30));
                 else
-                    Video.Screen.Blit(font.Render((string)animated[par1map[par2x, par3y] - 100 + 2], (Color)animated[par1map[par2x, par3y] - 100 + 3]), new Point(x + par2x * 30, y + par3y * 30));
+                    Video.Screen.Blit(font.Render((string)animated[(par1map[par2x, par3y] - 100)*4 + 2], (Color)animated[(par1map[par2x, par3y] - 100)*4 + 3]), new Point(x + par2x * 30, y + par3y * 30));
             }
             catch (Exception)
             {

@@ -88,7 +88,10 @@ namespace DW
             else if (par1 == "IpMenu")
                 ipMenu = new IpMenu();
             else if (par1 == "Client" && par2 != null)
+            {
+                Console.WriteLine(par2);
                 client = new Client(par2);
+            }
             else if (par1 == "GameMenu")
                 gameMenu = new GameMenu(par2);
             Scene = par1;

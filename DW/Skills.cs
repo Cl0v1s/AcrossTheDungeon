@@ -83,6 +83,22 @@ namespace DW
             return v;
         }
 
+        public int getCheat()
+        {
+            return cheating;
+        }
+
+        public void upgradeCheat(float par1)
+        {
+            cTemp += par1 * rand.Next(50, 100) / 100;
+            if (cTemp >= 5 * cheating + 45)
+            {
+                cTemp = 0;
+                cheating += 1;
+                owner.showMsg("Vous commencez à devenir un vrai roublard !");
+            }
+        }
+
 
 
     }

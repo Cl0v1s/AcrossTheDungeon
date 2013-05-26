@@ -101,6 +101,7 @@
     <Compile Include="Item.cs" />
     <Compile Include="OtherPlayer.cs" />
     <Compile Include="Packet.cs" />
+    <Compile Include="Pig.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

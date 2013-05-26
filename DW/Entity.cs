@@ -40,6 +40,7 @@ namespace DW
         protected bool isSleeping = false;
         protected int sleepingTime = 0;
         protected bool isFighting = false;
+        protected bool isburning = false;
 
 
         public Entity(String par1name, int par3force, int par4endurance, int par5volonte, int par6agilite, Stair par7stair)
@@ -87,6 +88,13 @@ namespace DW
                 if (frame >= 40)
                     frame = 0;
             }
+            if (isburning)
+            {
+                if (frame <= 20)
+                    color = Color.FromArgb(150, 50, 50);
+                else
+                    color = Color.FromArgb(250, 50, 50);
+            }
             if (lifeTmp <= 0)
             {
                 dead = true;
@@ -104,6 +112,8 @@ namespace DW
                 sommeil += (float)5 / 288;
                 soif += (float)1 / 18;
                 sale += (float)5 / 864;
+                if (isburning)
+                    lifeTmp -= 1;
                 if (enduranceTmp <= endurance - 0.5)
                     enduranceTmp += 0.5;
                 if (isSleeping == false)
@@ -265,6 +275,9 @@ namespace DW
                 soif = 0;
             if (isOn(3) == true)
                 lifeTmp -= 5;
+            else if (isOn(101))
+                isburning = true;
+
         }
 
         public void setLife(int par1)
@@ -487,7 +500,38 @@ namespace DW
             return name;
         }
 
+        //<summary>
+        //retourne si l'entitée peut marcher sur la case située aux coordonnées spécifiées
+        //</summary>
         public bool canWalkOn(int par1x, int par2y)
+        {
+            try
+            {
+                if (stair != null && stair.getMap()[par1x, par2y] == 1 || stair.getMap()[par1x, par2y] == 100 || stair.getMap()[par1x, par2y] == 4 || stair.getMap()[par1x, par2y] == 3 || stair.getMap()[par1x, par2y] == 5 || stair.getMap()[par1x, par2y] == 101)
+                {
+                    if (stair != null && stair.getSpecial()[par1x, par2y] != null)
+                        return stair.getSpecial()[par1x, par2y].canPass();
+                    else
+                    {
+                        Entity[] e = stair.getEntities();
+                        for (int i = 0; i < e.Length; i++)
+                        {
+                            if (e[i] != null && e[i].getX() == par1x && e[i].getY() == par2y)
+                                return false;
+                        }
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception)
+            { return true; }
+        }
+
+        //<summary>
+        //retourne si l'entitée peut marcher sur la case située aux coordonnées spécifiées
+        //</summary>
+        public static bool canWalkOn(int par1x, int par2y,Stair stair)
         {
             try
             {

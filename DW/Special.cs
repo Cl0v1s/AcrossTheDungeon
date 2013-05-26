@@ -1,6 +1,7 @@
 ﻿using System;
 
 using System.Drawing;
+using SdlDotNet.Graphics.Sprites;
 
 
 namespace DW
@@ -14,6 +15,7 @@ namespace DW
         protected string value="";
         protected string originalValue = "";
         protected Color color=Color.Gray;
+        protected Sprite sprite;
 
         public Special(Stair par1stair)
         {
@@ -61,7 +63,7 @@ namespace DW
             return stair;
         }
 
-        public Special clone()
+        public virtual Special clone()
         {
             return (Special)this.MemberwiseClone();
         }

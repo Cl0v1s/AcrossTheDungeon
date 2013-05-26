@@ -44,7 +44,7 @@ namespace DW
             else if (index == 1)
             {
                 DW.close(DW.gameMenu);
-                DW.changeScene("EditorMenu","IpMenu");
+                DW.changeScene("IpMenu");
 
             }
             else if (index == 2)

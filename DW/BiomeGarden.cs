@@ -8,6 +8,11 @@ namespace DW
     class BiomeGarden : Biome
     {
 
+        private Entity[] entities = new Entity[]
+            {
+                new Pig()
+            };
+
         private object[] specialCase = new object[]
         {
             new Plant(),
@@ -114,6 +119,44 @@ namespace DW
             }
         }
 
+        //<summary>
+        //génère les entitées inhérantes au biome
+        //</summary>
+        //<param name="par1">nombre maximal d'entités à générer</param>
+        public override Entity[] applyEntities(int par1)
+        {
+            if (par1 > 0)
+            {
+                Entity[] res = new Entity[par1];
+                for (int i = 0; i < par1; i++)
+                {
+                    Point p = new Point(-1, -1);
+                    p = stair.getFreeSpecialCase(new Rectangle(x, y, width, height));
+                    int tried = 0;
+                    while (contains(p.X, p.Y) == false)
+                    {
+                        tried += 1;
+                        p = stair.getFreeSpecialCase();
+                        if (tried >= 500)
+                        {
+                            Console.WriteLine("fail");
+                            break;
+                        }
+                    }
+                    if (p.X == -1 && p.Y == -1)
+                        continue;
+                    int ty = rand.Next(0, entities.Length);
+                    res[i] = (Entity)(entities[ty].clone());
+                    res[i].setPos(stair, p.X, p.Y);
+                }
+                return res;
+            }
+            else
+            {
+                return null;
+
+            }
+        }
 
 
     }

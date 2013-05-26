@@ -56,7 +56,8 @@ namespace DW
             sommeil += (float)5 / 288;
             soif += (float)1 / 18;
             sale += (float)5 / 864;
-
+            if (isburning)
+                lifeTmp -= 1;
             EnvironmentEffect();
             Entity[] e = stair.getEntities();
             for (int i = 0; i < e.Length; i++)
@@ -120,7 +121,12 @@ namespace DW
             if (isOn(3) == true)
             {
                 lifeTmp -= 5;
-                showMsg("Vous marchez sur un piège !");
+                showMsg("Vous venez de marcher sur un piège !");
+            }
+            else if (isOn(101))
+            {
+                isburning = true;
+                showMsg("Vous avez votre pieds dans un lac de lave...");
             }
         }
 
@@ -148,12 +154,15 @@ namespace DW
             inputUpdate();
             if (stair != null)
                 stair.update();
-            //Fait avancer le joueur en fonction de la touche choisie
-            //Note: L'axe est inversé !
-
-
             DW.render.renderEntityVision(this);
             statUI.update();
+            if (isburning)
+            {
+                if (frame <= 20)
+                    color = Color.FromArgb(150, 50, 50);
+                else
+                    color = Color.FromArgb(250, 50, 50);
+            }
             if (lifeTmp <= 0)
                 dead = true;
             return dead; 

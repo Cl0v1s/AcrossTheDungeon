@@ -490,6 +490,9 @@ namespace DW
             }
         }
 
+        //<summary>
+        //Retourne les coordonnées d'un espace libre sour forme de Point
+        //</summary>
         public Point getFreeSpecialCase()
         {
             int xp = rand.Next(1, width - 1);
@@ -512,7 +515,7 @@ namespace DW
                 xp = rand.Next(1, width - 1);
                 yp = rand.Next(1, height - 1);
                 i += 1;
-                if (i > 150)
+                if (i > 500)
                     return new Point(-1, -1);
             }
             return new Point(xp, yp);

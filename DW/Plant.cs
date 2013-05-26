@@ -57,5 +57,23 @@ namespace DW
             }
         }
 
+        //<summary>
+        //regle l'age de la plante 
+        //</summary>
+        public void setAge(int par1)
+        {
+            age = par1;
+        }
+
+        //<summary>
+        //clone la plante en changeant son etat d'evolution afin de ne pas obtenir de plantes homogènes
+        //</summary>
+        public override Special clone()
+        {
+            Plant s = (Plant)this.MemberwiseClone();
+            s.setAge(rand.Next(0, 3));
+            return (Special)s;
+        }
+
     }
 }

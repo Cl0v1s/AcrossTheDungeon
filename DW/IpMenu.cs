@@ -47,7 +47,7 @@ namespace DW
                 else
                 {
                     DW.close(DW.ipMenu);
-                    DW.changeScene("Client", input.getText());
+                    DW.changeScene("EditorMenu", "Client:"+input.getText());
                     return;
                 }
             }

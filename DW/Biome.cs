@@ -140,7 +140,6 @@ namespace DW
             return (Biome)this.MemberwiseClone();
         }
 
-
         //<summary>
         //applique de l'eau dans la salle passée en argument
         //</summary>

@@ -82,10 +82,17 @@ namespace DW
                 Events.KeyboardDown -= new EventHandler<KeyboardEventArgs>(this.examine);
                 DW.close(DW.editorMenu);
                 if (callback == "Server")
+                {
                     DW.setPlayer(new Player(nameIN.getText(), raceUI.getCurrentSelectionText(), force + forceB, endurance + enduranceB, volonte + volonteB, agilite + agiliteB));
-                else
+                    DW.changeScene(callback);
+                }
+                else if (callback.Contains(":"))
+                {
                     DW.setPlayer(new OtherPlayer(nameIN.getText(), raceUI.getCurrentSelectionText(), force + forceB, endurance + enduranceB, volonte + volonteB, agilite + agiliteB));
-                DW.changeScene(callback);
+                    string[] s = callback.Split(":".ToCharArray());
+                    DW.changeScene(s[0],s[1]);
+                }
+                
             }
 
         }

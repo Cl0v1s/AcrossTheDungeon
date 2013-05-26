@@ -8,48 +8,60 @@ namespace DW
     class Door : Special
     {
         private bool open;
+        private int levelMax;
+        private float level;
+        private bool already=false;
         private Random rand=new Random();
 
+
+        //<summary>
+        //créer et gère une porte
+        //</summary>
         public Door()
             : base()
         {
-            if (rand.Next(0, 50) == 0)
-                open = true;
-            else
-                open = false;
-
-            if (open == false)
-                value = "|";
-            else
-                value = ".";
+            open = false;
+            value = "|";
+            levelMax = rand.Next(1, 20);
+            level = (float)levelMax;
             color = Color.Chocolate;
         }
 
+        //<summary>
+        //retourne l'etat d'ouverture de la porte afin de savoir si un entitée peut passer
+        //</summary>
         public override bool canPass()
         {
             return open;
         }
 
+        //<summary>
+        //permet au joueur d'interagir avec la porte (ouverture/fermeture)
+        //</summary>
         public override void interact(Player par1)
         {
             if (open == false)
             {
-                par1.showMsg("Vous essayez d'ouvrir cette porte manifestement vérouillée...");
-                if (par1.skills.tryAction("cheating", (float)1))
+                if(level==levelMax)
+                    par1.showMsg("Vous essayez d'ouvrir cette porte manifestement vérouillée...");
+                level -= (float)par1.skills.getCheat() * rand.Next(1, 10) / 10;
+                if (level * 100 / levelMax <= 20 && already==false)
+                    par1.showMsg("Vous sentez la resistance de la porte faiblir.");
+                if (level <= 0)
                 {
                     open = true;
                     value = ".";
-                    par1.showMsg("Grace à votre talent, vous avez ouvert la porte !");
+                    par1.showMsg("Vous avez reussi à ouvrir la porte !");
+                    if(already==false)
+                        par1.skills.upgradeCheat(2F);
+                    already = true;
                 }
-                else
-                {
-                    par1.showMsg("Apres de nombreux essais vous n'arrivez pas à ouvrir la porte...");
-                    Console.WriteLine("fail");
-                }
+                
             }
             else
             {
                 open = false;
+                level = 0.00001F;
                 value = "|";
             }
         }

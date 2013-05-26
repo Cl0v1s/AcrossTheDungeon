@@ -20,10 +20,7 @@ namespace DW
             new Pot(),
         };
 
-        private Entity[] entities = new Entity[]
-            {
-                new Bat()
-            };
+
 
         //<summary>
         //Créer le biome Donjon
@@ -57,33 +54,6 @@ namespace DW
                     applySpecialCase(rooms[i]);
 
                 }
-            }
-        }
-
-        //<summary>
-        //génère les entitées inhérantes au biome
-        //</summary>
-        //<param name="par1">nombre maximal d'entités à générer</param>
-        public override Entity[] applyEntities(int par1)
-        {
-            if (par1 > 0)
-            {
-                Entity[] res = new Entity[par1];
-                for (int i = 0; i < par1; i++)
-                {
-                    Point p = stair.getFreeSpecialCase(new Rectangle(x, y, width, height));
-                    if (p.X == -1 && p.Y == -1)
-                        continue;
-                    int ty = rand.Next(0, entities.Length);
-                    res[i] = (Entity)(entities[ty].clone());
-                    res[i].setPos(stair, p.X, p.Y);
-                }
-                return res;
-            }
-            else
-            {
-                return null;
-
             }
         }
 
