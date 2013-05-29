@@ -127,7 +127,10 @@ namespace DW
         //<param name="par1">l'entité</param>
         private void renderEntityAt(Entity par1)
         {
-            Video.Screen.Blit(font.Render(par1.getChar(), par1.getColor()), new Point(x + par1.getX() * 30, y + par1.getY() * 30));
+            if(par1.getSprite()==null)
+                Video.Screen.Blit(font.Render(par1.getChar(), par1.getColor()), new Point(x + par1.getX() * 30, y + par1.getY() * 30));
+            else
+                Video.Screen.Blit(par1.getSprite(), new Point(x + par1.getX() * 30, y + par1.getY() * 30));
         }
 
         //<summary>

@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Threading;
 
+using SdlDotNet.Graphics.Sprites;
+using SdlDotNet.Graphics;
 using SdlDotNet.Input;
 
 
@@ -37,6 +39,13 @@ namespace DW
             lifeTmp = life;
             statUI = new StatUI(this);
             skills = new Skills(this);
+            run = new AnimationCollection();
+            SurfaceCollection e=new SurfaceCollection();
+            e.Add("Data/images/Hero.png", new Size(30, 30));
+            run.Add(e);
+            run.Delay = 200;
+            sprite = new AnimatedSprite(run);
+            sprite.Animate = true;
         }
 
         public string getClass()
@@ -78,18 +87,22 @@ namespace DW
             if (DW.input.equals(Key.UpArrow) == true)
             {
                 move(0, -1);
+                face = "back";
             }
             else if (DW.input.equals(Key.DownArrow) == true)
             {
                 move(0, 1);
+                face = "front";
             }
             else if (DW.input.equals(Key.RightArrow) == true)
             {
                 move(1, 0);
+                face = "right";
             }
             else if (DW.input.equals(Key.LeftArrow) == true)
             {
                 move(-1, 0);
+                face = "left";
             }
             else if (DW.input.equals(Key.KeypadEnter))
             {
@@ -149,7 +162,7 @@ namespace DW
         //<summary>
         //met à jour le joueur à l'écran (coté serveur seulement)
         //</summary>
-        public virtual bool update()
+        public new virtual bool update()
         {
             inputUpdate();
             if (stair != null)
