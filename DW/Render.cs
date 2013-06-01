@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IO;
 
+
 using System.Drawing;
 using SdlDotNet.Core;
 using SdlDotNet.Graphics;
+using SdlDotNet.Graphics.Sprites;
+
 
 namespace DW
 {
@@ -29,25 +32,37 @@ namespace DW
             
         };
 
+        public int[] id = new int[]
+        {
+            0,
+            0,
+            1,
+
+        };
+
+
         public object[] animated = new object[]{
             "_",Color.Blue,
             "-",Color.Blue,
             "_",Color.Red,
             "-",Color.Red,
-
         };
+
 
         private int frame;
         private int x;
         private int y;
-       
-        private SdlDotNet.Graphics.Font font = new SdlDotNet.Graphics.Font(Directory.GetCurrentDirectory()+"\\Data\\"+"pixel.ttf", 30);
+        private Surface tileset = new Surface("Data/images/TileSet.png");
 
-        public Render(int par1x,int par2y)
+        private SdlDotNet.Graphics.Font font = new SdlDotNet.Graphics.Font(Directory.GetCurrentDirectory() + "\\Data\\" + "pixel.ttf", 30);
+
+
+        public Render(int par1x, int par2y)
         {
             x = par1x;
             y = par2y;
         }
+
 
         //<summary>
         //met à jour le compteur de frame pour les annimations
@@ -58,6 +73,7 @@ namespace DW
             if (frame > 40)
                 frame = 0;
         }
+
 
         //<summary>
         //affiche la map entière dans la fenetre
@@ -72,14 +88,17 @@ namespace DW
                 for (int u = 0; u < par3height; u++)
                 {
 
+
                     if (par1map[i, u] * 2 <= value.Length && par1map[i, u] * 2 + 1 <= value.Length && par1map[i, u] < 100)
                         Video.Screen.Blit(font.Render((string)value[par1map[i, u] * 2], (Color)value[par1map[i, u] * 2 + 1]), new Point(x + i * 30, y + u * 30));
                     else
                         renderAnimated(par1map, i, u);
 
+
                 }
             }
         }
+
 
         //<summary>
         //affiche la map et les entitésdans le périmètre de vision de l'entité spécifiée
@@ -98,12 +117,24 @@ namespace DW
                         if (u >= 0 && i >= 0 && i <= par1.getStair().getW() && u <= par1.getStair().getH() && par1.canSee(i, u))
                         {
                             if (par1map[i, u] * 2 <= value.Length && par1map[i, u] * 2 + 1 <= value.Length && par1map[i, u] < 100)
-                                Video.Screen.Blit(font.Render((string)value[par1map[i, u] * 2], (Color)value[par1map[i, u] * 2 + 1]), new Point(x + i * 30, y + u * 30));
+                            {
+                                if (par1map[i, u] < id.Length)
+                                {
+                                    if (par1map[i, u] != 2)
+                                        Video.Screen.Blit(tileset, new Point(x + i * 30, y + u * 30), new Rectangle(id[par1map[i, u]] * 30, 0, 30, 30));
+                                    else
+                                        connectionTile(par1map,i,u);
+                                }
+                                else
+                                    Video.Screen.Blit(font.Render((string)value[par1map[i, u] * 2], (Color)value[par1map[i, u] * 2 + 1]), new Point(x + i * 30, y + u * 30));
+
+                            }
                             else
                                 renderAnimated(par1map, i, u);
                             if (specials[i, u] != null)
                                 renderSpecialAt(specials, i, u);
                         }
+
 
                     }
                 }
@@ -121,17 +152,32 @@ namespace DW
             }
         }
 
+
+        private void connectionTile(int[,] par1map, int par2x,int par3y)
+        {
+            int idToRender = par1map[par2x,par3y];
+            if (par1map[par2x - 1, par3y] != idToRender && par1map[par2x + 1, par3y] != idToRender && par1map[par2x, par3y + 1] != idToRender)
+                idToRender = id[idToRender];
+            else if(par1map[par2x, par3y + 1] != idToRender)
+                idToRender = id[idToRender] + 1;
+            else
+                idToRender = id[idToRender] + 2;
+            Video.Screen.Blit(tileset, new Point(x + par2x * 30, y + par3y * 30), new Rectangle(idToRender * 30, 0, 30, 30));
+        }
+
+
         //<summary>
         //affiche l'entité spécifiée
         //</summary>
         //<param name="par1">l'entité</param>
         private void renderEntityAt(Entity par1)
         {
-            if(par1.getSprite()==null)
+            if (par1.getSprite() == null)
                 Video.Screen.Blit(font.Render(par1.getChar(), par1.getColor()), new Point(x + par1.getX() * 30, y + par1.getY() * 30));
             else
                 Video.Screen.Blit(par1.getSprite(), new Point(x + par1.getX() * 30, y + par1.getY() * 30));
         }
+
 
         //<summary>
         //affiche la case contenant un objet spécial situé aux coordonées spécicifiées
@@ -145,20 +191,23 @@ namespace DW
                 Video.Screen.Blit(font.Render((string)par1map[par2x, par3y].getChar(), (Color)par1map[par2x, par3y].getColor()), new Point(x + par2x * 30, y + par3y * 30));
         }
 
+
         private void renderAnimated(int[,] par1map, int par2x, int par3y)
         {
             try
             {
                 if (frame < 40 / 2)
-                    Video.Screen.Blit(font.Render((string)animated[(par1map[par2x, par3y] - 100)*4], (Color)animated[(par1map[par2x, par3y] - 100)*4 + 1]), new Point(x + par2x * 30, y + par3y * 30));
+                    Video.Screen.Blit(font.Render((string)animated[(par1map[par2x, par3y] - 100) * 4], (Color)animated[(par1map[par2x, par3y] - 100) * 4 + 1]), new Point(x + par2x * 30, y + par3y * 30));
                 else
-                    Video.Screen.Blit(font.Render((string)animated[(par1map[par2x, par3y] - 100)*4 + 2], (Color)animated[(par1map[par2x, par3y] - 100)*4 + 3]), new Point(x + par2x * 30, y + par3y * 30));
+                    Video.Screen.Blit(font.Render((string)animated[(par1map[par2x, par3y] - 100) * 4 + 2], (Color)animated[(par1map[par2x, par3y] - 100) * 4 + 3]), new Point(x + par2x * 30, y + par3y * 30));
             }
             catch (Exception)
             {
 
+
             }
         }
+
 
         //<summary>
         //affiche tout les objets spéciaux de la map
@@ -172,11 +221,12 @@ namespace DW
             {
                 for (int u = 0; u < par3height; u++)
                 {
-                    if(par1map[i, u] != null)
+                    if (par1map[i, u] != null)
                         Video.Screen.Blit(font.Render((string)par1map[i, u].getChar(), (Color)par1map[i, u].getColor()), new Point(x + i * 30, y + u * 30));
                 }
             }
         }
+
 
         //<summary>
         //affiche tout les entités de la liste spécifiée
@@ -193,6 +243,7 @@ namespace DW
             }
         }
 
+
         //<summary>
         //Déplace la caméra aux coordonées spécifiées
         //</summary>
@@ -204,6 +255,7 @@ namespace DW
             y = par2y;
         }
 
+
         //<summary>
         //retourne la psoition x de la caméra
         //</summary>
@@ -211,6 +263,7 @@ namespace DW
         {
             return x;
         }
+
 
         //<summary>
         //retourne la psotion y de la caméra
@@ -221,3 +274,4 @@ namespace DW
         }
     }
 }
+

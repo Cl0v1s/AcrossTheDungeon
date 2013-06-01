@@ -2,9 +2,12 @@
 using System.Drawing;
 using System.Threading;
 
+
 using SdlDotNet.Graphics.Sprites;
 using SdlDotNet.Graphics;
 using SdlDotNet.Input;
+
+
 
 
 namespace DW
@@ -16,6 +19,7 @@ namespace DW
         protected String pclass;
         public Skills skills;
         private int stairId = -1;
+
 
         //<summary>
         //créer et gère le joueur coté serveur et les fonctions communes au joueur coté client
@@ -48,10 +52,12 @@ namespace DW
             sprite.Animate = true;
         }
 
+
         public string getClass()
         {
             return pclass;
         }
+
 
         //<summary>
         //affecte les statistiques du joueur en faisant évoluer le temps (1 tour = 10 min)
@@ -78,6 +84,7 @@ namespace DW
                 }
             }
         }
+
 
         //<summary>
         //réagit en fonction des touches préssées (seulement coté serveur, ceci étant géré par la class Client coté client
@@ -113,6 +120,7 @@ namespace DW
                 lap();
         }
 
+
         //<summary>
         //permet au joueur de boire (seulement coté serveur)
         //</summary>
@@ -125,6 +133,7 @@ namespace DW
                     soif = 0;
             }
         }
+
 
         //<summary>
         //affecte les statistiques du joueur en fonction de l'environnement
@@ -143,6 +152,7 @@ namespace DW
             }
         }
 
+
         public void showMsg(string par1)
         {
             if (DW.client != null)
@@ -151,6 +161,7 @@ namespace DW
                 DW.dungeon.showMsg(par1,this);
         }
 
+
         //<summary>
         //centre la caméra sur le joueur (coté serveur seulement)
         //</summary>
@@ -158,6 +169,7 @@ namespace DW
         {
             DW.render.move(x * -30 + 640 / 2, y * -30 + 480 / 2);
         }
+
 
         //<summary>
         //met à jour le joueur à l'écran (coté serveur seulement)
@@ -180,6 +192,7 @@ namespace DW
                 dead = true;
             return dead; 
         }
+
 
         public void interact()
         {
@@ -212,6 +225,7 @@ namespace DW
             }
         }
 
+
         //<summary>
         //fait bouger le joueur (coté serveur seulement)
         //</summary>
@@ -229,15 +243,19 @@ namespace DW
             stair.roll();
             setCanvas();
 
+
             Thread.Sleep(100);
 
+
         }
+
 
         public void changeStair(Stair par1stair, int par2id)
         {
             stair = par1stair;
             stairId = par2id;
         }
+
 
         public int getStairId()
         {
@@ -247,5 +265,10 @@ namespace DW
 
 
 
+
+
+
+
     }
 }
+

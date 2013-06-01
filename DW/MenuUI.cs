@@ -77,7 +77,7 @@ namespace DW
                     index += 1;
                 else if (e.Key == Key.UpArrow)
                     index -= 1;
-                else if (e.Key == Key.KeypadEnter)
+                else if (e.Key == Key.KeypadEnter || e.Key==Key.Return)
                     choosed = true;
                 if (index > length)
                     index = 0;

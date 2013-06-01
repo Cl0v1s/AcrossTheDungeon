@@ -10,7 +10,7 @@ namespace DW
     {
 
 
-        private Entity[] entities = new Entity[]
+        private new Entity[] entities = new Entity[]
             {
                 new Bat()
             };

@@ -8,7 +8,7 @@ namespace DW
     class BiomeGarden : Biome
     {
 
-        private Entity[] entities = new Entity[]
+        private new Entity[] entities = new Entity[]
             {
                 new Pig()
             };
