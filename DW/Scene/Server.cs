@@ -6,6 +6,8 @@ using System.Net.Sockets;
 using System.Text;
 using SdlDotNet.Core;
 using SdlDotNet.Input;
+using SdlDotNet.Graphics.Sprites;
+using SdlDotNet.Graphics;
 
 namespace DW
 {
@@ -156,6 +158,14 @@ namespace DW
                         other.setStair(DW.player.getStair());
                         Point p = other.getStair().getFreeSpecialCase();
                         other.setPos(p.X, p.Y);
+                        AnimationCollection a = new AnimationCollection();
+                        SurfaceCollection e = new SurfaceCollection();
+                        e.Add("Data/images/Hero.png", new Size(30, 30));
+                        a.Add(e);
+                        a.Delay = 200;
+                        AnimatedSprite s = new AnimatedSprite(a);
+                        s.Animate = true;
+                        DW.render.registerSprite(other, s);
                         DW.player.getStair().putEntity(other);
                         Packet.Send(new DataPacket(other), client);
                     }

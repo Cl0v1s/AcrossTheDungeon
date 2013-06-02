@@ -19,7 +19,7 @@ namespace DW
         protected String pclass;
         public Skills skills;
         private int stairId = -1;
-
+        
 
         //<summary>
         //créer et gère le joueur coté serveur et les fonctions communes au joueur coté client
@@ -43,13 +43,14 @@ namespace DW
             lifeTmp = life;
             statUI = new StatUI(this);
             skills = new Skills(this);
-            run = new AnimationCollection();
-            SurfaceCollection e=new SurfaceCollection();
+            AnimationCollection a = new AnimationCollection();
+            SurfaceCollection e = new SurfaceCollection();
             e.Add("Data/images/Hero.png", new Size(30, 30));
-            run.Add(e);
-            run.Delay = 200;
-            sprite = new AnimatedSprite(run);
-            sprite.Animate = true;
+            a.Add(e);
+            a.Delay = 200;
+            AnimatedSprite s = new AnimatedSprite(a);
+            s.Animate = true;
+            DW.render.registerSprite(this, s);
         }
 
 

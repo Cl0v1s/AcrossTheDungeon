@@ -18,8 +18,6 @@ namespace DW
         protected string value = "";
         protected string originalValue = "";
         protected Color color = Color.Gray;
-        protected AnimationCollection run;
-        protected AnimatedSprite sprite;
         protected string face = "front";
 
 
@@ -103,44 +101,14 @@ namespace DW
 
         }
 
-
-        public AnimatedSprite getSprite()
-        {
-            if (sprite != null)
-            {
-                switch (face)
-                {
-                    case "front":
-                        if (sprite.Frame > 3)
-                            sprite.Frame = 0;
-                        break;
-                    case "left":
-                        if (sprite.Frame < 8)
-                            sprite.Frame = 8;
-                        if (sprite.Frame > 11)
-                            sprite.Frame = 8;
-                        break;
-                    case "right":
-                        if (sprite.Frame < 4)
-                            sprite.Frame = 4;
-                        if (sprite.Frame > 7)
-                            sprite.Frame = 4;
-                        break;
-                    case "back":
-                        if (sprite.Frame < 12)
-                            sprite.Frame = 12;
-                        if (sprite.Frame > 15)
-                            sprite.Frame = 12;
-                        break;
-                }
-            }
-            return sprite;
-        }
-
-
         public void setFace(string par1)
         {
             face = par1;
+        }
+
+        public string getFace()
+        {
+            return face;
         }
     }
 }

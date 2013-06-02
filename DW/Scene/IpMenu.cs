@@ -8,7 +8,6 @@ namespace DW
 {
     class IpMenu
     {
-        private string ip;
         private TextInput input;
         private Text error;
 

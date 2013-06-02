@@ -85,55 +85,54 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bat.cs" />
+    <Compile Include="Entity\Bat.cs" />
     <Compile Include="Biome.cs" />
     <Compile Include="BiomeCave.cs" />
     <Compile Include="BiomeDungeon.cs" />
     <Compile Include="BiomeGarden.cs" />
-    <Compile Include="Chat.cs" />
-    <Compile Include="ChatPacket.cs" />
+    <Compile Include="System\Graphics\Chat.cs" />
+    <Compile Include="System\Network\ChatPacket.cs" />
     <Compile Include="Chest.cs" />
-    <Compile Include="Client.cs" />
-    <Compile Include="CommandPacket.cs" />
-    <Compile Include="DataPacket.cs" />
+    <Compile Include="Scene\Client.cs" />
+    <Compile Include="System\Network\CommandPacket.cs" />
+    <Compile Include="System\Network\DataPacket.cs" />
     <Compile Include="Door.cs" />
-    <Compile Include="IpMenu.cs" />
+    <Compile Include="Scene\IpMenu.cs" />
     <Compile Include="Item.cs" />
-    <Compile Include="OtherPlayer.cs" />
-    <Compile Include="Packet.cs" />
-    <Compile Include="Pig.cs" />
+    <Compile Include="Entity\OtherPlayer.cs" />
+    <Compile Include="System\Network\Packet.cs" />
+    <Compile Include="Entity\Pig.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Server.cs" />
-    <Compile Include="Entity.cs" />
-    <Compile Include="Input.cs" />
+    <Compile Include="Scene\Server.cs" />
+    <Compile Include="Entity\Entity.cs" />
+    <Compile Include="System\Input.cs" />
     <Compile Include="Plant.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Entity\Player.cs" />
     <Compile Include="Pot.cs" />
-    <Compile Include="Render.cs" />
+    <Compile Include="System\Graphics\Render.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Skills.cs" />
     <Compile Include="Special.cs" />
     <Compile Include="Stair.cs" />
-    <Compile Include="StatUI.cs" />
-    <Compile Include="TextInput.cs" />
-    <Compile Include="EditorMenu.cs" />
-    <Compile Include="Text.cs" />
-    <Compile Include="MenuUI.cs" />
-    <Compile Include="GameMenu.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="System\Graphics\StatUI.cs" />
+    <Compile Include="System\TextInput.cs" />
+    <Compile Include="Scene\EditorMenu.cs" />
+    <Compile Include="System\Text.cs" />
+    <Compile Include="System\MenuUI.cs" />
+    <Compile Include="Scene\GameMenu.cs" />
+    <Compile Include="System\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Zip.cs" />
+    <Compile Include="System\Network\Zip.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\Debug\Data\pixel.ttf" />
-    <None Include="DW_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -164,6 +163,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

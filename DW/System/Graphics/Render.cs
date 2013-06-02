@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 
 
 using System.Drawing;
@@ -53,6 +54,10 @@ namespace DW
         private int x;
         private int y;
         private Surface tileset = new Surface("Data/images/TileSet.png");
+        private KeyValuePair<string, AnimatedSprite>[] spriteList = new KeyValuePair<string, AnimatedSprite>[500];
+
+        protected AnimationCollection waterAnimation;
+        protected AnimatedSprite water;
 
         private SdlDotNet.Graphics.Font font = new SdlDotNet.Graphics.Font(Directory.GetCurrentDirectory() + "\\Data\\" + "pixel.ttf", 30);
 
@@ -61,6 +66,14 @@ namespace DW
         {
             x = par1x;
             y = par2y;
+            waterAnimation = new AnimationCollection();
+            SurfaceCollection e = new SurfaceCollection();
+            e.Add("Data/images/Water.png", new Size(30, 30));
+            waterAnimation.Add(e);
+            waterAnimation.Delay = 1200;
+            water = new AnimatedSprite(waterAnimation);
+            water.Animate = true;
+            
         }
 
 
@@ -97,6 +110,79 @@ namespace DW
 
                 }
             }
+        }
+
+
+        //<summary>
+        //Enregistre un sprite annimé pour l'objet spécifié
+        //</summary>
+        //<param name="par">objet clef dont le hash code va servir de clef pour le dictionnaire de sprites</param>
+        //<param name="par2">Sprite annimé à associé avec l'objet spcécifié</param>
+        public void registerSprite(Special par1, AnimatedSprite par2)
+        {
+
+            for (int i = 0; i < spriteList.Length; i++)
+            {
+                if (spriteList[i].Key==null)
+                {
+                    spriteList[i] = new KeyValuePair<string, AnimatedSprite>(par1.GetHashCode().ToString(), par2);
+                    Console.WriteLine(par1.GetHashCode().ToString());
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine(par1.GetHashCode().ToString());
+                    if (spriteList[i].Key == par1.GetHashCode().ToString())
+                        return;
+                }
+
+            }
+        }
+
+        //<summary>
+        //retourne le sprite animé associé à l'objet spécifié precedemment enregistré grace à la méthode registerSprite
+        //</summary>
+        //<param name="par1">objet associé au sprite animé</param>
+        private AnimatedSprite getSprite(Special par1)
+        {
+            for (int i = 0; i < spriteList.Length; i++)
+            {
+                if (!spriteList[i].Equals(null))
+                {
+                    //Console.WriteLine(spriteList[i].Key);
+                    if (spriteList[i].Key == par1.GetHashCode().ToString())
+                    {
+                        AnimatedSprite e = spriteList[i].Value;
+                        switch (par1.getFace())
+                        {
+                            case "front":
+                                if (e.Frame > 3)
+                                    e.Frame = 0;
+                                break;
+                            case "left":
+                                if (e.Frame < 8)
+                                    e.Frame = 8;
+                                if (e.Frame > 11)
+                                    e.Frame = 8;
+                                break;
+                            case "right":
+                                if (e.Frame < 4)
+                                    e.Frame = 4;
+                                if (e.Frame > 7)
+                                    e.Frame = 4;
+                                break;
+                            case "back":
+                                if (e.Frame < 12)
+                                    e.Frame = 12;
+                                if (e.Frame > 15)
+                                    e.Frame = 12;
+                                break;
+                        }
+                                return spriteList[i].Value;
+                    }
+                }
+            }
+            return null;
         }
 
 
@@ -172,10 +258,11 @@ namespace DW
         //<param name="par1">l'entité</param>
         private void renderEntityAt(Entity par1)
         {
-            if (par1.getSprite() == null)
-                Video.Screen.Blit(font.Render(par1.getChar(), par1.getColor()), new Point(x + par1.getX() * 30, y + par1.getY() * 30));
+            AnimatedSprite e=getSprite(par1);
+            if(e != null)
+                Video.Screen.Blit(e, new Point(x + par1.getX() * 30, y + par1.getY() * 30));
             else
-                Video.Screen.Blit(par1.getSprite(), new Point(x + par1.getX() * 30, y + par1.getY() * 30));
+                Video.Screen.Blit(font.Render(par1.getChar(), par1.getColor()), new Point(x + par1.getX() * 30, y + par1.getY() * 30));
         }
 
 
@@ -194,17 +281,29 @@ namespace DW
 
         private void renderAnimated(int[,] par1map, int par2x, int par3y)
         {
-            try
+            if (par1map[par2x, par3y] == 100)
             {
-                if (frame < 40 / 2)
-                    Video.Screen.Blit(font.Render((string)animated[(par1map[par2x, par3y] - 100) * 4], (Color)animated[(par1map[par2x, par3y] - 100) * 4 + 1]), new Point(x + par2x * 30, y + par3y * 30));
-                else
-                    Video.Screen.Blit(font.Render((string)animated[(par1map[par2x, par3y] - 100) * 4 + 2], (Color)animated[(par1map[par2x, par3y] - 100) * 4 + 3]), new Point(x + par2x * 30, y + par3y * 30));
+                if (par1map[par2x, par3y - 1] == 100 && water.Frame < 2)
+                    water.Frame = 2;
+                if (par1map[par2x, par3y - 1] != 100 && water.Frame > 1)
+                    water.Frame = 0;
+
+                Video.Screen.Blit(water, new Point(x + par2x * 30, y + par3y * 30));
             }
-            catch (Exception)
+            else
             {
+                try
+                {
+                    if (frame < 40 / 2)
+                        Video.Screen.Blit(font.Render((string)animated[(par1map[par2x, par3y] - 100) * 4], (Color)animated[(par1map[par2x, par3y] - 100) * 4 + 1]), new Point(x + par2x * 30, y + par3y * 30));
+                    else
+                        Video.Screen.Blit(font.Render((string)animated[(par1map[par2x, par3y] - 100) * 4 + 2], (Color)animated[(par1map[par2x, par3y] - 100) * 4 + 3]), new Point(x + par2x * 30, y + par3y * 30));
+                }
+                catch (Exception)
+                {
 
 
+                }
             }
         }
 
@@ -238,7 +337,11 @@ namespace DW
             {
                 if (par1[i] != null)
                 {
-                    Video.Screen.Blit(font.Render(par1[i].getChar(), par1[i].getColor()), new Point(x + par1[i].getX() * 30, y + par1[i].getY() * 30));
+                    AnimatedSprite e = getSprite(par1[i]);
+                    if (e != null)
+                        Video.Screen.Blit(e, new Point(x + par1[i].getX() * 30, y + par1[i].getY() * 30));
+                    else
+                        Video.Screen.Blit(font.Render(par1[i].getChar(), par1[i].getColor()), new Point(x + par1[i].getX() * 30, y + par1[i].getY() * 30));
                 }
             }
         }
