@@ -12,7 +12,7 @@ namespace DW
         public OtherPlayer(String par1name, String par2class, int par3force, int par4endurance, int par5volonte, int par6agilite)
             : base(par1name, par2class, par3force, par4endurance, par5volonte, par6agilite)
         {
-
+            value = "à";
         }
 
         //<summary>

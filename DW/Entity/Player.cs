@@ -43,14 +43,6 @@ namespace DW
             lifeTmp = life;
             statUI = new StatUI(this);
             skills = new Skills(this);
-            AnimationCollection a = new AnimationCollection();
-            SurfaceCollection e = new SurfaceCollection();
-            e.Add("Data/images/Hero.png", new Size(30, 30));
-            a.Add(e);
-            a.Delay = 200;
-            AnimatedSprite s = new AnimatedSprite(a);
-            s.Animate = true;
-            DW.render.registerSprite(this, s);
         }
 
 

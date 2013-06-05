@@ -13,6 +13,35 @@ namespace DW
 {
     class Render
     {
+        /* Index de position dans le fichier Tileset.png
+         * vide
+         * sol
+         * mur
+         */
+        public int[] id = new int[]
+        {
+            0,
+            0,
+            1,
+        };
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         /* Valeurs des différents ID contenus par les cases
          * 0-vide
          * 1-sol donjon
@@ -33,13 +62,7 @@ namespace DW
             
         };
 
-        public int[] id = new int[]
-        {
-            0,
-            0,
-            1,
 
-        };
 
 
         public object[] animated = new object[]{
@@ -54,11 +77,9 @@ namespace DW
         private int x;
         private int y;
         private Surface tileset = new Surface("Data/images/TileSet.png");
-        private KeyValuePair<string, AnimatedSprite>[] spriteList = new KeyValuePair<string, AnimatedSprite>[500];
-
+        private KeyValuePair<string, AnimatedSprite>[] spriteDictionnary = new KeyValuePair<string, AnimatedSprite>[500];
         protected AnimationCollection waterAnimation;
         protected AnimatedSprite water;
-
         private SdlDotNet.Graphics.Font font = new SdlDotNet.Graphics.Font(Directory.GetCurrentDirectory() + "\\Data\\" + "pixel.ttf", 30);
 
 
@@ -73,7 +94,70 @@ namespace DW
             waterAnimation.Delay = 1200;
             water = new AnimatedSprite(waterAnimation);
             water.Animate = true;
-            
+            registerDictionnary();
+        }
+
+        //<summary>
+        //Associe chaque caractère de texte à un sprite correspondant
+        //</summary>
+        private void registerDictionnary()
+        {
+            /*Player*/
+            addToSpriteDictionnary("@", "Data/images/Hero.png");
+            /*OtherPlayer*/
+            addToSpriteDictionnary("à", "Data/images/Hero.png");
+        }
+
+        //<summary>
+        //associe la case spéciale passé en paramètre au sprite donné
+        //</summary>
+        //<param name="par1special">La case spéciale</param>
+        //<param name="par2path">le chemin du sprite à associer</param>
+        public void addToSpriteDictionnary(Special par1special,string par2path)
+        {
+            for (int i = 0; i < spriteDictionnary.Length; i++)
+            {
+                if (spriteDictionnary[i].Key == null && File.Exists(par2path))
+                {
+                    AnimationCollection a = new AnimationCollection();
+                    SurfaceCollection e = new SurfaceCollection();
+                    e.Add(par2path, new Size(30, 30));
+                    a.Add(e);
+                    a.Delay = 200;
+                    AnimatedSprite s = new AnimatedSprite(a);
+                    s.Animate = true;
+                    spriteDictionnary[i] = new KeyValuePair<string, AnimatedSprite>(par1special.getValue(), s);
+                    return;
+                }
+                if (spriteDictionnary[i].Key == par1special.getValue())
+                    return;
+            }
+        }
+
+        //<summary>
+        //associe la case spéciale passé en paramètre au sprite donné
+        //</summary>
+        //<param name="par1special">Le caractère de la case spéciale</param>
+        //<param name="par2path">le chemin du sprite à associer</param>
+        public void addToSpriteDictionnary(string par1char, string par2path)
+        {
+            for (int i = 0; i < spriteDictionnary.Length; i++)
+            {
+                if (spriteDictionnary[i].Key == null && File.Exists(par2path))
+                {
+                    AnimationCollection a = new AnimationCollection();
+                    SurfaceCollection e = new SurfaceCollection();
+                    e.Add(par2path, new Size(30, 30));
+                    a.Add(e);
+                    a.Delay = 200;
+                    AnimatedSprite s = new AnimatedSprite(a);
+                    s.Animate = true;
+                    spriteDictionnary[i] = new KeyValuePair<string, AnimatedSprite>(par1char, s);
+                    return;
+                }
+                if (spriteDictionnary[i].Key == par1char)
+                    return;
+            }
         }
 
 
@@ -113,31 +197,6 @@ namespace DW
         }
 
 
-        //<summary>
-        //Enregistre un sprite annimé pour l'objet spécifié
-        //</summary>
-        //<param name="par">objet clef dont le hash code va servir de clef pour le dictionnaire de sprites</param>
-        //<param name="par2">Sprite annimé à associé avec l'objet spcécifié</param>
-        public void registerSprite(Special par1, AnimatedSprite par2)
-        {
-
-            for (int i = 0; i < spriteList.Length; i++)
-            {
-                if (spriteList[i].Key==null)
-                {
-                    spriteList[i] = new KeyValuePair<string, AnimatedSprite>(par1.GetHashCode().ToString(), par2);
-                    Console.WriteLine(par1.GetHashCode().ToString());
-                    return;
-                }
-                else
-                {
-                    Console.WriteLine(par1.GetHashCode().ToString());
-                    if (spriteList[i].Key == par1.GetHashCode().ToString())
-                        return;
-                }
-
-            }
-        }
 
         //<summary>
         //retourne le sprite animé associé à l'objet spécifié precedemment enregistré grace à la méthode registerSprite
@@ -145,14 +204,13 @@ namespace DW
         //<param name="par1">objet associé au sprite animé</param>
         private AnimatedSprite getSprite(Special par1)
         {
-            for (int i = 0; i < spriteList.Length; i++)
+            for (int i = 0; i < spriteDictionnary.Length; i++)
             {
-                if (!spriteList[i].Equals(null))
+                if (!spriteDictionnary[i].Equals(null))
                 {
-                    //Console.WriteLine(spriteList[i].Key);
-                    if (spriteList[i].Key == par1.GetHashCode().ToString())
+                    if (spriteDictionnary[i].Key == par1.getValue())
                     {
-                        AnimatedSprite e = spriteList[i].Value;
+                        AnimatedSprite e = spriteDictionnary[i].Value;
                         switch (par1.getFace())
                         {
                             case "front":
@@ -178,7 +236,7 @@ namespace DW
                                     e.Frame = 12;
                                 break;
                         }
-                                return spriteList[i].Value;
+                                return e;
                     }
                 }
             }
@@ -206,7 +264,7 @@ namespace DW
                             {
                                 if (par1map[i, u] < id.Length)
                                 {
-                                    if (par1map[i, u] != 2)
+                                    if (par1map[i, u] != 2 && par1map[i, u] != 1)
                                         Video.Screen.Blit(tileset, new Point(x + i * 30, y + u * 30), new Rectangle(id[par1map[i, u]] * 30, 0, 30, 30));
                                     else
                                         connectionTile(par1map,i,u);
@@ -232,23 +290,58 @@ namespace DW
                         int xe = ent[i].getX();
                         int ye = ent[i].getY();
                         if (par1.canSee(xe, ye))
-                            renderEntityAt(ent[i]);
+                        {
+                                renderEntityAt(ent[i]);
+                        }
                     }
                 }
             }
         }
 
-
+        //<summary>
+        //adapte les sprites de terrain en fcontion de leur environnnement direct
+        //</summary>
+        //<param name="par1map">La map</param>
+        //<param name="par2x">La position x de la tuile a afficher</param>
+        //<param name="par3y">La position y de la tuile a afficher</param>
         private void connectionTile(int[,] par1map, int par2x,int par3y)
         {
-            int idToRender = par1map[par2x,par3y];
-            if (par1map[par2x - 1, par3y] != idToRender && par1map[par2x + 1, par3y] != idToRender && par1map[par2x, par3y + 1] != idToRender)
-                idToRender = id[idToRender];
-            else if(par1map[par2x, par3y + 1] != idToRender)
-                idToRender = id[idToRender] + 1;
-            else
-                idToRender = id[idToRender] + 2;
-            Video.Screen.Blit(tileset, new Point(x + par2x * 30, y + par3y * 30), new Rectangle(idToRender * 30, 0, 30, 30));
+            try
+            {
+                int idToRender = par1map[par2x, par3y];
+                if (idToRender == 2)
+                {
+                    if (par1map[par2x - 1, par3y] != idToRender && par1map[par2x + 1, par3y] != idToRender && par1map[par2x, par3y + 1] != idToRender)
+                        idToRender = id[idToRender];
+                    else if (par1map[par2x, par3y + 1] != idToRender)
+                        idToRender = id[idToRender] + 1;
+                    else
+                        idToRender = id[idToRender] + 2;
+                }
+                else if (idToRender == 1)
+                {
+                    if (par1map[par2x - 1, par3y] == 100)
+                        idToRender = 6;
+                    else if (par1map[par2x + 1, par3y] == 100)
+                        idToRender = 11;
+                    else if (par1map[par2x, par3y - 1] == 100)
+                        idToRender = 10;
+                    else if (par1map[par2x, par3y + 1] == 100)
+                        idToRender = 5;
+                    else if (par1map[par2x, par3y + 1] == 1 && par1map[par2x + 1, par3y] == 1 && par1map[par2x + 1, par3y + 1] == 100)
+                        idToRender = 7;
+                    else if (par1map[par2x, par3y - 1] == 1 && par1map[par2x - 1, par3y] == 1 && par1map[par2x - 1, par3y - 1] == 100)
+                        idToRender = 8;
+                    else if (par1map[par2x, par3y - 1] == 1 && par1map[par2x + 1, par3y] == 1 && par1map[par2x + 1, par3y - 1] == 100)
+                        idToRender = 9;
+                    else if (par1map[par2x, par3y + 1] == 1 && par1map[par2x - 1, par3y] == 1 && par1map[par2x - 1, par3y + 1] == 100)
+                        idToRender = 4;
+                    else idToRender = id[1];
+                }
+                Video.Screen.Blit(tileset, new Point(x + par2x * 30, y + par3y * 30), new Rectangle(idToRender * 30, 0, 30, 30));
+            }
+            catch (Exception)
+            { }
         }
 
 
@@ -282,14 +375,7 @@ namespace DW
         private void renderAnimated(int[,] par1map, int par2x, int par3y)
         {
             if (par1map[par2x, par3y] == 100)
-            {
-                if (par1map[par2x, par3y - 1] == 100 && water.Frame < 2)
-                    water.Frame = 2;
-                if (par1map[par2x, par3y - 1] != 100 && water.Frame > 1)
-                    water.Frame = 0;
-
                 Video.Screen.Blit(water, new Point(x + par2x * 30, y + par3y * 30));
-            }
             else
             {
                 try

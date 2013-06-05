@@ -158,23 +158,17 @@ namespace DW
                         other.setStair(DW.player.getStair());
                         Point p = other.getStair().getFreeSpecialCase();
                         other.setPos(p.X, p.Y);
-                        AnimationCollection a = new AnimationCollection();
-                        SurfaceCollection e = new SurfaceCollection();
-                        e.Add("Data/images/Hero.png", new Size(30, 30));
-                        a.Add(e);
-                        a.Delay = 200;
-                        AnimatedSprite s = new AnimatedSprite(a);
-                        s.Animate = true;
-                        DW.render.registerSprite(other, s);
                         DW.player.getStair().putEntity(other);
                         Packet.Send(new DataPacket(other), client);
                     }
                     break;
                 case "moveplayer":
-                    if (par2args is Point)
+                    if (par2args is object[])
                     {
-                        Point p = (Point)par2args;
+                        object[] o = (object[])par2args;
+                        Point p = (Point)o[0];
                         other.move(p.X, p.Y);
+                        other.setFace((string)o[1]);
                         Packet.Send(new DataPacket(other), client);
                     }
                     break;

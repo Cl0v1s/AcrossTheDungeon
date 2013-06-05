@@ -36,6 +36,11 @@ namespace DW
             return value;
         }
 
+        public string getValue()
+        {
+            return value;
+        }
+
 
         public Color getColor()
         {

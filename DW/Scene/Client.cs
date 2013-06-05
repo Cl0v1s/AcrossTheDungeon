@@ -4,9 +4,12 @@ using System.Drawing;
 using System.Threading;
 using System.Net;
 using System.Net.Sockets;
+using System.IO;
 
 using SdlDotNet.Core;
 using SdlDotNet.Input;
+using SdlDotNet.Graphics.Sprites;
+using SdlDotNet.Graphics;
 
 namespace DW
 {
@@ -37,13 +40,13 @@ namespace DW
             if (isWriting == false)
             {
                 if (DW.input.equals(Key.UpArrow) == true)
-                    changePlayerPos(DW.player.getX(), DW.player.getY() - 1);
+                    changePlayerPos(DW.player.getX(), DW.player.getY() - 1,"back");
                 else if (DW.input.equals(Key.DownArrow) == true)
-                    changePlayerPos(DW.player.getX(), DW.player.getY() + 1);
+                    changePlayerPos(DW.player.getX(), DW.player.getY() + 1,"front");
                 else if (DW.input.equals(Key.RightArrow) == true)
-                    changePlayerPos(DW.player.getX() + 1, DW.player.getY());
+                    changePlayerPos(DW.player.getX() + 1, DW.player.getY(),"right");
                 else if (DW.input.equals(Key.LeftArrow) == true)
-                    changePlayerPos(DW.player.getX() - 1, DW.player.getY());
+                    changePlayerPos(DW.player.getX() - 1, DW.player.getY(),"left");
                 else if (DW.input.equals(Key.L))
                     ((OtherPlayer)DW.player).lap();
                 else if (DW.input.equals(Key.KeypadEnter))
@@ -57,9 +60,9 @@ namespace DW
             Thread.Sleep(100);
         }
 
-        private void changePlayerPos(int par1x, int par2y)
+        private void changePlayerPos(int par1x, int par2y,string par3dir)
         {
-            Packet.Send(new CommandPacket("moveplayer", new Point(par1x, par2y)), server);
+            Packet.Send(new CommandPacket("moveplayer", new object[]{new Point(par1x, par2y),par3dir}), server);
             while (true)
             {
                 Packet p = Packet.Receive(server);
@@ -160,6 +163,7 @@ namespace DW
         private void sendPlayer()
         {
             CommandPacket ap = new CommandPacket("sendplayer", DW.player);
+            Console.WriteLine(DW.player.GetType());
             Packet.Send(ap, server);
             while (true)
             {
@@ -199,8 +203,5 @@ namespace DW
             }
             DW.player.setStair(stair);
         }
-
-
-
     }
 }
