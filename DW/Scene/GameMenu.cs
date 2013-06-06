@@ -18,6 +18,7 @@ namespace DW
 
         public GameMenu(string par1=null)
         {
+            DW.render = null;
             menu = new MenuUI(new String[] { "Nouvelle marche", "Rejoindre une marche","Quitter" }, 320, 360,200,40);
             title = new Text("pixel.ttf", 60, 640/2, 50, "Dungeon Walker", 230, 230, 230,TypePos.Center);
             error = new Text("pixel.ttf", 20, 640 / 2, 90 + 100, "", 255, 0, 0,TypePos.Center);

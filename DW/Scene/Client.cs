@@ -56,7 +56,6 @@ namespace DW
             else
                 isWriting=chat.write();
             DW.render.renderEntityVision(DW.player);
-            DW.player.statUI.update();
             Thread.Sleep(100);
         }
 
@@ -198,6 +197,7 @@ namespace DW
             {
                 if (e[i] != null && e[i] is Player && e[i].getName() == DW.player.getName())
                 {
+                    DW.render.getStatUI().setOwner((Player)e[i]);
                     DW.player = (Player)e[i];
                 }
             }

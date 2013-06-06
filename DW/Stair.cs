@@ -306,6 +306,20 @@ namespace DW
                             map[i, u + 1] = 2;
                         //Console.WriteLine("Ajout de murs pour border les couloirs.");
                     }
+                    if (map[i, u] == 0)
+                    {
+                            if (u-1>=0 && i+1<=width && map[i, u - 1] == 2 && map[i + 1, u] == 2)
+                                map[i, u] = 2;
+                            if (u+1<=height && i+1<=width && map[i, u + 1] == 2 && map[i + 1, u] == 2)
+                                map[i, u] = 2;
+                            if (u+1<=height && i-1>=0 && map[i, u + 1] == 2 && map[i - 1, u] == 2)
+                                map[i, u] = 2;
+                            if (u-1>=0 && i-1>=0 && map[i, u - 1] == 2 && map[i - 1, u] == 2)
+                                map[i, u] = 2;
+
+
+
+                    }
 
 
 

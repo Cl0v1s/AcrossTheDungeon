@@ -249,6 +249,14 @@ namespace DW
                     }
                 }
             }
+            if (nodes[0].Equals(goodnode))
+                face = "left";
+            else if (nodes[1].Equals(goodnode))
+                face = "right";
+            else if (nodes[2].Equals(goodnode))
+                face = "back";
+            else if (nodes[3].Equals(goodnode))
+                face = "front";
             x = goodnode.X;
             y = goodnode.Y;
         }
@@ -507,7 +515,7 @@ namespace DW
         {
             try
             {
-                if (stair != null && stair.getMap()[par1x, par2y] == 1 || stair.getMap()[par1x, par2y] == 100 || stair.getMap()[par1x, par2y] == 4 || stair.getMap()[par1x, par2y] == 3 || stair.getMap()[par1x, par2y] == 5 || stair.getMap()[par1x, par2y] == 101)
+                if (stair != null && stair.getMap()[par1x, par2y] == 1 || stair.getMap()[par1x, par2y] == 100 || stair.getMap()[par1x, par2y] == 6 || stair.getMap()[par1x, par2y] == 3 || stair.getMap()[par1x, par2y] == 5 || stair.getMap()[par1x, par2y] == 101)
                 {
                     if (stair != null && stair.getSpecial()[par1x, par2y] != null)
                         return stair.getSpecial()[par1x, par2y].canPass();

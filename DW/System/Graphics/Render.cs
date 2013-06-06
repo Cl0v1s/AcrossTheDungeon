@@ -17,12 +17,24 @@ namespace DW
          * vide
          * sol
          * mur
+         * piège
+         * ?
+         * gravier
+         * herbe
+         * transition sol-herbe
          */
         public int[] id = new int[]
         {
-            0,
+            -1,
             0,
             1,
+            -1,
+            -1,
+            13,
+            12,
+
+
+
         };
         
 
@@ -49,7 +61,8 @@ namespace DW
          * 3-piège donjon
          * 4-herbe
          * 5-gravier
-         * 
+         * 6-herbe
+         * 7-transition sol donjon-herbe
          * 100-eau
          */
         public object[] value = new object[]{
@@ -59,6 +72,8 @@ namespace DW
             ",",Color.DarkSlateGray,
             "'",Color.Green,
             "*",Color.LightGray,
+            "'",Color.Green,
+            "]",Color.Green,
             
         };
 
@@ -76,6 +91,7 @@ namespace DW
         private int frame;
         private int x;
         private int y;
+        private StatUI statUI;
         private Surface tileset = new Surface("Data/images/TileSet.png");
         private KeyValuePair<string, AnimatedSprite>[] spriteDictionnary = new KeyValuePair<string, AnimatedSprite>[500];
         protected AnimationCollection waterAnimation;
@@ -97,6 +113,16 @@ namespace DW
             registerDictionnary();
         }
 
+        public void setStatUI(Player par1)
+        {
+            statUI = new StatUI(par1);
+        }
+
+        public StatUI getStatUI()
+        {
+            return statUI;
+        }
+
         //<summary>
         //Associe chaque caractère de texte à un sprite correspondant
         //</summary>
@@ -106,6 +132,8 @@ namespace DW
             addToSpriteDictionnary("@", "Data/images/Hero.png");
             /*OtherPlayer*/
             addToSpriteDictionnary("à", "Data/images/Hero.png");
+            /*Bat*/
+            addToSpriteDictionnary("V", "Data/images/Entity/Bat.png");
         }
 
         //<summary>
@@ -169,6 +197,8 @@ namespace DW
             frame += 1;
             if (frame > 40)
                 frame = 0;
+            if(statUI != null)
+                statUI.update();
         }
 
 
@@ -185,13 +215,10 @@ namespace DW
                 for (int u = 0; u < par3height; u++)
                 {
 
-
                     if (par1map[i, u] * 2 <= value.Length && par1map[i, u] * 2 + 1 <= value.Length && par1map[i, u] < 100)
                         Video.Screen.Blit(font.Render((string)value[par1map[i, u] * 2], (Color)value[par1map[i, u] * 2 + 1]), new Point(x + i * 30, y + u * 30));
                     else
                         renderAnimated(par1map, i, u);
-
-
                 }
             }
         }
@@ -210,7 +237,7 @@ namespace DW
                 {
                     if (spriteDictionnary[i].Key == par1.getValue())
                     {
-                        AnimatedSprite e = spriteDictionnary[i].Value;
+                        AnimatedSprite e = spriteDictionnary[i].Value.;
                         switch (par1.getFace())
                         {
                             case "front":
@@ -262,12 +289,12 @@ namespace DW
                         {
                             if (par1map[i, u] * 2 <= value.Length && par1map[i, u] * 2 + 1 <= value.Length && par1map[i, u] < 100)
                             {
-                                if (par1map[i, u] < id.Length)
+                                if (par1map[i, u] < id.Length && id[par1map[i,u]] != -1)
                                 {
                                     if (par1map[i, u] != 2 && par1map[i, u] != 1)
                                         Video.Screen.Blit(tileset, new Point(x + i * 30, y + u * 30), new Rectangle(id[par1map[i, u]] * 30, 0, 30, 30));
                                     else
-                                        connectionTile(par1map,i,u);
+                                        connectionTile(par1map, i, u);
                                 }
                                 else
                                     Video.Screen.Blit(font.Render((string)value[par1map[i, u] * 2], (Color)value[par1map[i, u] * 2 + 1]), new Point(x + i * 30, y + u * 30));
@@ -278,8 +305,6 @@ namespace DW
                             if (specials[i, u] != null)
                                 renderSpecialAt(specials, i, u);
                         }
-
-
                     }
                 }
                 Entity[] ent = par1.getStair().getEntities();

@@ -15,7 +15,6 @@ namespace DW
     [Serializable]
     class Player : Entity
     {
-        public StatUI statUI;
         protected String pclass;
         public Skills skills;
         private int stairId = -1;
@@ -41,7 +40,7 @@ namespace DW
             color = Color.Purple;
             life = force * endurance * rand.Next(1, par1name.Length);
             lifeTmp = life;
-            statUI = new StatUI(this);
+            DW.render.setStatUI(this);
             skills = new Skills(this);
         }
 
@@ -173,7 +172,6 @@ namespace DW
             if (stair != null)
                 stair.update();
             DW.render.renderEntityVision(this);
-            statUI.update();
             if (isburning)
             {
                 if (frame <= 20)

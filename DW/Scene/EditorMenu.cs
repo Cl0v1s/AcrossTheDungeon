@@ -79,6 +79,7 @@ namespace DW
 
             if (e.Key == Key.V && index != 0)
             {
+                DW.render = new Render(0, 0);
                 Events.KeyboardDown -= new EventHandler<KeyboardEventArgs>(this.examine);
                 DW.close(DW.editorMenu);
                 if (callback == "Server")

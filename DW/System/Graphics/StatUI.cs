@@ -9,7 +9,9 @@ namespace DW
     [Serializable]
     class StatUI
     {
-        Entity subject;
+        private Entity subject;
+        private Surface background = new Surface("Data/images/GUI/StatUI_background.png");
+
 
 
 
@@ -17,11 +19,16 @@ namespace DW
         {
             subject = par1;
         }
+
+        public void setOwner(Player par1)
+        {
+            subject = par1;
+        }
         
 
         public void update()
         {
-            Video.Screen.Fill(new Rectangle(0, 430, 640, 50),Color.Black);
+            Video.Screen.Blit(background,new Point(0,400));
             Video.Screen.Fill(new Rectangle(20,470,100,10),Color.DarkGray);
             Video.Screen.Fill(new Rectangle(20, 470, subject.getStat()[0]*100/subject.getLife(), 10), Color.FromArgb(50,255,50));
             Video.Screen.Fill(new Rectangle(140, 470, 100, 10), Color.DarkGray);

@@ -175,6 +175,66 @@ namespace DW
                 par1room.set(100, xp, yp);
                 stair.set(100, par1room.getX() + xp, par1room.getY() + yp);
             }
+            for(int i=0;i<par1room.getW();i++)
+            {
+                for (int o = 0; o < par1room.getH(); o++)
+                {
+                    if (par1room.getMap()[i, o] == 100)
+                    {
+                        if (par1room.getMap()[i + 1, o] != 100 && par1room.getMap()[i + 2, o] == 100)
+                        {
+                            par1room.set(100, i + 1, o);
+                            stair.set(100, par1room.getX() + i + 1, par1room.getY() + o);
+                        }
+                        if (par1room.getMap()[i, o +1] != 100 && par1room.getMap()[i, o+2] == 100)
+                        {
+                            par1room.set(100, i , o+1);
+                            stair.set(100, par1room.getX() + i, par1room.getY() + o+2);
+                        }
+                        
+                        if (par1room.getMap()[i-1, o] != 100)
+                        {
+                            par1room.set(1, i-1, o);
+                            stair.set(1, par1room.getX() + i-1, par1room.getY() + o);
+                        }
+                        if (par1room.getMap()[i+1, o] != 100)
+                        {
+                            par1room.set(1, i + 1, o);
+                            stair.set(1, par1room.getX() + i+1, par1room.getY() + o);
+                        }
+                        if (par1room.getMap()[i, o-1] != 100)
+                        {
+                            par1room.set(1, i, o-1);
+                            stair.set(1, par1room.getX() + i, par1room.getY() + o-1);
+                        }
+                        if (par1room.getMap()[i, o+1] != 100)
+                        {
+                            par1room.set(1, i, o+1);
+                            stair.set(1, par1room.getX() + i+1, par1room.getY() + o+1);
+                        }
+                        if (par1room.getMap()[i + 1, o+1] != 100)
+                        {
+                            par1room.set(1, i + 1, o+1);
+                            stair.set(1, par1room.getX() + i+1, par1room.getY() + o+1);
+                        }
+                        if (par1room.getMap()[i + 1, o-1] != 100)
+                        {
+                            par1room.set(1, i + 1, o-1);
+                            stair.set(1, par1room.getX() + i+1, par1room.getY() + o-1);
+                        }
+                        if (par1room.getMap()[i - 1, o+1] != 100)
+                        {
+                            par1room.set(1, i - 1, o+1);
+                            stair.set(1, par1room.getX() + i-1, par1room.getY() + o+1);
+                        }
+                        if (par1room.getMap()[i -1, o-1] != 100)
+                        {
+                            par1room.set(1, i - 1, o-1);
+                            stair.set(1, par1room.getX() + i-1, par1room.getY() + o-1);
+                        }
+                    }
+                }
+            }
         }
 
 

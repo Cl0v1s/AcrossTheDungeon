@@ -51,9 +51,9 @@ namespace DW
             {
                 if (rooms[i] != null)
                 {
-                   applyWater(rooms[i]);
                    applyWeed(rooms[i]);
                    applySpecialCase(rooms[i]);
+                   applyWater(rooms[i]);
                 }
             }            
         }
@@ -75,8 +75,8 @@ namespace DW
                         int r=rand.Next(0, h);
                         if ( r >=0 && r<=3)
                         {
-                            par1.set(4, i, u);
-                            stair.set(4, par1.getX() + i, par1.getY() + u);
+                            par1.set(6, i, u);
+                            stair.set(6, par1.getX() + i, par1.getY() + u);
                         }
                     }
                 }

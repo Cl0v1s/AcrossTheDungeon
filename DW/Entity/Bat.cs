@@ -27,25 +27,6 @@ namespace DW
         public override bool update(Entity[] par1)
         {
             others = par1;
-            frame += 1;
-            if (isSleeping == true)
-            {
-                if (frame <= 20)
-                    value = "Z";
-                else
-                    value = originalValue;
-                if (frame >= 40)
-                    frame = 0;
-            }
-            else
-            {
-                if (frame <= 20)
-                    value = "v";
-                else
-                    value = originalValue;
-                if (frame >= 40)
-                    frame = 0;
-            }
             if (lifeTmp <= 0)
                 dead = true;
             return dead;

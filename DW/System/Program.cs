@@ -63,7 +63,8 @@ namespace DW
         {
             //on efface l'écran
             Video.Screen.Fill(Color.Black);
-            render.update();
+            if(render != null)
+                render.update();
             if (Scene == "GameMenu")
                 gameMenu.update();
             else if (Scene == "EditorMenu")
