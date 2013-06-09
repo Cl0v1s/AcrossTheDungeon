@@ -103,7 +103,7 @@ namespace DW
                 move(-1, 0);
                 face = "left";
             }
-            else if (DW.input.equals(Key.KeypadEnter))
+            else if (DW.input.equals(Key.KeypadEnter) || DW.input.equals(Key.Return))
             {
                 interact();
                 Thread.Sleep(200);

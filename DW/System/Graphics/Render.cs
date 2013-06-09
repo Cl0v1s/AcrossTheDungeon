@@ -237,7 +237,7 @@ namespace DW
                 {
                     if (spriteDictionnary[i].Key == par1.getValue())
                     {
-                        AnimatedSprite e = spriteDictionnary[i].Value.;
+                        AnimatedSprite e = spriteDictionnary[i].Value;
                         switch (par1.getFace())
                         {
                             case "front":

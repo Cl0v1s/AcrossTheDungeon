@@ -27,10 +27,10 @@ namespace DW
         protected int agilite;
         protected int range = 5;
 
-        protected float faim = 0;
-        protected float soif = 0;
-        protected float sommeil = 0;
-        protected float sale = 0;
+        protected float faim = 71;
+        protected float soif = 71;
+        protected float sommeil = 71;
+        protected float sale = 71;
         protected double peur = 0;
 
         protected Entity[] others;
@@ -203,14 +203,14 @@ namespace DW
             {
                 if (objective != null)
                     moveTo(objective.X, objective.Y);
-                else if (bestFriend != null)
+                else if (bestFriend != null && canSee(bestFriend.getX(),bestFriend.getY()))
                     moveTo(bestFriend.getX(), bestFriend.getY());
             }
             else
             {
-                if (peur > 0)
+                if (peur > 0 && canSee(worstEnemy.getX(),worstEnemy.getY()))
                     escapeFrom(worstEnemy.getX(), worstEnemy.getY());
-                else
+                else if(canSee(worstEnemy.getX(),worstEnemy.getY()))
                     moveTo(worstEnemy.getX(), worstEnemy.getY());
             }
         }
@@ -376,7 +376,7 @@ namespace DW
                 }
             }
             else
-                defineObjectiveFor(4);
+                defineObjectiveFor(6);
         }
 
         protected void defineObjectiveFor(int par1case)
@@ -385,10 +385,15 @@ namespace DW
             {
                 for (int u = (int)(y - range / 2); u < (int)(y + range / 2); u++)
                 {
-                    if (stair.getMap()[i, u] == par1case && canSee(i, u))
+                    try
                     {
-                        objective = new Point(i, u);
+                        if (stair.getMap()[i, u] == par1case && canSee(i, u))
+                        {
+                            objective = new Point(i, u);
+                        }
                     }
+                    catch (Exception)
+                    { }
                 }
             }
         }

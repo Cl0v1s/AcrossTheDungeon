@@ -72,8 +72,20 @@ namespace DW
                     if (rand.Next(0, 50) != 1 && par1.getMap()[i,u] == 1)
                     {
                         int h = Math.Abs(c.X - i) + Math.Abs(c.Y - u);
-                        int r=rand.Next(0, h);
-                        if ( r >=0 && r<=3)
+                        int j=0;
+                        if(c.X-i<0)
+                            j = Math.Abs(par1.getW() - i);
+                        else 
+                            j=Math.Abs(0-i);
+                        if(c.Y-u<0)
+                            j+=Math.Abs(par1.getH()-u);
+                        else 
+                            j+=Math.Abs(0-u);
+                        int d = (h - j)*20;
+                        if (d < 0)
+                            d = 0;
+                        int r = rand.Next(0, d);
+                        if ( r ==0 )
                         {
                             par1.set(6, i, u);
                             stair.set(6, par1.getX() + i, par1.getY() + u);

@@ -49,7 +49,7 @@ namespace DW
                     changePlayerPos(DW.player.getX() - 1, DW.player.getY(),"left");
                 else if (DW.input.equals(Key.L))
                     ((OtherPlayer)DW.player).lap();
-                else if (DW.input.equals(Key.KeypadEnter))
+                else if (DW.input.equals(Key.KeypadEnter) || DW.input.equals(Key.Return))
                     interactPlayer();
                 DW.render.move(DW.player.getX() * -30 + 640 / 2, DW.player.getY() * -30 + 480 / 2);
             }
