@@ -51,8 +51,6 @@ namespace DW
                     y = par2y;
                 }
             }
-            turn();
-            stair.roll();
         }
 
 

@@ -27,10 +27,10 @@ namespace DW
         protected int agilite;
         protected int range = 5;
 
-        protected float faim = 71;
-        protected float soif = 71;
-        protected float sommeil = 71;
-        protected float sale = 71;
+        protected float faim = 0;
+        protected float soif = 0;
+        protected float sommeil = 0;
+        protected float sale = 0;
         protected double peur = 0;
 
         protected Entity[] others;
@@ -170,30 +170,33 @@ namespace DW
             {
                 double a = -1;
                 double f = -1;
-                for (int i = 0; i < others.Length; i++)
+                if (others != null)
                 {
-                    if (others[i] != null && canSee(others[i].getX(), others[i].getY()) == true)
+                    for (int i = 0; i < others.Length; i++)
                     {
-                        if (peur < 0 && others[i].getSpecies() != getSpecies())
+                        if (others[i] != null && canSee(others[i].getX(), others[i].getY()) == true)
                         {
-                            if (a == -1 || a < others[i].getPower())
+                            if (peur < 0 && others[i].getSpecies() != getSpecies())
                             {
-                                a = others[i].getPower();
-                                worstEnemy = others[i];
+                                if (a == -1 || a < others[i].getPower())
+                                {
+                                    a = others[i].getPower();
+                                    worstEnemy = others[i];
+                                }
                             }
-                        }
-                        else if (others[i].getSpecies() == getSpecies())
-                        {
-                            if (f == -1 || f < others[i].getPower())
+                            else if (others[i].getSpecies() == getSpecies())
                             {
-                                f = others[i].getPower();
-                                bestFriend = others[i];
+                                if (f == -1 || f < others[i].getPower())
+                                {
+                                    f = others[i].getPower();
+                                    bestFriend = others[i];
+                                }
                             }
                         }
                     }
+                    if (worstEnemy != null && worstEnemy.getPower() > getPower())
+                        peur = peur + (worstEnemy.getPower() - getPower());
                 }
-                if (worstEnemy != null && worstEnemy.getPower() > getPower())
-                    peur = peur + (worstEnemy.getPower() - getPower());
             }
         }
 
@@ -203,15 +206,28 @@ namespace DW
             {
                 if (objective != null)
                     moveTo(objective.X, objective.Y);
-                else if (bestFriend != null && canSee(bestFriend.getX(),bestFriend.getY()))
+                else if (bestFriend != null && canSee(bestFriend.getX(), bestFriend.getY()))
+                {
                     moveTo(bestFriend.getX(), bestFriend.getY());
+                }
+                else
+                {
+                    Console.WriteLine("ok");
+                    int yt = 0;
+                    int xt = rand.Next(-1, 1);
+                    if (xt == 0)
+                        yt = rand.Next(-1, 1);
+                    moveTo(x + xt, y + yt);
+                }
             }
             else
             {
-                if (peur > 0 && canSee(worstEnemy.getX(),worstEnemy.getY()))
+                if (peur > 0 && canSee(worstEnemy.getX(), worstEnemy.getY()))
                     escapeFrom(worstEnemy.getX(), worstEnemy.getY());
-                else if(canSee(worstEnemy.getX(),worstEnemy.getY()))
+                else if (canSee(worstEnemy.getX(), worstEnemy.getY()))
                     moveTo(worstEnemy.getX(), worstEnemy.getY());
+                else
+                    worstEnemy = null;
             }
         }
 
@@ -275,9 +291,12 @@ namespace DW
 
         protected virtual void EnvironmentEffect()
         {
-            if (isNear(worstEnemy) == true)
-                fight(this, worstEnemy);
-            else if (isNear(4) == true && regime != "carnivore")
+            if(isNear(worstEnemy))
+            {
+                isFighting = true;
+                worstEnemy.setFighting(true);
+            }
+            if (isNear(4) == true && regime != "carnivore")
                 faim = 0;
             else if (isNear(100) == true)
                 soif = 0;
@@ -293,13 +312,16 @@ namespace DW
             lifeTmp = par1;
         }
 
-        protected void fight(Entity par1cause, Entity par2victim)
+        public void fight(Entity par1cause, Entity par2victim)
         {
             par1cause.setFighting(true);
             par1cause.atk(par2victim);
-            Console.WriteLine(par1cause.getName() + " is fighting " + par2victim.getName());
             if (par2victim.getStat()[0] <= 0 || par1cause.isNear(par2victim) == false)
+            {
                 par1cause.setFighting(false);
+                return;
+            }
+            par2victim.fight(par2victim, par1cause);
         }
 
         protected bool isOn(int par1)
@@ -309,7 +331,7 @@ namespace DW
             return false;
         }
 
-        protected bool isNear(Special par1)
+        public bool isNear(Special par1)
         {
             try
             {
@@ -324,7 +346,7 @@ namespace DW
 
         }
 
-        protected bool isNear(Entity par1)
+        public bool isNear(Entity par1)
         {
             try
             {
@@ -339,7 +361,7 @@ namespace DW
 
         }
 
-        protected bool isNear(int par1)
+        public bool isNear(int par1)
         {
             try
             {

@@ -66,15 +66,6 @@ namespace DW
             if (isburning)
                 lifeTmp -= 1;
             EnvironmentEffect();
-            Entity[] e = stair.getEntities();
-            for (int i = 0; i < e.Length; i++)
-            {
-                if (e[i] != null && !(e[i] is Player) && isNear(e[i]))
-                {
-                    fight(this, e[i]);
-                    break;
-                }
-            }
         }
 
 
@@ -210,8 +201,6 @@ namespace DW
                     s[x, y + 1].interact(this);
                     return;
                 }
-                    turn();
-                    stair.roll();
                 
             }
         }
@@ -222,6 +211,15 @@ namespace DW
         //</summary>
         private void move(int par1x, int par2y)
         {
+            Entity[] e = stair.getEntities();
+            for (int i = 0; i < e.Length; i++)
+            {
+                if (e[i] != null && !(e[i] is Player) && isNear(e[i]))
+                {
+                    fight(this, e[i]);
+                    break;
+                }
+            }
             if (isFighting == false)
             {
                 if (canWalkOn(x + par1x, y + par2y))
@@ -230,11 +228,8 @@ namespace DW
                     y = y + par2y;
                 }
             }
-            turn();
-            stair.roll();
             setCanvas();
-
-
+            turn();
             Thread.Sleep(100);
 
 

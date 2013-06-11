@@ -28,7 +28,7 @@ namespace DW
             -1,
             0,
             1,
-            -1,
+            14,
             -1,
             13,
             12,
@@ -93,7 +93,7 @@ namespace DW
         private int y;
         private StatUI statUI;
         private Surface tileset = new Surface("Data/images/TileSet.png");
-        private KeyValuePair<string, AnimatedSprite>[] spriteDictionnary = new KeyValuePair<string, AnimatedSprite>[500];
+        private KeyValuePair<string, Sprite>[] spriteDictionnary = new KeyValuePair<string, Sprite>[500];
         protected AnimationCollection waterAnimation;
         protected AnimatedSprite water;
         private SdlDotNet.Graphics.Font font = new SdlDotNet.Graphics.Font(Directory.GetCurrentDirectory() + "\\Data\\" + "pixel.ttf", 30);
@@ -134,6 +134,10 @@ namespace DW
             addToSpriteDictionnary("à", "Data/images/Hero.png");
             /*Bat*/
             addToSpriteDictionnary("V", "Data/images/Entity/Bat.png");
+
+            /*Door*/
+            addToSpriteDictionnary("|", "Data/images/Elements/Door.png");
+            addToSpriteDictionnary("|o", "Data/images/Elements/Door_side.png");
         }
 
         //<summary>
@@ -154,7 +158,7 @@ namespace DW
                     a.Delay = 200;
                     AnimatedSprite s = new AnimatedSprite(a);
                     s.Animate = true;
-                    spriteDictionnary[i] = new KeyValuePair<string, AnimatedSprite>(par1special.getValue(), s);
+                    spriteDictionnary[i] = new KeyValuePair<string, Sprite>(par1special.getValue(), (Sprite)s);
                     return;
                 }
                 if (spriteDictionnary[i].Key == par1special.getValue())
@@ -167,21 +171,26 @@ namespace DW
         //</summary>
         //<param name="par1special">Le caractère de la case spéciale</param>
         //<param name="par2path">le chemin du sprite à associer</param>
-        public void addToSpriteDictionnary(string par1char, string par2path)
+        public void addToSpriteDictionnary(string par1char, string par2path,bool animated=true)
         {
             for (int i = 0; i < spriteDictionnary.Length; i++)
             {
                 if (spriteDictionnary[i].Key == null && File.Exists(par2path))
                 {
-                    AnimationCollection a = new AnimationCollection();
-                    SurfaceCollection e = new SurfaceCollection();
-                    e.Add(par2path, new Size(30, 30));
-                    a.Add(e);
-                    a.Delay = 200;
-                    AnimatedSprite s = new AnimatedSprite(a);
-                    s.Animate = true;
-                    spriteDictionnary[i] = new KeyValuePair<string, AnimatedSprite>(par1char, s);
-                    return;
+                    if (animated)
+                    {
+                        AnimationCollection a = new AnimationCollection();
+                        SurfaceCollection e = new SurfaceCollection();
+                        e.Add(par2path, new Size(30, 30));
+                        a.Add(e);
+                        a.Delay = 200;
+                        AnimatedSprite s = new AnimatedSprite(a);
+                        s.Animate = true;
+                        spriteDictionnary[i] = new KeyValuePair<string, Sprite>(par1char, s);
+                        return;
+                    }
+                    else
+                        spriteDictionnary[i] = new KeyValuePair<string, Sprite>(par1char, new Sprite(par2path));
                 }
                 if (spriteDictionnary[i].Key == par1char)
                     return;
@@ -229,7 +238,7 @@ namespace DW
         //retourne le sprite animé associé à l'objet spécifié precedemment enregistré grace à la méthode registerSprite
         //</summary>
         //<param name="par1">objet associé au sprite animé</param>
-        private AnimatedSprite getSprite(Special par1)
+        private Sprite getSprite(Special par1)
         {
             for (int i = 0; i < spriteDictionnary.Length; i++)
             {
@@ -237,33 +246,38 @@ namespace DW
                 {
                     if (spriteDictionnary[i].Key == par1.getValue())
                     {
-                        AnimatedSprite e = spriteDictionnary[i].Value;
-                        switch (par1.getFace())
+                        if (spriteDictionnary[i].Value is AnimatedSprite)
                         {
-                            case "front":
-                                if (e.Frame > 3)
-                                    e.Frame = 0;
-                                break;
-                            case "left":
-                                if (e.Frame < 8)
-                                    e.Frame = 8;
-                                if (e.Frame > 11)
-                                    e.Frame = 8;
-                                break;
-                            case "right":
-                                if (e.Frame < 4)
-                                    e.Frame = 4;
-                                if (e.Frame > 7)
-                                    e.Frame = 4;
-                                break;
-                            case "back":
-                                if (e.Frame < 12)
-                                    e.Frame = 12;
-                                if (e.Frame > 15)
-                                    e.Frame = 12;
-                                break;
+                            AnimatedSprite e = (AnimatedSprite)spriteDictionnary[i].Value;
+                            switch (par1.getFace())
+                            {
+                                case "front":
+                                    if (e.Frame > 3)
+                                        e.Frame = 0;
+                                    break;
+                                case "left":
+                                    if (e.Frame < 8)
+                                        e.Frame = 8;
+                                    if (e.Frame > 11)
+                                        e.Frame = 8;
+                                    break;
+                                case "right":
+                                    if (e.Frame < 4)
+                                        e.Frame = 4;
+                                    if (e.Frame > 7)
+                                        e.Frame = 4;
+                                    break;
+                                case "back":
+                                    if (e.Frame < 12)
+                                        e.Frame = 12;
+                                    if (e.Frame > 15)
+                                        e.Frame = 12;
+                                    break;
+                            }
+                            return e;
                         }
-                                return e;
+                        else
+                            return spriteDictionnary[i].Value;
                     }
                 }
             }
@@ -376,7 +390,7 @@ namespace DW
         //<param name="par1">l'entité</param>
         private void renderEntityAt(Entity par1)
         {
-            AnimatedSprite e=getSprite(par1);
+            AnimatedSprite e=(AnimatedSprite)getSprite(par1);
             if(e != null)
                 Video.Screen.Blit(e, new Point(x + par1.getX() * 30, y + par1.getY() * 30));
             else
@@ -392,8 +406,14 @@ namespace DW
         //<param name="par3y">la position y de l'objet à afficher</param>
         private void renderSpecialAt(Special[,] par1map, int par2x, int par3y)
         {
-            if (par1map[par2x, par3y] != null)
+            Console.WriteLine(par1map[par2x, par3y].getValue());
+            Sprite e = getSprite(par1map[par2x,par3y]);
+            if (e != null)
+                Video.Screen.Blit(e, new Point(x + par2x * 30, y + par3y * 30));
+            else
                 Video.Screen.Blit(font.Render((string)par1map[par2x, par3y].getChar(), (Color)par1map[par2x, par3y].getColor()), new Point(x + par2x * 30, y + par3y * 30));
+
+
         }
 
 
@@ -448,7 +468,7 @@ namespace DW
             {
                 if (par1[i] != null)
                 {
-                    AnimatedSprite e = getSprite(par1[i]);
+                    AnimatedSprite e = (AnimatedSprite)getSprite(par1[i]);
                     if (e != null)
                         Video.Screen.Blit(e, new Point(x + par1[i].getX() * 30, y + par1[i].getY() * 30));
                     else

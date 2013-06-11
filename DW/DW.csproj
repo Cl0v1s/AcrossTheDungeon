@@ -73,7 +73,7 @@
   <ItemGroup>
     <Reference Include="SdlDotNet, Version=6.1.0.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Program Files\SdlDotNet\bin\SdlDotNet.dll</HintPath>
+      <HintPath>SDL\SdlDotNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -92,11 +92,11 @@
     <Compile Include="BiomeGarden.cs" />
     <Compile Include="System\Graphics\Chat.cs" />
     <Compile Include="System\Network\ChatPacket.cs" />
-    <Compile Include="Chest.cs" />
+    <Compile Include="Elements\Chest.cs" />
     <Compile Include="Scene\Client.cs" />
     <Compile Include="System\Network\CommandPacket.cs" />
     <Compile Include="System\Network\DataPacket.cs" />
-    <Compile Include="Door.cs" />
+    <Compile Include="Elements\Door.cs" />
     <Compile Include="Scene\IpMenu.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Entity\OtherPlayer.cs" />
@@ -110,9 +110,9 @@
     <Compile Include="Scene\Server.cs" />
     <Compile Include="Entity\Entity.cs" />
     <Compile Include="System\Input.cs" />
-    <Compile Include="Plant.cs" />
+    <Compile Include="Elements\Plant.cs" />
     <Compile Include="Entity\Player.cs" />
-    <Compile Include="Pot.cs" />
+    <Compile Include="Elements\Pot.cs" />
     <Compile Include="System\Graphics\Render.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Skills.cs" />

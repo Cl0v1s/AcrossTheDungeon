@@ -12,19 +12,24 @@ namespace DW
         private float level;
         private bool already=false;
         private Random rand=new Random();
+        private string originalValue;
 
 
         //<summary>
         //créer et gère une porte
         //</summary>
-        public Door()
+        public Door(int[,] par1map,int par2x,int par3y)
             : base()
         {
             open = false;
-            value = "|";
-            levelMax = rand.Next(1, 20);
+            if (par1map[par2x, par3y - 1] == 2 && par1map[par2x, par3y + 1] == 2)
+                value = "|o";
+            else if (par1map[par2x - 1, par3y] == 2 && par1map[par2x + 1, par3y] == 2)
+                value = "|";
+            levelMax = rand.Next(1, 10);
             level = (float)levelMax;
             color = Color.Chocolate;
+            originalValue = value;
         }
 
         //<summary>
@@ -62,7 +67,7 @@ namespace DW
             {
                 open = false;
                 level = 0.00001F;
-                value = "|";
+                value = originalValue;
             }
         }
     }

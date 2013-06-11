@@ -342,7 +342,7 @@ namespace DW
                 {
                     if (rand.Next(1, 1) == 1 && map[b.X - 1, b.Y] != 0 && map[b.X + 1, b.Y] != 0 && map[b.X, b.Y + 1] != 0 && map[b.X, b.Y - 1] != 0 && ((map[b.X + 1, b.Y] == 2 && map[b.X - 1, b.Y] == 2) || (map[b.X, b.Y + 1] == 2 && map[b.X, b.Y - 1] == 2)))
                     {
-                        Special s = (Special)new Door();
+                        Special s = (Special)new Door(map,b.X,b.Y);
                         s.setPos(this, b.X, b.Y);
                         set(1, b.X, b.Y);
                         setSpecial(s, b.X, b.Y);

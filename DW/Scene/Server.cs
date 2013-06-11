@@ -25,6 +25,7 @@ namespace DW
         private Chat chat;
         private string[] otherChatMsg = new string[6];
         private int otherChatMsgIndex = 0;
+        private int tmp = 50;
 
         public Server(bool par1 = false)
         {
@@ -53,6 +54,12 @@ namespace DW
 
         public void update()
         {
+            tmp = tmp - 1;
+            if (tmp <= 0)
+            {
+                roll();
+                tmp = 50;
+            }
             if (chat != null)
                 chat.update();
             DW.player.update();
@@ -75,7 +82,7 @@ namespace DW
 
         public void roll()
         {
-
+            DW.player.getStair().roll();
         }
 
         public bool isConnected()
@@ -169,6 +176,16 @@ namespace DW
                         Point p = (Point)o[0];
                         other.move(p.X, p.Y);
                         other.setFace((string)o[1]);
+                        Entity[] e = other.getStair().getEntities();
+                        for (int i = 0; i < e.Length; i++)
+                        {
+                            if(e[i] != null && !(e[i] is Player) && other.isNear(e[i]))
+                            {
+                                other.fight(other,e[i]);
+                                Console.WriteLine("other FIGHT");
+                                break;
+                            }
+                        }
                         Packet.Send(new DataPacket(other), client);
                     }
                     break;

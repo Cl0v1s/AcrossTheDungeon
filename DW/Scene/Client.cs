@@ -68,6 +68,7 @@ namespace DW
                 if (p is DataPacket && ((DataPacket)p).get() is OtherPlayer)
                 {
                     DW.player = (OtherPlayer)((DataPacket)p).get();
+                    DW.player.turn();
                     break;
                 }
                 else
