@@ -75,5 +75,12 @@ namespace DW
             return (Special)s;
         }
 
+        public override bool canPass()
+        {
+            if (age < 2)
+                return true;
+            return false;
+        }
+
     }
 }

@@ -13,7 +13,7 @@ namespace DW
     {
 
         public static Input input = new Input();
-        public static Render render = new Render(0, 0);
+        public static Render render;
         public static EditorMenu editorMenu;
         public static GameMenu gameMenu = new GameMenu();
         public static IpMenu ipMenu;
@@ -35,10 +35,12 @@ namespace DW
          */
         public DW()
         {
+            
             Scene = "GameMenu";
             Video.WindowCaption = "Dungeon Walker";
             //on créer la sortie vidéo
             Video.SetVideoMode(640, 480, false);
+            render = new Render(0, 0);
             //on ajoute un evenement lors du clique sur fermer
             Events.Quit += new EventHandler<QuitEventArgs>(DW.endProgramm);
             //on actualise à chaque tick
@@ -63,8 +65,6 @@ namespace DW
         {
             //on efface l'écran
             Video.Screen.Fill(Color.Black);
-            if(render != null)
-                render.update();
             if (Scene == "GameMenu")
                 gameMenu.update();
             else if (Scene == "EditorMenu")
@@ -75,6 +75,8 @@ namespace DW
                 client.update();
             else if (Scene == "IpMenu")
                 ipMenu.update();
+            if (render != null)
+                render.update();
             //on met à jour l'écran
             Video.Screen.Update();
         }

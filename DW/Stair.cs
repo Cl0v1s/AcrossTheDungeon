@@ -41,6 +41,7 @@ namespace DW
             cleanMap();
             applyBiome();
             genDoors();
+            brushMap();
             genEntities();
         }
 
@@ -316,10 +317,57 @@ namespace DW
                                 map[i, u] = 2;
                             if (u-1>=0 && i-1>=0 && map[i, u - 1] == 2 && map[i - 1, u] == 2)
                                 map[i, u] = 2;
-
-
-
                     }
+                }
+            }
+
+        }
+
+        private void brushMap()
+        {
+            for (int i = 0; i < width; i++)
+            {
+                for (int o = 0; o < height; o++)
+                {
+                    try
+                    {
+                        /*Clean Water side*/
+                        if (map[i, o] != 2 && map[i, o] != 100 && i - 1 >= 0 && map[i - 1, o] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] != 2 && map[i, o] != 100 && i + 1 <= width && map[i + 1, o] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] != 2 && map[i, o] != 100 && o - 1 >= 0 && map[i, o - 1] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] != 2 && map[i, o] != 100 && o + 1 <= height && map[i, o + 1] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] != 2 && map[i, o] != 100 && i - 1 >= 0 && o + 1 <= height && map[i - 1, o + 1] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] != 2 && map[i, o] != 100 && i - 1 >= 0 && o - 1 >= 0 && map[i - 1, o - 1] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] != 2 && map[i, o] != 100 && i + 1 <= width && o + 1 <= height && map[i + 1, o + 1] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] != 2 && map[i, o] != 100 && i + 1 <= width && o - 1 >= 0 && map[i + 1, o - 1] == 100)
+                            map[i, o] = 1;
+                        /*Clean Lava Side*/
+                        if (map[i, o] == 101 && map[i + 2, o] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] == 101 && map[i - 2, o] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] == 101 && map[i, o + 2] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] == 101 && map[i, o - 2] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] == 101 && map[i + 2, o + 2] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] == 101 && map[i + 2, o - 2] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] == 101 && map[i - 2, o + 2] == 100)
+                            map[i, o] = 1;
+                        if (map[i, o] == 101 && map[i - 2, o - 2] == 100)
+                            map[i, o] = 1;
+                    }
+                    catch (Exception)
+                    { }
 
 
 
@@ -330,7 +378,6 @@ namespace DW
 
                 }
             }
-
         }
 
         public void genDoors()

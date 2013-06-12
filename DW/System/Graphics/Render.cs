@@ -25,16 +25,13 @@ namespace DW
          */
         public int[] id = new int[]
         {
-            -1,
+            3,
             0,
             1,
             14,
             -1,
             13,
             12,
-
-
-
         };
         
 
@@ -92,10 +89,13 @@ namespace DW
         private int x;
         private int y;
         private StatUI statUI;
+        private Surface shadow = new Surface(30, 30).Convert(Video.Screen);
         private Surface tileset = new Surface("Data/images/TileSet.png");
         private KeyValuePair<string, Sprite>[] spriteDictionnary = new KeyValuePair<string, Sprite>[500];
         protected AnimationCollection waterAnimation;
         protected AnimatedSprite water;
+        protected AnimationCollection lavaAnimation;
+        protected AnimatedSprite lava;
         private SdlDotNet.Graphics.Font font = new SdlDotNet.Graphics.Font(Directory.GetCurrentDirectory() + "\\Data\\" + "pixel.ttf", 30);
 
 
@@ -103,6 +103,13 @@ namespace DW
         {
             x = par1x;
             y = par2y;
+            shadow.AlphaBlending = true;
+            setAnimatedTile();
+            registerDictionnary();
+        }
+
+        private void setAnimatedTile()
+        {
             waterAnimation = new AnimationCollection();
             SurfaceCollection e = new SurfaceCollection();
             e.Add("Data/images/Water.png", new Size(30, 30));
@@ -110,7 +117,14 @@ namespace DW
             waterAnimation.Delay = 1200;
             water = new AnimatedSprite(waterAnimation);
             water.Animate = true;
-            registerDictionnary();
+
+            lavaAnimation = new AnimationCollection();
+            e = new SurfaceCollection();
+            e.Add("Data/images/Lava.png", new Size(30, 30));
+            lavaAnimation.Add(e);
+            lavaAnimation.Delay = 1200;
+            lava = new AnimatedSprite(lavaAnimation);
+            lava.Animate = true;
         }
 
         public void setStatUI(Player par1)
@@ -138,6 +152,11 @@ namespace DW
             /*Door*/
             addToSpriteDictionnary("|", "Data/images/Elements/Door.png");
             addToSpriteDictionnary("|o", "Data/images/Elements/Door_side.png");
+            /*Plant*/
+            addToSpriteDictionnary(",", "Data/images/Elements/Plant/1.png");
+            addToSpriteDictionnary("\"", "Data/images/Elements/Plant/2.png");
+            addToSpriteDictionnary("!", "Data/images/Elements/Plant/3.png");
+            addToSpriteDictionnary("T", "Data/images/Elements/Plant/4.png");
         }
 
         //<summary>
@@ -295,30 +314,40 @@ namespace DW
             {
                 int[,] par1map = par1.getStair().getMap();
                 Special[,] specials = par1.getStair().getSpecial();
-                for (int i = par1.getX() - par1.getRange(); i < par1.getX() + par1.getRange(); i++)
+                for (int i = (int)(par1.getX() - par1.getRange()*2); i < par1.getX() + par1.getRange()*2; i++)
                 {
-                    for (int u = par1.getY() - par1.getRange(); u < par1.getY() + par1.getRange(); u++)
+                    for (int u = (int)(par1.getY() - par1.getRange()*2); u < par1.getY() + par1.getRange()*2; u++)
                     {
-                        if (u >= 0 && i >= 0 && i <= par1.getStair().getW() && u <= par1.getStair().getH() && par1.canSee(i, u))
+                        if (u >= 0 && i >= 0 && i <= par1.getStair().getW() && u <= par1.getStair().getH() && (Math.Abs(par1.getX() - i) + Math.Abs(par1.getY() - u))<9)
                         {
-                            if (par1map[i, u] * 2 <= value.Length && par1map[i, u] * 2 + 1 <= value.Length && par1map[i, u] < 100)
-                            {
-                                if (par1map[i, u] < id.Length && id[par1map[i,u]] != -1)
+                                if (par1map[i, u] * 2 <= value.Length && par1map[i, u] * 2 + 1 <= value.Length && par1map[i, u] < 100)
                                 {
-                                    if (par1map[i, u] != 2 && par1map[i, u] != 1)
-                                        Video.Screen.Blit(tileset, new Point(x + i * 30, y + u * 30), new Rectangle(id[par1map[i, u]] * 30, 0, 30, 30));
+                                    if (par1map[i, u] < id.Length && id[par1map[i, u]] != -1)
+                                    {
+                                        if (par1map[i, u] != 2 && par1map[i, u] != 1)
+                                            Video.Screen.Blit(tileset, new Point(x + i * 30, y + u * 30), new Rectangle(id[par1map[i, u]] * 30, 0, 30, 30));
+                                        else
+                                            connectionTile(par1map, i, u);
+                                    }
                                     else
-                                        connectionTile(par1map, i, u);
+                                        Video.Screen.Blit(font.Render((string)value[par1map[i, u] * 2], (Color)value[par1map[i, u] * 2 + 1]), new Point(x + i * 30, y + u * 30));
+
                                 }
                                 else
-                                    Video.Screen.Blit(font.Render((string)value[par1map[i, u] * 2], (Color)value[par1map[i, u] * 2 + 1]), new Point(x + i * 30, y + u * 30));
-
+                                    renderAnimated(par1map, i, u);
+                                if (specials[i, u] != null)
+                                    renderSpecialAt(specials, i, u);
                             }
-                            else
-                                renderAnimated(par1map, i, u);
-                            if (specials[i, u] != null)
-                                renderSpecialAt(specials, i, u);
-                        }
+                            if (!par1.canSee(i, u))
+                            {
+                                if (i <= par1.getX() - par1.getRange() || i >= par1.getX() + par1.getRange() || u <= par1.getY() - par1.getRange() || u >= par1.getY() + par1.getRange())
+                                {
+                                        shadow.Alpha = (byte)(100 + (Math.Abs(par1.getX() - i) + Math.Abs(par1.getY() - u)) * 40);
+                                }
+                                else
+                                    shadow.Alpha = 100;
+                                Video.Screen.Blit(shadow, new Point(x + i * 30, y + u * 30));
+                            }
                     }
                 }
                 Entity[] ent = par1.getStair().getEntities();
@@ -350,6 +379,7 @@ namespace DW
                 int idToRender = par1map[par2x, par3y];
                 if (idToRender == 2)
                 {
+                    /*Wall*/
                     if (par1map[par2x - 1, par3y] != idToRender && par1map[par2x + 1, par3y] != idToRender && par1map[par2x, par3y + 1] != idToRender)
                         idToRender = id[idToRender];
                     else if (par1map[par2x, par3y + 1] != idToRender)
@@ -359,6 +389,26 @@ namespace DW
                 }
                 else if (idToRender == 1)
                 {
+
+                                        /*Lava Side*/
+                    if (par1map[par2x - 1, par3y] == 101)
+                        idToRender = 17;
+                    else if (par1map[par2x + 1, par3y] == 101)
+                        idToRender = 22;
+                    else if (par1map[par2x, par3y - 1] == 101)
+                        idToRender = 21;
+                    else if (par1map[par2x, par3y + 1] == 101)
+                        idToRender = 16;
+                    else if (par1map[par2x, par3y + 1] == 1 && par1map[par2x + 1, par3y] == 1 && par1map[par2x + 1, par3y + 1] == 101)
+                        idToRender = 18;
+                    else if (par1map[par2x, par3y - 1] == 1 && par1map[par2x - 1, par3y] == 1 && par1map[par2x - 1, par3y - 1] == 101)
+                        idToRender = 19;
+                    else if (par1map[par2x, par3y - 1] == 1 && par1map[par2x + 1, par3y] == 1 && par1map[par2x + 1, par3y - 1] == 101)
+                        idToRender = 20;
+                    else if (par1map[par2x, par3y + 1] == 1 && par1map[par2x - 1, par3y] == 1 && par1map[par2x - 1, par3y + 1] == 101)
+                        idToRender = 15;
+                    else idToRender = id[1];
+                    /*Water Side*/
                     if (par1map[par2x - 1, par3y] == 100)
                         idToRender = 6;
                     else if (par1map[par2x + 1, par3y] == 100)
@@ -375,7 +425,9 @@ namespace DW
                         idToRender = 9;
                     else if (par1map[par2x, par3y + 1] == 1 && par1map[par2x - 1, par3y] == 1 && par1map[par2x - 1, par3y + 1] == 100)
                         idToRender = 4;
-                    else idToRender = id[1];
+
+
+
                 }
                 Video.Screen.Blit(tileset, new Point(x + par2x * 30, y + par3y * 30), new Rectangle(idToRender * 30, 0, 30, 30));
             }
@@ -406,7 +458,6 @@ namespace DW
         //<param name="par3y">la position y de l'objet à afficher</param>
         private void renderSpecialAt(Special[,] par1map, int par2x, int par3y)
         {
-            Console.WriteLine(par1map[par2x, par3y].getValue());
             Sprite e = getSprite(par1map[par2x,par3y]);
             if (e != null)
                 Video.Screen.Blit(e, new Point(x + par2x * 30, y + par3y * 30));
@@ -421,6 +472,8 @@ namespace DW
         {
             if (par1map[par2x, par3y] == 100)
                 Video.Screen.Blit(water, new Point(x + par2x * 30, y + par3y * 30));
+            else if(par1map[par2x, par3y] == 101)
+                Video.Screen.Blit(lava, new Point(x + par2x * 30, y + par3y * 30));
             else
             {
                 try

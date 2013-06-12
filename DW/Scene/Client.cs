@@ -23,20 +23,21 @@ namespace DW
         private Chat chat;
         private bool isWriting=false;
 
-
+        //<summary>
+        //créer le client
+        //</summary>
+        //<param name="par1">l'adresse ip du serveur à rejoindre</param>
         public Client(String par1)
         {
             chat = new Chat();
             createConnexion(par1);
         }
 
+        //<summary>
+        //actualise le client de manière à géréer les entrées de touches et à afficher le donjon
+        //</summary>
         public void update()
         {
-            if (chat != null)
-            {
-                chat.update();
-            }
-
             if (isWriting == false)
             {
                 if (DW.input.equals(Key.UpArrow) == true)
@@ -56,9 +57,17 @@ namespace DW
             else
                 isWriting=chat.write();
             DW.render.renderEntityVision(DW.player);
+            if (chat != null)
+                chat.update();
             Thread.Sleep(100);
         }
 
+        //<summary>
+        //demande au serveur de changer la position du client dans le donjon 
+        //</summary>
+        //<param name="par1x">La postion x à atteindre</param>
+        //<param name="par2">la position y à atteindre</param>
+        //<param name="par3dir">la direction du sprite dui joueur à afficher</param>
         private void changePlayerPos(int par1x, int par2y,string par3dir)
         {
             Packet.Send(new CommandPacket("moveplayer", new object[]{new Point(par1x, par2y),par3dir}), server);
@@ -76,6 +85,9 @@ namespace DW
             }
         }
 
+        //<summary>
+        //demande au serveur d'entammer une procédure de recherche d'élements avec lesquels le client peut interragir
+        //</summary>
         private void interactPlayer()
         {
             Packet.Send(new CommandPacket("interactplayer"), server);
@@ -94,6 +106,9 @@ namespace DW
             Thread.Sleep(200);
         }
 
+        //<summary>
+        //retourne si le client est connecté ou non
+        //</summary>
         public bool isConnected()
         {
             return connected;
@@ -104,6 +119,10 @@ namespace DW
             connected = par1;
         }
 
+        //<summary>
+        //entamme al procedure de connexion au client
+        //</summary>
+        //<param name="par1"> l'adresse ip du serveur à rejoindre</param>
         private void createConnexion(String par1)
         {
             server = new UdpClient(listen);
@@ -114,10 +133,12 @@ namespace DW
             chat.setOther(server);
             exchange = new Thread(new ThreadStart(exchangeData));
             exchange.Start();
-
-
         }
 
+        //<summary>
+        //demande au serveur de retourner le contenu de la boite de chat
+        //afin del'actualiser conté client
+        //</summary>
         private void getChatMsg()
         {
             Packet.Send(new CommandPacket("getchatmsg"), server);
@@ -139,16 +160,25 @@ namespace DW
             }
         }
 
+        //<summary>
+        //retourne le client udp chargé de la connexion
+        //</summary>
         public UdpClient getServer()
         {
             return server;
         }
 
+        //<summary>
+        //ajoute un message dans le chat
+        //</summary>
         public void showMsg(string par1)
         {
             chat.add(par1);
         }
 
+        //<summary>
+        //fnction chargé de l'actualisation des données entre le serveur et le client
+        //</summary>
         public void exchangeData()
         {
             sendPlayer();
@@ -160,6 +190,9 @@ namespace DW
             }
         }
 
+        //<summary>
+        //envoie le joueur coté client au serveur afin de l'intégrer au jeu
+        //</summary>
         private void sendPlayer()
         {
             CommandPacket ap = new CommandPacket("sendplayer", DW.player);
@@ -177,6 +210,9 @@ namespace DW
             }
         }
 
+        //<summary>
+        //fonction chargé d'actualiser le client en téléchargeant les données du donjon depuis le serveur
+        //</summary>
         private void updateStair()
         {
             CommandPacket ap = new CommandPacket("getstair");

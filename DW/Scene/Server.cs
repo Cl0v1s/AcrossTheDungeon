@@ -25,7 +25,7 @@ namespace DW
         private Chat chat;
         private string[] otherChatMsg = new string[6];
         private int otherChatMsgIndex = 0;
-        private int tmp = 50;
+        private int tmp = 40;
 
         public Server(bool par1 = false)
         {
@@ -58,11 +58,11 @@ namespace DW
             if (tmp <= 0)
             {
                 roll();
-                tmp = 50;
+                tmp = 40;
             }
+            DW.player.update();
             if (chat != null)
                 chat.update();
-            DW.player.update();
         }
 
         public void up(Player par1)
