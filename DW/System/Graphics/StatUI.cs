@@ -31,7 +31,7 @@ namespace DW
         public void update()
         {
             int dec = 1;
-            Video.Screen.Blit(background,new Point(0,400));
+            Video.Screen.Blit(background,new Point(-440,400));
             new Text("pixel.ttf", 25, 20, 410, subject.getName(), 200, 200, 200).update();
             /*Life*/
             Video.Screen.Fill(new Rectangle(45, 447, subject.getStat()[0] * 98 / subject.getLife(), 16), Color.FromArgb(50, 250, 50));

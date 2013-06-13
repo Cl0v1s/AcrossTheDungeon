@@ -35,6 +35,7 @@ namespace DW
                 age += 1;
                 grow = 0;
                 limit = rand.Next(0, age * 50);
+                Console.WriteLine("grow");
             }
             if (age == 0)
                 value = ",";

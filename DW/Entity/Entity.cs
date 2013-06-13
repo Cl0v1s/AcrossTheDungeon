@@ -32,15 +32,18 @@ namespace DW
         protected float sommeil = 0;
         protected float sale = 0;
         protected double peur = 0;
+        protected int timer = 40;
+        protected int speed = 40;
 
         protected Entity[] others;
         protected Entity worstEnemy = null;
         protected Entity bestFriend = null;
-        protected Point objective;
+        protected Point objective = new Point(-1, -1);
         protected bool isSleeping = false;
         protected int sleepingTime = 0;
         protected bool isFighting = false;
         protected bool isburning = false;
+        protected int attempt = 0;
 
 
         public Entity(String par1name, int par3force, int par4endurance, int par5volonte, int par6agilite, Stair par7stair)
@@ -73,6 +76,16 @@ namespace DW
         public void setStair(Stair par1)
         {
             stair = par1;
+        }
+
+        public void time()
+        {
+            timer -= 1;
+            if (timer <= 0)
+            {
+                turn();
+                timer = speed;
+            }
         }
 
         public virtual bool update(Entity[] par1)
@@ -202,33 +215,44 @@ namespace DW
 
         protected void choiceIA()
         {
-            if (worstEnemy == null)
-            {
-                if (objective != null)
-                    moveTo(objective.X, objective.Y);
-                else if (bestFriend != null && canSee(bestFriend.getX(), bestFriend.getY()))
-                {
-                    moveTo(bestFriend.getX(), bestFriend.getY());
-                }
-                else
-                {
-                    Console.WriteLine("ok");
-                    int yt = 0;
-                    int xt = rand.Next(-1, 1);
-                    if (xt == 0)
-                        yt = rand.Next(-1, 1);
-                    moveTo(x + xt, y + yt);
-                }
-            }
-            else
+
+            if (worstEnemy != null)
             {
                 if (peur > 0 && canSee(worstEnemy.getX(), worstEnemy.getY()))
+                {
                     escapeFrom(worstEnemy.getX(), worstEnemy.getY());
+                    return;
+                }
                 else if (canSee(worstEnemy.getX(), worstEnemy.getY()))
+                {
                     moveTo(worstEnemy.getX(), worstEnemy.getY());
-                else
-                    worstEnemy = null;
+                    return;
+                }
             }
+            if (objective.X != -1 && objective.Y != -1)
+            {
+                attempt += 1;
+                if (attempt >= 10)
+                {
+                    attempt = 0;
+                    objective = new Point(-1, -1);
+                    return;
+                }
+                moveTo(objective.X, objective.Y);
+                return;
+            }
+            else if (bestFriend != null && canSee(bestFriend.getX(), bestFriend.getY()) && peur>0)
+            {
+                moveTo(bestFriend.getX(), bestFriend.getY());
+                return;
+            }
+
+            Point p = stair.getFreeSpecialCase();
+            objective = p;
+            moveTo(objective.X, objective.Y);
+            return;
+
+
         }
 
         protected void moveTo(int par1x, int par2y)
@@ -275,6 +299,8 @@ namespace DW
                 face = "front";
             x = goodnode.X;
             y = goodnode.Y;
+            if (x == objective.X && y == objective.Y)
+                objective = new Point(-1, -1);
         }
 
         protected void escapeFrom(int par1x, int par2y)

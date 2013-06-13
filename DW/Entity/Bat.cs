@@ -15,9 +15,11 @@ namespace DW
             lifeTmp = life;
             force = 2;
             endurance = 2;
+            speed = 20;
             volonte = 0;
             agilite = 7;
             regime = "carnivore";
+            range = 3;
             value = "V";
             peur = -10;
             originalValue = value;

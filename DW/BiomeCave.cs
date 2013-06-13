@@ -34,8 +34,8 @@ namespace DW
             {
                 if (rooms[i] != null)
                 {
-                    applyGravel(rooms[i]);
                     applyWater(rooms[i]);
+                    applyGravel(rooms[i]);
                     applyLava(rooms[i]);
                 }
             }

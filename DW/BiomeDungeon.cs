@@ -83,9 +83,7 @@ namespace DW
                             {
                                 Special s = (((Special)specialCase[r]).clone());
                                 s.setPos(stair,par2room.getX() + i, par2room.getY() + u);
-                                stair.set(0, par2room.getX() + i, par2room.getY() + u);
                                 stair.setSpecial(s, par2room.getX() + i, par2room.getY() + u);
-                                par2room.set(0, i, u);
                                 par2room.setSpecial(s, i, u);
                             }
                             else

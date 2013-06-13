@@ -148,6 +148,8 @@ namespace DW
             addToSpriteDictionnary("à", "Data/images/Hero.png");
             /*Bat*/
             addToSpriteDictionnary("V", "Data/images/Entity/Bat.png");
+            /*Pig*/
+            addToSpriteDictionnary("P", "Data/images/Entity/Pig.png");
 
             /*Door*/
             addToSpriteDictionnary("|", "Data/images/Elements/Door.png");
@@ -157,6 +159,8 @@ namespace DW
             addToSpriteDictionnary("\"", "Data/images/Elements/Plant/2.png");
             addToSpriteDictionnary("!", "Data/images/Elements/Plant/3.png");
             addToSpriteDictionnary("T", "Data/images/Elements/Plant/4.png");
+            /*Pot*/
+            addToSpriteDictionnary("U", "Data/images/Elements/Pot.png");
         }
 
         //<summary>

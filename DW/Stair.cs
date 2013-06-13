@@ -74,16 +74,14 @@ namespace DW
             }
         }
 
-        public void roll()
+        public void time()
         {
             for (int i = 0; i < entities.Length; i++)
             {
                 if (entities[i] != null)
                 {
                     if (!(entities[i] is Player))
-                        entities[i].turn();
-                    else
-                        ((Player)entities[i]).turn();
+                        entities[i].time();
 
                 }
             }

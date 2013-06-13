@@ -54,13 +54,8 @@ namespace DW
 
         public void update()
         {
-            tmp = tmp - 1;
-            if (tmp <= 0)
-            {
-                roll();
-                tmp = 40;
-            }
             DW.player.update();
+            DW.player.getStair().time();
             if (chat != null)
                 chat.update();
         }
@@ -78,11 +73,6 @@ namespace DW
                 }
             }
 
-        }
-
-        public void roll()
-        {
-            DW.player.getStair().roll();
         }
 
         public bool isConnected()
