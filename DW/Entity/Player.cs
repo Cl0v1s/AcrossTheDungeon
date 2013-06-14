@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Threading;
 
-
 using SdlDotNet.Graphics.Sprites;
 using SdlDotNet.Graphics;
 using SdlDotNet.Input;
@@ -26,6 +25,8 @@ namespace DW
         public Player(String par1name, String par2class, int par3force, int par4endurance, int par5volonte, int par6agilite)
             : base()
         {
+            inventory = new Inventory(this);
+            inventory.addItem(new Berry());
             name = par1name;
             force = par3force;
             endurance = par4endurance;
@@ -40,11 +41,13 @@ namespace DW
             color = Color.Purple;
             life = force * endurance * rand.Next(1, par1name.Length);
             lifeTmp = life;
-            DW.render.setStatUI(this);
+            DW.render.setUI(this);
             skills = new Skills(this);
         }
 
-
+        //<summary>
+        //retourne la classe du joueur
+        //</summary>
         public string getClass()
         {
             return pclass;
@@ -135,12 +138,14 @@ namespace DW
             }
         }
 
-
-        public void showMsg(string par1)
+        //<summary>
+        //tranfert le message envoyé au joueur au client ou au serveur selon la configuration de la connexion
+        //</summary>
+        public override void showMsg(string par1)
         {
             if (DW.client != null)
                 DW.client.showMsg(par1);
-            else
+            else if(DW.dungeon != null)
                 DW.dungeon.showMsg(par1,this);
         }
 
@@ -199,6 +204,11 @@ namespace DW
                 else if (s[x, y + 1] != null)
                 {
                     s[x, y + 1].interact(this);
+                    return;
+                }
+                else if (s[x, y] != null)
+                {
+                    s[x, y].interact(this);
                     return;
                 }
                 

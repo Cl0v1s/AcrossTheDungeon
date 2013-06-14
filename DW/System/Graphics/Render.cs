@@ -89,6 +89,7 @@ namespace DW
         private int x;
         private int y;
         private StatUI statUI;
+        private InventoryUI inventoryUI;
         private Surface shadow = new Surface(30, 30).Convert(Video.Screen);
         private Surface tileset = new Surface("Data/images/TileSet.png");
         private KeyValuePair<string, Sprite>[] spriteDictionnary = new KeyValuePair<string, Sprite>[500];
@@ -127,9 +128,15 @@ namespace DW
             lava.Animate = true;
         }
 
-        public void setStatUI(Player par1)
+        public void setUI(Player par1)
         {
             statUI = new StatUI(par1);
+            inventoryUI = new InventoryUI(par1.getInventory());
+        }
+
+        public void openInventory()
+        {
+            inventoryUI.open();
         }
 
         public StatUI getStatUI()
@@ -142,6 +149,7 @@ namespace DW
         //</summary>
         private void registerDictionnary()
         {
+            /**************************************************Entities*/
             /*Player*/
             addToSpriteDictionnary("@", "Data/images/Hero.png");
             /*OtherPlayer*/
@@ -150,7 +158,7 @@ namespace DW
             addToSpriteDictionnary("V", "Data/images/Entity/Bat.png");
             /*Pig*/
             addToSpriteDictionnary("P", "Data/images/Entity/Pig.png");
-
+            /*************************************************Elements*/
             /*Door*/
             addToSpriteDictionnary("|", "Data/images/Elements/Door.png");
             addToSpriteDictionnary("|o", "Data/images/Elements/Door_side.png");
@@ -161,6 +169,9 @@ namespace DW
             addToSpriteDictionnary("T", "Data/images/Elements/Plant/4.png");
             /*Pot*/
             addToSpriteDictionnary("U", "Data/images/Elements/Pot.png");
+            /*************************************************Items*/
+            /*baie*/
+            addToSpriteDictionnary("baie", "Data/images/Items/Berry.png");
         }
 
         //<summary>
@@ -231,6 +242,8 @@ namespace DW
                 frame = 0;
             if(statUI != null)
                 statUI.update();
+            if (inventoryUI != null)
+                inventoryUI.update();
         }
 
 
@@ -462,13 +475,11 @@ namespace DW
         //<param name="par3y">la position y de l'objet à afficher</param>
         private void renderSpecialAt(Special[,] par1map, int par2x, int par3y)
         {
-            Sprite e = getSprite(par1map[par2x,par3y]);
-            if (e != null)
-                Video.Screen.Blit(e, new Point(x + par2x * 30, y + par3y * 30));
-            else
-                Video.Screen.Blit(font.Render((string)par1map[par2x, par3y].getChar(), (Color)par1map[par2x, par3y].getColor()), new Point(x + par2x * 30, y + par3y * 30));
-
-
+                Sprite e = getSprite(par1map[par2x, par3y]);
+                if (e != null)
+                    Video.Screen.Blit(e, new Point(x + par2x * 30, y + par3y * 30));
+                else
+                    Video.Screen.Blit(font.Render((string)par1map[par2x, par3y].getChar(), (Color)par1map[par2x, par3y].getColor()), new Point(x + par2x * 30, y + par3y * 30));
         }
 
 

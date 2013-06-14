@@ -590,6 +590,25 @@ namespace DW
             special = par1;
         }
 
+        public void removeSpecial(int par1x,int par2y)
+        {
+            special[par1x,par2y]=null;
+        }
+
+        public void spawnItem(Item par1item, int par2x, int par3y)
+        {
+            ItemOnMap i = new ItemOnMap(par1item, this, par2x, par3y);
+            if (special[par2x, par3y] == null)
+                special[par2x, par3y] = i;
+            else if (special[par2x + 1, par3y] == null)
+                special[par2x + 1, par3y] = i;
+            else if (special[par2x - 1, par3y] == null)
+                special[par2x - 1, par3y] = i;
+            else if (special[par2x, par3y - 1] == null)
+                special[par2x, par3y - 1] = i;
+            else special[par3y, par3y + 1] = i;
+        }
+
 
     }
 }

@@ -41,17 +41,19 @@ namespace DW
             if (isWriting == false)
             {
                 if (DW.input.equals(Key.UpArrow) == true)
-                    changePlayerPos(DW.player.getX(), DW.player.getY() - 1,"back");
+                    changePlayerPos(DW.player.getX(), DW.player.getY() - 1, "back");
                 else if (DW.input.equals(Key.DownArrow) == true)
-                    changePlayerPos(DW.player.getX(), DW.player.getY() + 1,"front");
+                    changePlayerPos(DW.player.getX(), DW.player.getY() + 1, "front");
                 else if (DW.input.equals(Key.RightArrow) == true)
-                    changePlayerPos(DW.player.getX() + 1, DW.player.getY(),"right");
+                    changePlayerPos(DW.player.getX() + 1, DW.player.getY(), "right");
                 else if (DW.input.equals(Key.LeftArrow) == true)
-                    changePlayerPos(DW.player.getX() - 1, DW.player.getY(),"left");
+                    changePlayerPos(DW.player.getX() - 1, DW.player.getY(), "left");
                 else if (DW.input.equals(Key.L))
                     ((OtherPlayer)DW.player).lap();
                 else if (DW.input.equals(Key.KeypadEnter) || DW.input.equals(Key.Return))
                     interactPlayer();
+                else if (DW.input.equals(Key.I))
+                    DW.render.openInventory();
                 DW.render.move(DW.player.getX() * -30 + 640 / 2, DW.player.getY() * -30 + 480 / 2);
             }
             else

@@ -10,6 +10,7 @@ namespace DW
     {
         public Bat()
         {
+            inventory = new Inventory(this);
             name = "Chauve-Souris";
             life = 50;
             lifeTmp = life;

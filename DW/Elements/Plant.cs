@@ -50,7 +50,7 @@ namespace DW
         //<summary>
         //permet au joueur d'interragir avec les plantes et notamment de les recolter.
         //</summary>
-        public override void interact(Player par1)
+        public override void interact(Entity par1)
         {
             if (age > 2)
             {

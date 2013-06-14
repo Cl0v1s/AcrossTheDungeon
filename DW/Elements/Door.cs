@@ -43,31 +43,35 @@ namespace DW
         //<summary>
         //permet au joueur d'interagir avec la porte (ouverture/fermeture)
         //</summary>
-        public override void interact(Player par1)
+        public override void interact(Entity par1entity)
         {
-            if (open == false)
+            if (par1entity is Player)
             {
-                if(level==levelMax)
-                    par1.showMsg("Vous essayez d'ouvrir cette porte manifestement vérouillée...");
-                level -= (float)par1.skills.getCheat() * rand.Next(1, 10) / 10;
-                if (level * 100 / levelMax <= 20 && already==false)
-                    par1.showMsg("Vous sentez la resistance de la porte faiblir.");
-                if (level <= 0)
+                Player par1 = ((Player)par1entity);
+                if (open == false)
                 {
-                    open = true;
-                    value = ".";
-                    par1.showMsg("Vous avez reussi à ouvrir la porte !");
-                    if(already==false)
-                        par1.skills.upgradeCheat(2F);
-                    already = true;
+                    if (level == levelMax)
+                        par1.showMsg("Vous essayez d'ouvrir cette porte manifestement vérouillée...");
+                    level -= (float)par1.skills.getCheat() * rand.Next(1, 10) / 10;
+                    if (level * 100 / levelMax <= 20 && already == false)
+                        par1.showMsg("Vous sentez la resistance de la porte faiblir.");
+                    if (level <= 0)
+                    {
+                        open = true;
+                        value = ".";
+                        par1.showMsg("Vous avez reussi à ouvrir la porte !");
+                        if (already == false)
+                            par1.skills.upgradeCheat(2F);
+                        already = true;
+                    }
+
                 }
-                
-            }
-            else
-            {
-                open = false;
-                level = 0.00001F;
-                value = originalValue;
+                else
+                {
+                    open = false;
+                    level = 0.00001F;
+                    value = originalValue;
+                }
             }
         }
     }

@@ -93,7 +93,7 @@ namespace DW
         }
 
 
-        public virtual void interact(Player par1)
+        public virtual void interact(Entity par1)
         {
 
 

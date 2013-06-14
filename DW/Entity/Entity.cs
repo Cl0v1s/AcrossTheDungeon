@@ -34,6 +34,7 @@ namespace DW
         protected double peur = 0;
         protected int timer = 40;
         protected int speed = 40;
+        protected Inventory inventory;
 
         protected Entity[] others;
         protected Entity worstEnemy = null;
@@ -49,6 +50,7 @@ namespace DW
         public Entity(String par1name, int par3force, int par4endurance, int par5volonte, int par6agilite, Stair par7stair)
             : base(par7stair)
         {
+            inventory = new Inventory(this);
             name = par1name;
             force = par3force;
             life = force * endurance + rand.Next(1, par1name.Length);
@@ -71,6 +73,10 @@ namespace DW
         public Entity()
         {
 
+        }
+
+        public virtual void showMsg(string par1)
+        {
         }
 
         public void setStair(Stair par1)
@@ -634,6 +640,9 @@ namespace DW
             return life;
         }
 
-
+        public Inventory getInventory()
+        {
+            return inventory;
+        }
     }
 }

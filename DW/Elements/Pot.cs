@@ -14,7 +14,7 @@ namespace DW
             color = Color.Brown;
         }
 
-        public override void interact(Player par1)
+        public override void interact(Entity par1)
         {
             stair.setSpecial(null, x, y);
             drop();

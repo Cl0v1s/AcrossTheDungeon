@@ -9,6 +9,7 @@ namespace DW
     {
         public Pig()
         {
+            inventory = new Inventory(this);
             name = "Cochon";
             life = 30;
             lifeTmp = life;

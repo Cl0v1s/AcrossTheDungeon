@@ -85,11 +85,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="System\Graphics\InventoryUI.cs" />
+    <Compile Include="Item\Berry.cs" />
     <Compile Include="Entity\Bat.cs" />
     <Compile Include="Biome.cs" />
     <Compile Include="BiomeCave.cs" />
     <Compile Include="BiomeDungeon.cs" />
     <Compile Include="BiomeGarden.cs" />
+    <Compile Include="Elements\ItemOnMap.cs" />
+    <Compile Include="Item\Inventory.cs" />
     <Compile Include="System\Graphics\Chat.cs" />
     <Compile Include="System\Network\ChatPacket.cs" />
     <Compile Include="Elements\Chest.cs" />
@@ -98,7 +102,7 @@
     <Compile Include="System\Network\DataPacket.cs" />
     <Compile Include="Elements\Door.cs" />
     <Compile Include="Scene\IpMenu.cs" />
-    <Compile Include="Item.cs" />
+    <Compile Include="Item\Item.cs" />
     <Compile Include="Entity\OtherPlayer.cs" />
     <Compile Include="System\Network\Packet.cs" />
     <Compile Include="Entity\Pig.cs" />
@@ -116,13 +120,13 @@
     <Compile Include="System\Graphics\Render.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Skills.cs" />
-    <Compile Include="Special.cs" />
+    <Compile Include="Elements\Special.cs" />
     <Compile Include="Stair.cs" />
     <Compile Include="System\Graphics\StatUI.cs" />
     <Compile Include="System\TextInput.cs" />
     <Compile Include="Scene\EditorMenu.cs" />
-    <Compile Include="System\Text.cs" />
-    <Compile Include="System\MenuUI.cs" />
+    <Compile Include="System\Graphics\Text.cs" />
+    <Compile Include="System\Graphics\MenuUI.cs" />
     <Compile Include="Scene\GameMenu.cs" />
     <Compile Include="System\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

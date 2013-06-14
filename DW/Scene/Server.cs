@@ -54,10 +54,17 @@ namespace DW
 
         public void update()
         {
+            inputUpdate();
             DW.player.update();
             DW.player.getStair().time();
             if (chat != null)
                 chat.update();
+        }
+
+        private void inputUpdate()
+        {
+            if (DW.input.equals(Key.I))
+                DW.render.openInventory();
         }
 
         public void up(Player par1)

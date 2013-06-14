@@ -23,6 +23,18 @@ namespace DW
             price = par3price;
         }
 
+        public Item()
+        {
+
+        }
+
+        protected void set(string par1name, string par2desc, int par3price)
+        {
+            name = par1name;
+            description = par2desc;
+            price = par3price;
+        }
+
         //<summary>
         //execute la fonction de l'objet
         //</summary>
@@ -30,6 +42,11 @@ namespace DW
         public virtual void interact(Entity par1)
         {
 
+        }
+
+        public string getName()
+        {
+            return name;
         }
 
     }
