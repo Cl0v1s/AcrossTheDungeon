@@ -31,6 +31,12 @@ namespace DW
             selector.Fill(Color.FromArgb(0, 255, 0));
         }
 
+        public void setInventory(Inventory par1)
+        {
+            inventory = par1;
+            contents = inventory.getContents();
+        }
+
         public void update()
         {
             if (opened)

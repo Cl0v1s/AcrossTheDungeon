@@ -229,6 +229,15 @@ namespace DW
                     otherChatMsg = new string[6];
                     otherChatMsgIndex = 0;
                     break;
+                case "spawnitem":
+                    if (par2args is object[])
+                    {
+                        object[] d = (object[])par2args;
+                        bool r=DW.player.getStair().spawnItem((Item)d[0], (int)d[1], (int)d[2]);
+                        Packet.Send(new DataPacket(r), client);
+                        other.getInventory().removeItem((Item)d[0], false);
+                    }
+                    break;
 
             }
             //Console.WriteLine("Execution de " + par1command);

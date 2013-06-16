@@ -26,7 +26,6 @@ namespace DW
             : base()
         {
             inventory = new Inventory(this);
-            inventory.addItem(new Berry());
             name = par1name;
             force = par3force;
             endurance = par4endurance;

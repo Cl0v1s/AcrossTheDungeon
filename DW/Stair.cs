@@ -347,6 +347,23 @@ namespace DW
                         if (map[i, o] != 2 && map[i, o] != 100 && i + 1 <= width && o - 1 >= 0 && map[i + 1, o - 1] == 100)
                             map[i, o] = 1;
                         /*Clean Lava Side*/
+                        if (map[i, o] != 101 && map[i + 1, o] == 101)
+                            map[i, o] = 1;
+                        if (map[i, o] != 101 && map[i - 1, o] == 101)
+                            map[i, o] = 1;
+                        if (map[i, o] != 101 && map[i, o + 1] == 101)
+                            map[i, o] = 1;
+                        if (map[i, o] != 101 && map[i, o - 1] == 101)
+                            map[i, o] = 1;
+                        if (map[i, o] != 101 && map[i + 1, o + 1] == 101)
+                            map[i, o] = 1;
+                        if (map[i, o] != 101 && map[i + 1, o - 1] == 101)
+                            map[i, o] = 1;
+                        if (map[i, o] != 101 && map[i - 1, o + 1] == 101)
+                            map[i, o] = 1;
+                        if (map[i, o] != 101 && map[i - 1, o - 1] == 101)
+                            map[i, o] = 1;
+                        /*water win against lava*/
                         if (map[i, o] == 101 && map[i + 2, o] == 100)
                             map[i, o] = 1;
                         if (map[i, o] == 101 && map[i - 2, o] == 100)

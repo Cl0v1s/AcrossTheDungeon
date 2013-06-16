@@ -86,7 +86,7 @@ namespace DW
                 int xGravel = rand.Next(1, par2room.getW() - 1);
                 int yGravel = rand.Next(1, par2room.getH() - 1);
 
-                while (par2room.getMap()[xGravel, yGravel] != 1)
+                while (par2room.getMap()[xGravel, yGravel] != 1 && par2room.getMap()[xGravel - 1, yGravel] == 101 && par2room.getMap()[xGravel + 1, yGravel] == 101 && par2room.getMap()[xGravel, yGravel - 1] == 101 && par2room.getMap()[xGravel, yGravel+1] == 101)
                 {
                     if (tried >= 500)
                         return;

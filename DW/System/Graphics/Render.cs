@@ -139,6 +139,11 @@ namespace DW
             inventoryUI.open();
         }
 
+        public void setInventory(Inventory par1)
+        {
+            inventoryUI.setInventory(par1);
+        }
+
         public bool isInventoryOpenned()
         {
             return inventoryUI.isOpenned();

@@ -13,6 +13,7 @@ namespace DW
             : base(par1name, par2class, par3force, par4endurance, par5volonte, par6agilite)
         {
             value = "à";
+            inventory = new Inventory(this);
         }
 
         //<summary>

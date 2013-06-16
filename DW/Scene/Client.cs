@@ -33,31 +33,33 @@ namespace DW
             createConnexion(par1);
         }
 
+        private void inputUpdate()
+        {
+            if (DW.input.equals(Key.I))
+                DW.render.openInventory();
+            if (DW.render.isInventoryOpenned())
+                return;
+            if (DW.input.equals(Key.UpArrow) == true)
+                changePlayerPos(DW.player.getX(), DW.player.getY() - 1, "back");
+            else if (DW.input.equals(Key.DownArrow) == true)
+                changePlayerPos(DW.player.getX(), DW.player.getY() + 1, "front");
+            else if (DW.input.equals(Key.RightArrow) == true)
+                changePlayerPos(DW.player.getX() + 1, DW.player.getY(), "right");
+            else if (DW.input.equals(Key.LeftArrow) == true)
+                changePlayerPos(DW.player.getX() - 1, DW.player.getY(), "left");
+            else if (DW.input.equals(Key.L))
+                ((OtherPlayer)DW.player).lap();
+            else if (DW.input.equals(Key.KeypadEnter) || DW.input.equals(Key.Return))
+                interactPlayer();
+            DW.render.move(DW.player.getX() * -30 + 640 / 2, DW.player.getY() * -30 + 480 / 2);
+        }
+
         //<summary>
         //actualise le client de manière à géréer les entrées de touches et à afficher le donjon
         //</summary>
         public void update()
         {
-            if (isWriting == false)
-            {
-                if (DW.input.equals(Key.UpArrow) == true)
-                    changePlayerPos(DW.player.getX(), DW.player.getY() - 1, "back");
-                else if (DW.input.equals(Key.DownArrow) == true)
-                    changePlayerPos(DW.player.getX(), DW.player.getY() + 1, "front");
-                else if (DW.input.equals(Key.RightArrow) == true)
-                    changePlayerPos(DW.player.getX() + 1, DW.player.getY(), "right");
-                else if (DW.input.equals(Key.LeftArrow) == true)
-                    changePlayerPos(DW.player.getX() - 1, DW.player.getY(), "left");
-                else if (DW.input.equals(Key.L))
-                    ((OtherPlayer)DW.player).lap();
-                else if (DW.input.equals(Key.KeypadEnter) || DW.input.equals(Key.Return))
-                    interactPlayer();
-                else if (DW.input.equals(Key.I))
-                    DW.render.openInventory();
-                DW.render.move(DW.player.getX() * -30 + 640 / 2, DW.player.getY() * -30 + 480 / 2);
-            }
-            else
-                isWriting=chat.write();
+            inputUpdate();
             DW.render.renderEntityVision(DW.player);
             if (chat != null)
                 chat.update();
@@ -238,6 +240,7 @@ namespace DW
                 {
                     DW.render.getStatUI().setOwner((Player)e[i]);
                     DW.player = (Player)e[i];
+                    DW.render.setInventory(DW.player.getInventory());
                 }
             }
             DW.player.setStair(stair);
