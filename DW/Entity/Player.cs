@@ -71,46 +71,10 @@ namespace DW
             EnvironmentEffect();
         }
 
-
-        //<summary>
-        //réagit en fonction des touches préssées (seulement coté serveur, ceci étant géré par la class Client coté client
-        //</summary>
-        private void inputUpdate()
-        {
-            if (DW.input.equals(Key.UpArrow) == true)
-            {
-                move(0, -1);
-                face = "back";
-            }
-            else if (DW.input.equals(Key.DownArrow) == true)
-            {
-                move(0, 1);
-                face = "front";
-            }
-            else if (DW.input.equals(Key.RightArrow) == true)
-            {
-                move(1, 0);
-                face = "right";
-            }
-            else if (DW.input.equals(Key.LeftArrow) == true)
-            {
-                move(-1, 0);
-                face = "left";
-            }
-            else if (DW.input.equals(Key.KeypadEnter) || DW.input.equals(Key.Return))
-            {
-                interact();
-                Thread.Sleep(200);
-            }
-            else if (DW.input.equals(Key.L))
-                lap();
-        }
-
-
         //<summary>
         //permet au joueur de boire (seulement coté serveur)
         //</summary>
-        private void lap()
+        public void lap()
         {
             if (isOn(100))
             {
@@ -164,7 +128,6 @@ namespace DW
         //</summary>
         public new virtual bool update()
         {
-            inputUpdate();
             if (stair != null)
                 stair.update();
             DW.render.renderEntityVision(this);
@@ -219,7 +182,7 @@ namespace DW
         //<summary>
         //fait bouger le joueur (coté serveur seulement)
         //</summary>
-        private void move(int par1x, int par2y)
+        public void move(int par1x, int par2y)
         {
             Entity[] e = stair.getEntities();
             for (int i = 0; i < e.Length; i++)

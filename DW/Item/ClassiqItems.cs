@@ -5,11 +5,12 @@ using System.Text;
 
 namespace DW
 {
+    [Serializable]
     class Berry : Item
     {
         public Berry()
         {
-            set("baie", "Une petite baie acide ceuilli sur une plante du donjon.", 2);
+            set("baie", "Une petite baie acide cueillie sur une plante du donjon.", 2);
         }
     }
 }

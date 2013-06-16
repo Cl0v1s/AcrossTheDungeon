@@ -64,7 +64,38 @@ namespace DW
         private void inputUpdate()
         {
             if (DW.input.equals(Key.I))
+            {
                 DW.render.openInventory();
+            }
+            if (DW.render.isInventoryOpenned())
+                return;
+            if (DW.input.equals(Key.UpArrow) == true)
+            {
+                DW.player.move(0, -1);
+                DW.player.setFace("back");
+            }
+            else if (DW.input.equals(Key.DownArrow) == true)
+            {
+                DW.player.move(0, 1);
+                DW.player.setFace("front");
+            }
+            else if (DW.input.equals(Key.RightArrow) == true)
+            {
+                DW.player.move(1, 0);
+                DW.player.setFace("right");
+            }
+            else if (DW.input.equals(Key.LeftArrow) == true)
+            {
+                DW.player.move(-1, 0);
+                DW.player.setFace("left");
+            }
+            else if (DW.input.equals(Key.KeypadEnter) || DW.input.equals(Key.Return))
+            {
+                DW.player.interact();
+                Thread.Sleep(200);
+            }
+            else if (DW.input.equals(Key.L))
+                DW.player.lap();
         }
 
         public void up(Player par1)

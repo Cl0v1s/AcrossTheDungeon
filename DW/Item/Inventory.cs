@@ -2,17 +2,23 @@
 
 namespace DW
 {
+    [Serializable]
     class Inventory
     {
         private Entity owner;
         private int size;
         private Item[] contents;
 
-        public Inventory(Entity par1owner, int par2size=16)
+        public Inventory(Entity par1owner, int par2size=22)
         {
             owner = par1owner;
             size = par2size;
             contents = new Item[par2size];
+        }
+
+        public void setSlot(int par1index, Item par2item)
+        {
+            contents[par1index] = par2item;
         }
 
         public bool addItem(Item par1)
@@ -51,14 +57,28 @@ namespace DW
                 if (owner is Player)
                     ((Player)owner).showMsg("L'objet " + contents[par1].getName() + " a été retiré du sac.");
                 if (par2let == true)
-                    owner.getStair().spawnItem(contents[par1], owner.getX(), owner.getY());
-                contents[par1] = null;
+                {
+                    if(owner.getStair().spawnItem(contents[par1], owner.getX(), owner.getY()))
+                        contents[par1] = null;
+                    else
+                        owner.showMsg("Vousne pouvez deposer un objet ici.");
+                }
             }
         }
 
         public Entity getOwner()
         {
             return owner;
+        }
+
+        public Item[] getContents()
+        {
+            return contents;
+        }
+
+        public int getSize()
+        {
+            return size;
         }
 
 

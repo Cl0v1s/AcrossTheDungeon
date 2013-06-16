@@ -139,6 +139,11 @@ namespace DW
             inventoryUI.open();
         }
 
+        public bool isInventoryOpenned()
+        {
+            return inventoryUI.isOpenned();
+        }
+
         public StatUI getStatUI()
         {
             return statUI;
@@ -310,6 +315,31 @@ namespace DW
                                         e.Frame = 12;
                                     break;
                             }
+                            return e;
+                        }
+                        else
+                            return spriteDictionnary[i].Value;
+                    }
+                }
+            }
+            return null;
+        }
+
+        //<summary>
+        //retourne le sprite animé associé à l'objet spécifié precedemment enregistré grace à la méthode registerSprite
+        //</summary>
+        //<param name="par1">caractère associé au sprite animé</param>
+        public Sprite getSprite(string par1)
+        {
+            for (int i = 0; i < spriteDictionnary.Length; i++)
+            {
+                if (!spriteDictionnary[i].Equals(null))
+                {
+                    if (spriteDictionnary[i].Key == par1)
+                    {
+                        if (spriteDictionnary[i].Value is AnimatedSprite)
+                        {
+                            AnimatedSprite e = (AnimatedSprite)spriteDictionnary[i].Value;
                             return e;
                         }
                         else

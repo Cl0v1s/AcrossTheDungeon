@@ -595,7 +595,7 @@ namespace DW
             special[par1x,par2y]=null;
         }
 
-        public void spawnItem(Item par1item, int par2x, int par3y)
+        public bool spawnItem(Item par1item, int par2x, int par3y)
         {
             ItemOnMap i = new ItemOnMap(par1item, this, par2x, par3y);
             if (special[par2x, par3y] == null)
@@ -606,7 +606,10 @@ namespace DW
                 special[par2x - 1, par3y] = i;
             else if (special[par2x, par3y - 1] == null)
                 special[par2x, par3y - 1] = i;
-            else special[par3y, par3y + 1] = i;
+            else if (special[par3y, par3y + 1] == null)
+                special[par3y, par3y + 1] = i;
+            else return false;
+            return true;
         }
 
 
