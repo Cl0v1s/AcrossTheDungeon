@@ -18,6 +18,7 @@ namespace DW
             3,
             new Chest(),
             new Pot(),
+            new Rock(),
         };
 
 

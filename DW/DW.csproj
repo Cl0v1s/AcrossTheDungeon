@@ -85,13 +85,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Item\ItemMineral.cs" />
     <Compile Include="Item\ItemFood.cs" />
+    <Compile Include="Elements\Rock.cs" />
     <Compile Include="System\Graphics\InventoryUI.cs" />
     <Compile Include="Entity\Bat.cs" />
-    <Compile Include="Biome.cs" />
-    <Compile Include="BiomeCave.cs" />
-    <Compile Include="BiomeDungeon.cs" />
-    <Compile Include="BiomeGarden.cs" />
+    <Compile Include="Gen\Biome.cs" />
+    <Compile Include="Gen\BiomeCave.cs" />
+    <Compile Include="Gen\BiomeDungeon.cs" />
+    <Compile Include="Gen\BiomeGarden.cs" />
     <Compile Include="Elements\ItemOnMap.cs" />
     <Compile Include="Item\Inventory.cs" />
     <Compile Include="System\Graphics\Chat.cs" />
@@ -118,10 +120,10 @@
     <Compile Include="Entity\Player.cs" />
     <Compile Include="Elements\Pot.cs" />
     <Compile Include="System\Graphics\Render.cs" />
-    <Compile Include="Room.cs" />
+    <Compile Include="Gen\Room.cs" />
     <Compile Include="Skills.cs" />
     <Compile Include="Elements\Special.cs" />
-    <Compile Include="Stair.cs" />
+    <Compile Include="Gen\Stair.cs" />
     <Compile Include="System\Graphics\StatUI.cs" />
     <Compile Include="System\TextInput.cs" />
     <Compile Include="Scene\EditorMenu.cs" />

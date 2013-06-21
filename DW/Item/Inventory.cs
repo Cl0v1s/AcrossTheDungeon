@@ -14,6 +14,7 @@ namespace DW
             owner = par1owner;
             size = par2size;
             contents = new Item[par2size];
+            addItem(new ItemPickAxe());
         }
 
         public bool isEmtpy()
@@ -138,6 +139,16 @@ namespace DW
         public int getSize()
         {
             return size;
+        }
+
+        public bool contains(Item par1)
+        {
+            for (int i = 0; i < contents.Length; i++)
+            {
+                if (contents[i].getName() == par1.getName())
+                    return true;
+            }
+            return false;
         }
 
 

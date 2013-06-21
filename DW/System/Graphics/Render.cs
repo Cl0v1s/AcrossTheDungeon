@@ -179,11 +179,17 @@ namespace DW
             addToSpriteDictionnary("T", "Data/images/Elements/Plant/4.png");
             /*Pot*/
             addToSpriteDictionnary("U", "Data/images/Elements/Pot.png");
+            /*Rock*/
+            addToSpriteDictionnary("rock", "Data/images/Elements/Rock.png");
             /*************************************************Items*/
             /*baie*/
             addToSpriteDictionnary("baie", "Data/images/Items/Berry.png");
             /*cookie*/
             addToSpriteDictionnary("cookie", "Data/images/Items/Cookie.png");
+            /*Dust*/
+            addToSpriteDictionnary("Poussière fine", "Data/images/Items/Dust.png");
+            /*PickAxe*/
+            addToSpriteDictionnary("Pioche", "Data/images/Items/PickAxe.png");
         }
 
         //<summary>
