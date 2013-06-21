@@ -13,7 +13,7 @@ namespace DW
         private Biome[] biomes;
         private Biome[] biomesList = new Biome[]
         {
-            new Biome(),
+            //new Biome(),
             new BiomeDungeon(),
             new BiomeGarden(),
             new BiomeCave(),
@@ -329,6 +329,7 @@ namespace DW
                 {
                     try
                     {
+
                         /*Clean Water side*/
                         if (map[i, o] != 2 && map[i, o] != 100 && i - 1 >= 0 && map[i - 1, o] == 100)
                             map[i, o] = 1;
@@ -380,6 +381,7 @@ namespace DW
                             map[i, o] = 1;
                         if (map[i, o] == 101 && map[i - 2, o - 2] == 100)
                             map[i, o] = 1;
+
                     }
                     catch (Exception)
                     { }
@@ -614,18 +616,35 @@ namespace DW
 
         public bool spawnItem(Item par1item, int par2x, int par3y)
         {
-            ItemOnMap i = new ItemOnMap(par1item, this, par2x, par3y);
-            if (special[par2x, par3y] == null)
-                special[par2x, par3y] = i;
-            else if (special[par2x + 1, par3y] == null)
-                special[par2x + 1, par3y] = i;
-            else if (special[par2x - 1, par3y] == null)
-                special[par2x - 1, par3y] = i;
-            else if (special[par2x, par3y - 1] == null)
-                special[par2x, par3y - 1] = i;
-            else if (special[par3y, par3y + 1] == null)
-                special[par3y, par3y + 1] = i;
-            else return false;
+
+                ItemOnMap i = new ItemOnMap(par1item, this, par2x, par3y);
+                if (special[par2x, par3y] == null)
+                {
+                    i.setPos(par2x, par3y);
+                    special[par2x, par3y] = i;
+                }
+                else if (special[par2x + 1, par3y] == null && map[par2x + 1, par3y]==1)
+                {
+                    i.setPos(par2x + 1, par3y);
+                    special[par2x + 1, par3y] = i;
+                }
+                else if (special[par2x - 1, par3y] == null && map[par2x - 1, par3y] == 1)
+                {
+                    i.setPos(par2x - 1, par3y);
+                    special[par2x - 1, par3y] = i;
+                }
+                else if (special[par2x, par3y - 1] == null && map[par2x, par3y - 1] == 1)
+                {
+                    i.setPos(par2x, par3y - 1);
+                    special[par2x, par3y - 1] = i;
+                }
+                else if (special[par3y, par3y + 1] == null && map[par2x, par3y + 1] == 1)
+                {
+                    i.setPos(par2x, par3y + 1);
+                    special[par3y, par3y + 1] = i;
+                }
+                else return false;
+
             return true;
         }
 

@@ -36,7 +36,9 @@ namespace DW
         private void inputUpdate()
         {
             if (DW.input.equals(Key.I))
+            {
                 DW.render.openInventory();
+            }
             if (DW.render.isInventoryOpenned())
                 return;
             if (DW.input.equals(Key.UpArrow) == true)

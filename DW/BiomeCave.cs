@@ -43,6 +43,22 @@ namespace DW
 
         private void applyLava(Room par1room)
         {
+            int x = rand.Next(1, par1room.getW() - 1);
+            int y = rand.Next(1, par1room.getH() - 1);
+            int w = rand.Next(2, 7);
+            int h = rand.Next(2, 7);
+            for (int i = x; i < w; i++)
+            {
+                for (int u = y; u < h; u++)
+                {
+                    if (stair.getMap()[i + par1room.getX(), u + par1room.getY()] != 2)
+                    {
+                        stair.set(101, i + par1room.getX(), u + par1room.getY());
+                        par1room.set(101, i, u);
+                    }
+                }
+            }
+            /*
             int tried = 0;
             int xp = rand.Next(1, par1room.getW() - 1);
             int yp = rand.Next(1, par1room.getH() - 1);
@@ -71,7 +87,7 @@ namespace DW
                 }
                 par1room.set(101, xp, yp);
                 stair.set(101, par1room.getX() + xp, par1room.getY() + yp);
-            }
+            }*/
         }
 
         //<summary>

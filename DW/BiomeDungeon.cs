@@ -79,7 +79,7 @@ namespace DW
                         }
                         catch (System.InvalidCastException)
                         {
-                            if (specialCase[r].GetType() != new Pot().GetType())
+                            if (specialCase[r].GetType() != new Pot().GetType() || !(specialCase[r] is Chest))
                             {
                                 Special s = (((Special)specialCase[r]).clone());
                                 s.setPos(stair,par2room.getX() + i, par2room.getY() + u);
@@ -95,32 +95,35 @@ namespace DW
                                     xp = rand.Next(1, par2room.getW());
                                     yp = rand.Next(1, par2room.getH());
                                 }
-                                Special s = (((Special)specialCase[r]).clone());
+                                Special s = ((Special)specialCase[r]);
+                                s = (Special)s.clone();
                                 s.setPos(stair,par2room.getX() + xp, par2room.getY() + yp);
-                                stair.set(0, par2room.getX() + xp, par2room.getY() + yp);
                                 stair.setSpecial(s, par2room.getX() + xp, par2room.getY() + yp);
-                                par2room.set(0, xp, yp);
                                 par2room.setSpecial(s, xp, yp);
+                                stair.getSpecial()[par2room.getX() + xp, par2room.getY() + yp].setPos(stair, par2room.getX() + xp, par2room.getY() + yp);
                                 int nb = rand.Next(1, 6);
-                                for (int p = 0; p < nb; p++)
+                                if (specialCase[r] is Pot)
                                 {
-                                    try
+                                    for (int p = 0; p < nb; p++)
                                     {
-                                        xp = rand.Next(1, par2room.getW());
-                                        yp = rand.Next(1, par2room.getH());
-                                        while ((par2room.getMap()[xp + 1, yp] != 2 && par2room.getMap()[xp - 1, yp] != 2 && par2room.getMap()[xp, yp + 1] != 2 && par2room.getMap()[xp, yp - 1] != 2) && (par2room.getSpecial()[xp + 1, yp].GetType() != specialCase[r].GetType() && par2room.getSpecial()[xp - 1, yp].GetType() != specialCase[r].GetType() && par2room.getSpecial()[xp, yp + 1].GetType() != specialCase[r].GetType() && par2room.getSpecial()[xp, yp - 1].GetType() != specialCase[r].GetType()))
+                                        try
                                         {
                                             xp = rand.Next(1, par2room.getW());
                                             yp = rand.Next(1, par2room.getH());
+                                            while ((par2room.getMap()[xp + 1, yp] != 2 && par2room.getMap()[xp - 1, yp] != 2 && par2room.getMap()[xp, yp + 1] != 2 && par2room.getMap()[xp, yp - 1] != 2) && (par2room.getSpecial()[xp + 1, yp].GetType() != specialCase[r].GetType() && par2room.getSpecial()[xp - 1, yp].GetType() != specialCase[r].GetType() && par2room.getSpecial()[xp, yp + 1].GetType() != specialCase[r].GetType() && par2room.getSpecial()[xp, yp - 1].GetType() != specialCase[r].GetType()))
+                                            {
+                                                xp = rand.Next(1, par2room.getW());
+                                                yp = rand.Next(1, par2room.getH());
+                                            }
+                                            s = ((Special)specialCase[r]);
+                                            s = (Special)s.clone();
+                                            s.setPos(stair, par2room.getX() + xp, par2room.getY() + yp);
+                                            stair.setSpecial(s, par2room.getX() + xp, par2room.getY() + yp);
+                                            stair.getSpecial()[par2room.getX() + xp, par2room.getY() + yp].setPos(stair, par2room.getX() + xp, par2room.getY() + yp);
+                                            par2room.setSpecial(s, xp, yp);
                                         }
-                                        s = (((Special)specialCase[r]).clone());
-                                        s.setPos(stair,par2room.getX() + xp, par2room.getY() + yp);
-                                        stair.set(0, par2room.getX() + xp, par2room.getY() + yp);
-                                        stair.setSpecial(s, par2room.getX() + xp, par2room.getY() + yp);
-                                        par2room.set(0, xp, yp);
-                                        par2room.setSpecial(s, xp, yp);
+                                        catch (Exception) { }
                                     }
-                                    catch (Exception) { }
                                 }
                             }
                         }

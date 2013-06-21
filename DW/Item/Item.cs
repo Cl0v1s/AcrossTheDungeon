@@ -4,6 +4,29 @@
 
 namespace DW
 {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     [Serializable]
     class Item
     {
@@ -32,11 +55,12 @@ namespace DW
 
         }
 
-        protected void set(string par1name, string par2desc, int par3price)
+        protected virtual void set(string par1name, string par2desc, int par3price,string par4action=null)
         {
             name = par1name;
             description = par2desc;
             price = par3price;
+            action = par4action;
         }
 
         //<summary>
@@ -61,6 +85,11 @@ namespace DW
         public string getAction()
         {
             return action;
+        }
+
+        public virtual Item clone()
+        {
+            return (Item)this.MemberwiseClone();
         }
 
     }

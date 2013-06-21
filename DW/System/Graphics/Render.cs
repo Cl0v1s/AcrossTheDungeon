@@ -182,6 +182,8 @@ namespace DW
             /*************************************************Items*/
             /*baie*/
             addToSpriteDictionnary("baie", "Data/images/Items/Berry.png");
+            /*cookie*/
+            addToSpriteDictionnary("cookie", "Data/images/Items/Cookie.png");
         }
 
         //<summary>

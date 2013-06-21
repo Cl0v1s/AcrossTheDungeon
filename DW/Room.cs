@@ -148,7 +148,12 @@ namespace DW
 
         public void set(int par1case, int par2x, int par3y)
         {
-            map[par2x, par3y] = par1case;
+            try
+            {
+                map[par2x, par3y] = par1case;
+            }
+            catch (Exception)
+            { }
         }
 
         public void setSpecial(Special par1case, int par2x, int par3y)

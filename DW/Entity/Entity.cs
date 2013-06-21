@@ -644,5 +644,25 @@ namespace DW
         {
             return inventory;
         }
+
+        public void setHungry(float par1)
+        {
+            faim = par1;
+        }
+
+        public float getHungry()
+        {
+            return faim;
+        }
+
+        public void setThrirst(float par1)
+        {
+            soif = par1;
+        }
+
+        public float getThrirst()
+        {
+            return soif;
+        }
     }
 }

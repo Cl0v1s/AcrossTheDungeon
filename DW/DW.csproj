@@ -85,8 +85,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Item\ItemFood.cs" />
     <Compile Include="System\Graphics\InventoryUI.cs" />
-    <Compile Include="Item\ClassiqItems.cs" />
     <Compile Include="Entity\Bat.cs" />
     <Compile Include="Biome.cs" />
     <Compile Include="BiomeCave.cs" />

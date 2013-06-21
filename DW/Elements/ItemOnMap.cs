@@ -28,9 +28,10 @@ namespace DW
 
         public override void interact(Entity par1)
         {
-            Console.WriteLine("pl");
             if (par1.getInventory().addItem(item))
+            {
                 par1.getStair().removeSpecial(x, y);
+            }
         }
 
     }

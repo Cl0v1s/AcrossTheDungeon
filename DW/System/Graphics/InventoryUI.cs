@@ -64,7 +64,7 @@ namespace DW
                     {
                         Video.Screen.Blit(Icon, new Point(90, 240));
                         string d = contents[index].getDescription();
-                        int part = d.Length / 55;
+                        int part = d.Split("\n".ToCharArray()).Length;
                         if (part <= 1)
                             new Text("pixel.ttf", 20, 90 + 60, 262, contents[index].getDescription()).update();
                         else if (part > 1)
@@ -72,7 +72,7 @@ namespace DW
                             int yu = 262 - (part * 25 / 2) + 25 / 2;
                             for (int i = 0; i < part; i++)
                             {
-                                new Text("pixel.ttf", 20, 90 + 60, yu + i * 25, d.Substring(i * 55, 55)).update();
+                                new Text("pixel.ttf", 20, 90 + 60, yu + i * 25, d.Split("\n".ToCharArray())[i]).update();
                             }
                         }
                         if (contents[index].getAction() == null)
@@ -137,6 +137,7 @@ namespace DW
             }
             else
             {
+
                 if (DW.input.equals(SdlDotNet.Input.Key.Escape))
                     inSelection = false;
                 else if (DW.input.equals(SdlDotNet.Input.Key.LeftArrow))
@@ -146,7 +147,7 @@ namespace DW
                 else if (DW.input.equals(SdlDotNet.Input.Key.KeypadEnter) || DW.input.equals(SdlDotNet.Input.Key.Return))
                 {
                     if (SelectionIndex == 0)
-                        inventory.setSlot(index,contents[index].interact(inventory.getOwner()));
+                        inventory.setSlot(index,contents[index].interact((Entity)inventory.getOwner()));
                     else
                     {
                         inventory.removeItem(index, true);
@@ -160,6 +161,7 @@ namespace DW
 
         public void open()
         {
+            inSelection = false;
             if (opened == false)
                 opened = true;
             else

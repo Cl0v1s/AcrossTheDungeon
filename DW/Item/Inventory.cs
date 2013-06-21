@@ -5,16 +5,25 @@ namespace DW
     [Serializable]
     class Inventory
     {
-        private Entity owner;
+        private Special owner;
         private int size;
         private Item[] contents;
 
-        public Inventory(Entity par1owner, int par2size=22)
+        public Inventory(Special par1owner, int par2size=22)
         {
             owner = par1owner;
             size = par2size;
             contents = new Item[par2size];
-            addItem(new Berry());
+        }
+
+        public bool isEmtpy()
+        {
+            for (int i = 0; i < contents.Length; i++)
+            {
+                if (contents[i] != null)
+                    return false;
+            }
+            return true;
         }
 
         public void setSlot(int par1index, Item par2item)
@@ -39,19 +48,20 @@ namespace DW
             return false;
         }
 
-        public void removeItem(Item par1,bool par2let)
+        public void removeItem(Item par1,bool par2let,Entity par3target=null)
         {
             for (int i = 0; i < size; i++)
             {
+                
                 if (contents[i].getName() == par1.getName())
                 {
-                    removeItem(i, par2let);
+                    removeItem(i, par2let,par3target);
                     return;
                 }
             }
         }
 
-        public void removeItem(int par1, bool par2let)
+        public void removeItem(int par1, bool par2let,Entity par3target=null)
         {
             if (contents[par1] != null)
             {
@@ -60,13 +70,29 @@ namespace DW
                 {
                     if (DW.client == null)
                     {
-                        if (owner.getStair().spawnItem(contents[par1], owner.getX(), owner.getY()))
-                            contents[par1] = null;
+                        if (par3target == null)
+                        {
+                            if (owner.getStair().spawnItem(contents[par1], owner.getX(), owner.getY()))
+                                contents[par1] = null;
+                            else
+                            {
+                                if (owner is Entity)
+                                    ((Entity)owner).showMsg("Vous ne pouvez deposer un objet ici.");
+                                return;
+                            }
+                        }
                         else
                         {
-                            owner.showMsg("Vous ne pouvez deposer un objet ici.");
-                            return;
+                            if (owner.getStair().spawnItem(contents[par1], par3target.getX(), par3target.getY()))
+                                contents[par1] = null;
+                            else
+                            {
+                                if (owner is Entity)
+                                    ((Entity)owner).showMsg("Vous ne pouvez deposer un objet ici.");
+                                return;
+                            }
                         }
+
                     }
                     else
                     {
@@ -81,7 +107,8 @@ namespace DW
                                     contents[par1] = null;
                                 else
                                 {
-                                    owner.showMsg("Vous ne pouvez deposer un objet ici.");
+                            if(owner is Entity)
+                                ((Entity)owner).showMsg("Vous ne pouvez deposer un objet ici.");
                                     return;
                                 }
                                 break;
@@ -98,7 +125,7 @@ namespace DW
 
         }
 
-        public Entity getOwner()
+        public Special getOwner()
         {
             return owner;
         }

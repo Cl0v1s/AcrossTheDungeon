@@ -146,34 +146,21 @@ namespace DW
         //<param name="par1room">salle à affecter</param>
         protected void applyWater(Room par1room)
         {
-            int tried = 0;
-            int xp = rand.Next(1, par1room.getW() - 1);
-            int yp = rand.Next(1, par1room.getH() - 1);
-            while (par1room.getMap()[xp, yp] != 1)
+
+            int x=rand.Next(1,par1room.getW()-1);
+            int y=rand.Next(1,par1room.getH()-1);
+            int w = rand.Next(2, 7);
+            int h = rand.Next(2, 7);
+            for (int i = x; i < w; i++)
             {
-                if (tried >= 500)
-                    return;
-                xp = rand.Next(1, par1room.getW() - 1);
-                yp = rand.Next(1, par1room.getH() - 1);
-                tried += 1;
-            }
-            tried = 0;
-            par1room.set(100, xp, yp);
-            stair.set(100, par1room.getX() + xp, par1room.getY() + yp);
-            for (int i = 0; i < rand.Next(5, 15); i++)
-            {
-                xp = rand.Next(1, par1room.getW() - 1);
-                yp = rand.Next(1, par1room.getH() - 1);
-                while (!(par1room.getMap()[xp - 1, yp] == 100 || par1room.getMap()[xp + 1, yp] == 100 || par1room.getMap()[xp, yp - 1] == 100 || par1room.getMap()[xp, yp + 1] == 100) || par1room.getMap()[xp, yp] != 1)
+                for (int u = y; u < h; u++)
                 {
-                    if (tried >= 500)
-                        return;
-                    xp = rand.Next(1, par1room.getW() - 1);
-                    yp = rand.Next(1, par1room.getH() - 1);
-                    tried += 1;
+                    if (stair.getMap()[i + par1room.getX(), u + par1room.getY()] != 2)
+                    {
+                        stair.set(100, i + par1room.getX(), u + par1room.getY());
+                        par1room.set(100, i, u);
+                    }
                 }
-                par1room.set(100, xp, yp);
-                stair.set(100, par1room.getX() + xp, par1room.getY() + yp);
             }
         }
 

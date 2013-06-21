@@ -148,7 +148,12 @@ namespace DW
             if (isFighting == false)
             {
                 Special[,] s = stair.getSpecial();
-                if (s[x - 1, y] != null)
+                if (s[x, y] != null)
+                {
+                    s[x, y].interact(this);
+                    return;
+                }
+                else if (s[x - 1, y] != null)
                 {
                     s[x - 1, y].interact(this);
                     return;
@@ -166,11 +171,6 @@ namespace DW
                 else if (s[x, y + 1] != null)
                 {
                     s[x, y + 1].interact(this);
-                    return;
-                }
-                else if (s[x, y] != null)
-                {
-                    s[x, y].interact(this);
                     return;
                 }
                 
