@@ -31,12 +31,19 @@ namespace DW
             selector.Fill(Color.FromArgb(0, 255, 0));
         }
 
+        //<summary>
+        //paramètre la fenetre d'inventaire pour afficher l'inventaire passé en paramètre
+        //</summary>
+        //<param name="par1">L'inventaire à affecter à la fentre d'inventaire.</param>
         public void setInventory(Inventory par1)
         {
             inventory = par1;
             contents = inventory.getContents();
         }
 
+        //<summary>
+        //si ouvert, affiche l'inventaire à l'écran
+        //</summary>
         public void update()
         {
             if (opened)
@@ -88,6 +95,10 @@ namespace DW
             }
         }
 
+        //<summary>
+        //actualise la position des différents sélécteurs affichés à l'ecran.
+        //scan les entrée de touche afin de réagir en conséquence.
+        //</summary>
         private void updateSelector()
         {
             if (inSelection == false)
@@ -137,9 +148,11 @@ namespace DW
             }
             else
             {
-
                 if (DW.input.equals(SdlDotNet.Input.Key.Escape))
+                {
                     inSelection = false;
+                    Thread.Sleep(100);
+                }
                 else if (DW.input.equals(SdlDotNet.Input.Key.LeftArrow))
                     SelectionIndex = 0;
                 else if (DW.input.equals(SdlDotNet.Input.Key.RightArrow))
@@ -147,7 +160,7 @@ namespace DW
                 else if (DW.input.equals(SdlDotNet.Input.Key.KeypadEnter) || DW.input.equals(SdlDotNet.Input.Key.Return))
                 {
                     if (SelectionIndex == 0)
-                        inventory.setSlot(index,contents[index].interact((Entity)inventory.getOwner()));
+                        inventory.setSlot(index, contents[index].interact((Entity)inventory.getOwner()));
                     else
                     {
                         inventory.removeItem(index, true);
@@ -155,10 +168,12 @@ namespace DW
                     }
                 }
             }
-
             Video.Screen.Blit(selector, new Point(107 + 40 * xIndex, 147 + 25 * yIndex));
         }
 
+        //<summary>
+        //ouvre l'inventaire si fermé. Ferme l'inventaire si ouvert.
+        //</summary>
         public void open()
         {
             inSelection = false;
@@ -169,6 +184,9 @@ namespace DW
             Thread.Sleep(100);
         }
 
+        //<summary>
+        //retourne si la fenètre d'inventaire est ouverte ou fermée.
+        //</summary>
         public bool isOpenned()
         {
             return opened;

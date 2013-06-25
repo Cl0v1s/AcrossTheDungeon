@@ -86,10 +86,12 @@ namespace DW
 
 
         private int frame;
+        private int entityFrame = 0;
         private int x;
         private int y;
         private StatUI statUI;
         private InventoryUI inventoryUI;
+        private RecipeUI recipeUI;
         private Surface shadow = new Surface(30, 30).Convert(Video.Screen);
         private Surface tileset = new Surface("Data/images/TileSet.png");
         private KeyValuePair<string, Sprite>[] spriteDictionnary = new KeyValuePair<string, Sprite>[500];
@@ -132,6 +134,7 @@ namespace DW
         {
             statUI = new StatUI(par1);
             inventoryUI = new InventoryUI(par1.getInventory());
+            recipeUI = new RecipeUI(par1, null);
         }
 
         public void openInventory()
@@ -139,14 +142,27 @@ namespace DW
             inventoryUI.open();
         }
 
+        public void openRecipe()
+        {
+            recipeUI.open();
+        }
+
+        public void setRecipe(Special par1)
+        {
+            recipeUI.setTool(par1);
+        }
+
         public void setInventory(Inventory par1)
         {
             inventoryUI.setInventory(par1);
         }
 
-        public bool isInventoryOpenned()
+        public bool isUIOpenned()
         {
-            return inventoryUI.isOpenned();
+            if (inventoryUI.isOpenned() || recipeUI.isOpenned())
+                return true;
+            else
+                return false;
         }
 
         public StatUI getStatUI()
@@ -190,6 +206,10 @@ namespace DW
             addToSpriteDictionnary("Poussière fine", "Data/images/Items/Dust.png");
             /*PickAxe*/
             addToSpriteDictionnary("Pioche", "Data/images/Items/PickAxe.png");
+            /*IronMineral*/
+            addToSpriteDictionnary("Minerais de fer", "Data/images/Items/IronMineral.png");
+            /*ObsidianMineral*/
+            addToSpriteDictionnary("Minerais d'obsidienne", "Data/images/Items/ObsidianMineral.png");
         }
 
         //<summary>
@@ -255,6 +275,9 @@ namespace DW
         //</summary>
         public void update()
         {
+            entityFrame += 1;
+            if (entityFrame > 3)
+                entityFrame = 0;
             frame += 1;
             if (frame > 40)
                 frame = 0;
@@ -262,6 +285,8 @@ namespace DW
                 statUI.update();
             if (inventoryUI != null)
                 inventoryUI.update();
+            if (recipeUI != null)
+                recipeUI.update();
         }
 
 
@@ -440,12 +465,12 @@ namespace DW
                 if (idToRender == 2)
                 {
                     /*Wall*/
-                    if (par1map[par2x - 1, par3y] != idToRender && par1map[par2x + 1, par3y] != idToRender && par1map[par2x, par3y + 1] != idToRender)
-                        idToRender = id[idToRender];
-                    else if (par1map[par2x, par3y + 1] != idToRender)
-                        idToRender = id[idToRender] + 1;
+                    if (par1map[par2x - 1, par3y] != 2 && par1map[par2x + 1, par3y] != 2 && par1map[par2x, par3y + 1] != 2)
+                        idToRender = id[2];
+                    else if (par1map[par2x, par3y + 1] != 2 && par1map[par2x, par3y + 1] != 0)
+                        idToRender = id[2] + 1;
                     else
-                        idToRender = id[idToRender] + 2;
+                        idToRender = id[2] + 2;
                 }
                 else if (idToRender == 1)
                 {

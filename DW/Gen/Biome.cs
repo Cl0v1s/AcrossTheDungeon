@@ -155,11 +155,16 @@ namespace DW
             {
                 for (int u = y; u < h; u++)
                 {
-                    if (stair.getMap()[i + par1room.getX(), u + par1room.getY()] != 2)
+                    try
                     {
-                        stair.set(100, i + par1room.getX(), u + par1room.getY());
-                        par1room.set(100, i, u);
+                        if (stair.getMap()[i + par1room.getX(), u + par1room.getY()] != 2 && stair.getMap()[i + par1room.getX(), u + par1room.getY()] != 0)
+                        {
+                            stair.set(100, i + par1room.getX(), u + par1room.getY());
+                            par1room.set(100, i, u);
+                        }
                     }
+                    catch (Exception)
+                    { }
                 }
             }
         }

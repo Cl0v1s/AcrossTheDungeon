@@ -17,6 +17,7 @@ namespace DW
         protected String pclass;
         public Skills skills;
         private int stairId = -1;
+        protected Recipe[] recipeList = new Recipe[100];
         
 
         //<summary>
@@ -42,6 +43,7 @@ namespace DW
             lifeTmp = life;
             DW.render.setUI(this);
             skills = new Skills(this);
+            learnRecipe(Recipe.RecipeIronIngot);
         }
 
         //<summary>
@@ -50,6 +52,11 @@ namespace DW
         public string getClass()
         {
             return pclass;
+        }
+
+        public Recipe[] getRecipes()
+        {
+            return recipeList;
         }
 
 
@@ -174,6 +181,22 @@ namespace DW
                     return;
                 }
                 
+            }
+        }
+
+        //<summary>
+        //Permet au joueur d'apprendre une recette
+        //</summary>
+        //<param name="par1">Recette à apprendre</param>
+        public void learnRecipe(Recipe par1)
+        {
+            for (int i = 0; i < recipeList.Length; i++)
+            {
+                if (recipeList[i] == null)
+                {
+                    recipeList[i] = par1;
+                    return;
+                }   
             }
         }
 

@@ -4,78 +4,9 @@
 
 namespace DW
 {
-    [Serializable]
-    class ItemStick : Item
-    {
-        public ItemStick()
-        {
-            set("Bâton", "Un bâton long et fin...", 4);
-        }
-    }
 
-    [Serializable]
-    class ItemIronIngot : Item
-    {
-        public ItemIronIngot()
-        {
-            set("Lingot de fer", "Un lingot de fer.", 10);
-        }
-    }
 
-    [Serializable]
-    class ItemCoal : Item
-    {
-        public ItemCoal()
-        {
-            set("Charbon", "Un minerais de charbon. Hé, Marie, on aura de quoi se chauffer ce soir !", 6);
-        }
-    }
-
-    [Serializable]
-    class ItemGlass : Item
-    {
-        public ItemGlass()
-        {
-            set("Verre brute", "Il brille de milles feux, mais attention ! Il est coupant...", 2);
-        }
-    }
-
-    [Serializable]
-    class ItemRefinedGlass : Item
-    {
-        public ItemRefinedGlass()
-        {
-            set("Verre raffiné", "Fin prêt à l'emploi", 5);
-        }
-    }
-
-    [Serializable]
-    class ItemEmerald : Item
-    {
-        public ItemEmerald()
-        {
-            set("Emeraude", "Prête à être incrustée dans un bâton.", 4);
-        }
-    }
-
-    [Serializable]
-    class ItemRuby : Item
-    {
-        public ItemRuby()
-        {
-            set("Ruby", "Une pierre rouge écarlate. On dirait un coeur... de pierre...", 4);
-        }
-    }
-
-    [Serializable]
-    class ItemObsidian : Item
-    {
-        public ItemObsidian()
-        {
-            set("Obsidienne", "Originellement forgé par les titans, l'obsidienne est maintenant un matériaux noir et utilisé pour tout et par tous.", 4);
-        }
-    }
-
+ /*
 
     [Serializable]
     class ItemCloviscieux : Item
@@ -196,14 +127,7 @@ namespace DW
         }
     }
 
-    [Serializable]
-    class ItemDust : Item
-    {
-        public ItemDust()
-        {
-            set("Poussière fine", "Le cailloux à du tomber... en poussière...", 4);
-        }
-    }
+
 
     [Serializable]
     class ItemIvoire : Item
@@ -223,14 +147,7 @@ namespace DW
         }
     }
 
-    [Serializable]
-    class ItemPickAxe : Item
-    {
-        public ItemPickAxe()
-        {
-            set("Pioche", "What's your's is Mine.Craft.", 4);
-        }
-    }
+ */
 
 
 
@@ -256,6 +173,18 @@ namespace DW
     [Serializable]
     class Item
     {
+
+        
+        public static Item ItemStick=new Item("Bâton", "Un bâton long et fin...", 4);
+        public static Item ItemIronIngot=new Item("Lingot de fer", "Un lingot de fer.", 10);
+        public static Item ItemGlass=new Item("Verre brute", "Il brille de milles feux, mais attention ! Il est coupant...", 2);
+        public static Item ItemRefinedGlass=new Item("Verre raffiné", "Fin prêt à l'emploi", 5);
+        public static Item ItemEmeral=new Item("Emeraude", "Prête à être incrustée dans un bâton.", 4);
+        public static Item ItemRuby=new Item("Ruby", "Une pierre rouge écarlate. On dirait un coeur... de pierre...", 4);
+        public static Item ItemObsidian=new Item("Obsidienne", "Originellement forgé par les titans, l'obsidienne est maintenant un matériaux noir et utilisé pour tout et par tous.", 4);
+        public static Item ItemPickAxe=new Item("Pioche", "What's your's is Mine.Craft.", 4);
+        public static Item ItemDust=new Item("Poussière fine", "Le caillou a du tomber... en poussière...", 4);
+
         private string name;
         private string description;
         private string action;

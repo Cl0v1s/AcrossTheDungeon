@@ -39,7 +39,7 @@ namespace DW
             {
                 DW.render.openInventory();
             }
-            if (DW.render.isInventoryOpenned())
+            if (DW.render.isUIOpenned())
                 return;
             if (DW.input.equals(Key.UpArrow) == true)
                 changePlayerPos(DW.player.getX(), DW.player.getY() - 1, "back");

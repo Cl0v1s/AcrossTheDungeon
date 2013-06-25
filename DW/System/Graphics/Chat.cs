@@ -58,15 +58,13 @@ namespace DW
 
         public void add(string par1)
         {
-            if (par1 != history[0])
-            {
                 for (int i = 5; i > 0; i--)
                 {
                     history[i] = history[i - 1];
                 }
                 history[0] = par1;
                 change = true;
-            }
+            
         }
 
         public void update()

@@ -63,12 +63,16 @@ namespace DW
 
         private void inputUpdate()
         {
+            if (DW.render.isUIOpenned())
+                return;
             if (DW.input.equals(Key.I))
             {
                 DW.render.openInventory();
             }
-            if (DW.render.isInventoryOpenned())
-                return;
+            if (DW.input.equals(Key.C))
+            {
+                DW.render.openRecipe();
+            }
             if (DW.input.equals(Key.UpArrow) == true)
             {
                 DW.player.move(0, -1);

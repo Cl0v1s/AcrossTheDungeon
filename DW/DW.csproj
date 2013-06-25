@@ -88,6 +88,8 @@
     <Compile Include="Item\ItemMineral.cs" />
     <Compile Include="Item\ItemFood.cs" />
     <Compile Include="Elements\Rock.cs" />
+    <Compile Include="Item\Recipe.cs" />
+    <Compile Include="System\Graphics\RecipeUI.cs" />
     <Compile Include="System\Graphics\InventoryUI.cs" />
     <Compile Include="Entity\Bat.cs" />
     <Compile Include="Gen\Biome.cs" />
