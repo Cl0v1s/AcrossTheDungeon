@@ -10,8 +10,9 @@ namespace DW
 
         private int age = 0;
         private Random rand = new Random();
-        private int grow = 0;
+        private float grow = 0;
         private int limit;
+        private int life = 1;
 
         //<summary>
         //créer une plante pouvant être recoltée
@@ -19,6 +20,7 @@ namespace DW
         public Plant()
             : base()
         {
+            life = rand.Next(1, 5);
             age = rand.Next(0, 3);
             value = ",";
             color = Color.DarkGreen;
@@ -30,12 +32,13 @@ namespace DW
         //</summary>
         public override void update()
         {
+            grow += (float)rand.NextDouble()*2;
             if(grow>5000+limit)
             {
                 age += 1;
                 grow = 0;
                 limit = rand.Next(0, age * 50);
-                Console.WriteLine("grow");
+                life += rand.Next(1, 5);
             }
             if (age == 0)
                 value = ",";
@@ -52,9 +55,39 @@ namespace DW
         //</summary>
         public override void interact(Entity par1)
         {
-            if (age > 2)
+            if (age == 3)
             {
-
+                int n=rand.Next(0,2);
+                for(int i=0;i<n;i++)
+                {
+                    stair.spawnItem(ItemFood.Berry,x,y);
+                }
+                age = 2;
+                return;
+            }
+            if (age >= 2 && par1.getInventory().contains(Item.ItemAxe))
+            {
+                if (((Player)par1).skills.tryAction("survival", 2F))
+                {
+                    life -= 1;
+                    par1.showMsg("Vous brandissez bravement votre hache au dessus de votre tete ");
+                    par1.showMsg("et entaillez profondemment le végétal.");
+                }
+                else
+                {
+                    par1.showMsg("Votre hache vous echappe misérablement des mains alors");
+                    par1.showMsg("que vous alliez attaquer l'arbre.");
+                }
+                if (life <= 0)
+                {
+                    par1.showMsg("Dans un grand fracas, l'arbre fini par tomber au sol.");
+                    int n = rand.Next(0, 2);
+                    for (int i = 0; i < n; i++)
+                    {
+                        stair.spawnItem(Item.ItemWood,x,y);
+                    }
+                    stair.setSpecial(null, x, y);
+                }
             }
         }
 
@@ -75,13 +108,5 @@ namespace DW
             s.setAge(rand.Next(0, 3));
             return (Special)s;
         }
-
-        public override bool canPass()
-        {
-            if (age < 2)
-                return true;
-            return false;
-        }
-
     }
 }

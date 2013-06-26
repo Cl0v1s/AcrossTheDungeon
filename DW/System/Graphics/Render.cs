@@ -210,6 +210,14 @@ namespace DW
             addToSpriteDictionnary("Minerais de fer", "Data/images/Items/IronMineral.png");
             /*ObsidianMineral*/
             addToSpriteDictionnary("Minerais d'obsidienne", "Data/images/Items/ObsidianMineral.png");
+            /*IronIngot*/
+            addToSpriteDictionnary("Morceau de fer", "Data/images/Items/IronIngot.png");
+            /*Obsidian*/
+            addToSpriteDictionnary("Obsidienne", "Data/images/Items/Obsidian.png");
+            /*Axe*/
+            addToSpriteDictionnary("Hache", "Data/images/Items/Axe.png");
+            /*Wood*/
+            addToSpriteDictionnary("Bois", "Data/images/Items/Wood.png");
         }
 
         //<summary>

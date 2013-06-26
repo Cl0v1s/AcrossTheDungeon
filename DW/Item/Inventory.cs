@@ -14,7 +14,6 @@ namespace DW
             owner = par1owner;
             size = par2size;
             contents = new Item[par2size];
-            addItem(Item.ItemPickAxe);
         }
 
         //<summary>

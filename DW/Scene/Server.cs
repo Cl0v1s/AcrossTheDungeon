@@ -214,7 +214,6 @@ namespace DW
                             if(e[i] != null && !(e[i] is Player) && other.isNear(e[i]))
                             {
                                 other.fight(other,e[i]);
-                                Console.WriteLine("other FIGHT");
                                 break;
                             }
                         }
@@ -244,7 +243,6 @@ namespace DW
                     break;
 
             }
-            //Console.WriteLine("Execution de " + par1command);
         }
     }
 }

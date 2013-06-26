@@ -38,7 +38,14 @@ namespace DW
                     if (possibleList[i] != null)
                     {
                         Sprite e=DW.render.getSprite(possibleList[i].getItemResults()[0].getName());
-                        Video.Screen.Blit(e, new Point(110, 140 + i * 30));
+                        try
+                        {
+                            Video.Screen.Blit(e, new Point(110, 140 + i * 30));
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("Ressource absente pour " + possibleList[i].getItemResults()[0].getName());
+                        }
                         new Text("pixel.ttf", 25, 140, 140 + i * 30, possibleList[i].getName()).update();
                     }
                 }

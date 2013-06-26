@@ -18,15 +18,6 @@ namespace DW
     }
 
     [Serializable]
-    class ItemWood : Item
-    {
-        public ItemWood()
-        {
-            set("Bois", "Comme le bûcheron Kébécoué que vous êtes, un tronc de plus ou de moins ne vous fait pas peur.", 4);
-        }
-    }
-
-    [Serializable]
     class ItemPearl : Item
     {
         public ItemPearl()
@@ -176,14 +167,16 @@ namespace DW
 
         
         public static Item ItemStick=new Item("Bâton", "Un bâton long et fin...", 4);
-        public static Item ItemIronIngot=new Item("Lingot de fer", "Un lingot de fer.", 10);
+        public static Item ItemIronIngot = new Item("Morceau de fer", "Un morceau de fer forge de maniere tres artisanale...", 10);
         public static Item ItemGlass=new Item("Verre brute", "Il brille de milles feux, mais attention ! Il est coupant...", 2);
         public static Item ItemRefinedGlass=new Item("Verre raffiné", "Fin prêt à l'emploi", 5);
         public static Item ItemEmeral=new Item("Emeraude", "Prête à être incrustée dans un bâton.", 4);
         public static Item ItemRuby=new Item("Ruby", "Une pierre rouge écarlate. On dirait un coeur... de pierre...", 4);
         public static Item ItemObsidian=new Item("Obsidienne", "Originellement forgé par les titans, l'obsidienne est maintenant un matériaux noir et utilisé pour tout et par tous.", 4);
-        public static Item ItemPickAxe=new Item("Pioche", "What's your's is Mine.Craft.", 4);
+        public static Item ItemPickAxe=new Item("Pioche", "What's your's is Mine.Craft.", 15);
+        public static Item ItemAxe = new Item("Hache", "Ca v'hache yeah !", 15);
         public static Item ItemDust=new Item("Poussière fine", "Le caillou a du tomber... en poussière...", 4);
+        public static Item ItemWood=new Item("Bois", "Comme le bûcheron Kébécoué que vous etes, un tronc de \nplus ou de moins ne vous fait pas peur Tabernacle !", 4);
 
         private string name;
         private string description;

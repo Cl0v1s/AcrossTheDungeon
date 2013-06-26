@@ -326,7 +326,7 @@ namespace DW
             if(isNear(worstEnemy))
             {
                 isFighting = true;
-                worstEnemy.setFighting(true);
+                fight(this, worstEnemy);
             }
             if (isNear(4) == true && regime != "carnivore")
                 faim = 0;
@@ -347,13 +347,40 @@ namespace DW
         public void fight(Entity par1cause, Entity par2victim)
         {
             par1cause.setFighting(true);
+            par2victim.setFighting(true);
             par1cause.atk(par2victim);
+            par1cause.setEnemy(par2victim);
+            par2victim.setEnemy(par1cause);
+            par1cause.lookTo(par2victim);
+            par2victim.lookTo(par1cause);
             if (par2victim.getStat()[0] <= 0 || par1cause.isNear(par2victim) == false)
             {
                 par1cause.setFighting(false);
                 return;
             }
-            par2victim.fight(par2victim, par1cause);
+        }
+
+        public void lookTo(Entity par1)
+        {
+            lookTo(par1.getX(), par1.getY());
+        }
+
+        public void lookTo(int par1x, int par2y)
+        {
+            if (x < par1x)
+                setFace("right");
+            else if (x > par1x)
+                setFace("left");
+            else if (y < par2y)
+                setFace("front");
+            else
+                setFace("back");
+
+        }
+
+        public void setEnemy(Entity par1)
+        {
+            worstEnemy = par1;
         }
 
         protected bool isOn(int par1)
