@@ -14,6 +14,11 @@ namespace DW
             owner = par1owner;
             size = par2size;
             contents = new Item[par2size];
+            addItem(Item.ItemRock);
+            addItem(Item.ItemRock);
+            addItem(Item.ItemRock);
+            addItem(Item.ItemRock);
+            addItem(Item.ItemBucketLava);
         }
 
         //<summary>
@@ -50,6 +55,8 @@ namespace DW
                 if (contents[i] == null)
                 {
                     contents[i] = par1;
+                    if(owner is Entity)
+                        contents[i].onAddingInInventory((Entity)owner);
                     if (owner is Player && par2talk)
                         ((Player)owner).showMsg("Vous placez l'objet " + par1.getName() + " dans votre sac.");
                     return true;
@@ -70,11 +77,13 @@ namespace DW
         {
             for (int i = 0; i < size; i++)
             {
-                
-                if (contents[i].getName() == par1.getName())
+                if (contents[i] != null)
                 {
-                    removeItem(i, par2let,par3target,par4talk);
-                    return;
+                    if (contents[i].getName() == par1.getName())
+                    {
+                        removeItem(i, par2let, par3target, par4talk);
+                        return;
+                    }
                 }
             }
         }
@@ -142,7 +151,7 @@ namespace DW
                 }
                 else
                     contents[par1] = null;
-                if (owner is Player)
+                if (owner is Player && par4talk==true)
                     ((Player)owner).showMsg("L'objet " + name + " a été retiré du sac.");
             }
 

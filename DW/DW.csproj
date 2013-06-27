@@ -85,6 +85,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Elements\Forge.cs" />
+    <Compile Include="Item\ItemForge.cs" />
+    <Compile Include="Item\Bucket.cs" />
     <Compile Include="Item\ItemMineral.cs" />
     <Compile Include="Item\ItemFood.cs" />
     <Compile Include="Elements\Rock.cs" />

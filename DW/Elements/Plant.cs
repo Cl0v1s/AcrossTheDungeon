@@ -84,11 +84,13 @@ namespace DW
                     int n = rand.Next(0, 2);
                     for (int i = 0; i < n; i++)
                     {
-                        stair.spawnItem(Item.ItemWood,x,y);
+                        stair.spawnItem(Item.ItemWood, x, y);
                     }
                     stair.setSpecial(null, x, y);
                 }
             }
+            else
+                par1.showMsg("Oui, c'est un arbre.");
         }
 
         //<summary>

@@ -43,7 +43,8 @@ namespace DW
             lifeTmp = life;
             DW.render.setUI(this);
             skills = new Skills(this);
-            learnRecipe(Recipe.RecipeIronIngot);
+            learnRecipe(Recipe.RecipeForge);
+            learnRecipe(Recipe.RecipeRefinedGlass);
         }
 
         //<summary>

@@ -65,6 +65,11 @@ namespace DW
             turn();
         }
 
+        public void setSale(int par1)
+        {
+            sale = par1;
+        }
+
         public Entity(Stair par1)
             : base(par1)
         {

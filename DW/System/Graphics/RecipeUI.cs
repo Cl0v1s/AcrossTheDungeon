@@ -26,13 +26,19 @@ namespace DW
             tool = par2tool;
         }
 
+        //<summary>
+        //si ouvert, affiche la fenetre d'assemblage
+        //</summary>
         public void update()
         {
             if (opened)
             {
                 inputUpdate();
                 Video.Screen.Blit(background, new Point(70, 90));
-                new Text("pixel.ttf", 30, 90, 100, "Assemblage", 200, 200, 200).update();
+                if(tool==null)
+                    new Text("pixel.ttf", 30, 90, 100, "Assemblage", 200, 200, 200).update();
+                else
+                    new Text("pixel.ttf", 30, 90, 100, "Assemblage ("+tool.getValue()+")", 200, 200, 200).update();
                 for (int i = listIndex; i < listIndex+5; i++)
                 {
                     if (possibleList[i] != null)
@@ -40,70 +46,91 @@ namespace DW
                         Sprite e=DW.render.getSprite(possibleList[i].getItemResults()[0].getName());
                         try
                         {
-                            Video.Screen.Blit(e, new Point(110, 140 + i * 30));
+                            Video.Screen.Blit(e, new Point(120, 135 + i * 30));
                         }
                         catch (Exception)
                         {
                             Console.WriteLine("Ressource absente pour " + possibleList[i].getItemResults()[0].getName());
                         }
-                        new Text("pixel.ttf", 25, 140, 140 + i * 30, possibleList[i].getName()).update();
+                        new Text("pixel.ttf", 25, 160, 140 + i * 30, possibleList[i].getName()).update();
                     }
                 }
                 new Text("pixel.ttf", 25, 100, 140 + index * 30, ">").update();
                 if (inSelection)
                 {
-                    new Text("pixel.ttf", 27, 300, 100, possibleList[index].getName(),0,255,0).update();
-                    string d = possibleList[index].getDescription();
-                    int part=d.Split("\n".ToCharArray()).Length;
-                    for (int u = 0; u < part; u++)
+                    if (possibleList[index] != null)
                     {
-                        new Text("pixel.ttf", 20, 300, 130 + u * 20, d.Split("\n".ToCharArray())[u]).update();
+                        if(canCraftSelected)
+                            new Text("pixel.ttf", 27, 540, 100, "V",0,255,0).update();
+                        new Text("pixel.ttf", 27, 300, 100, possibleList[index].getName()).update();
+                        string d = possibleList[index].getDescription();
+                        int part = d.Split("\n".ToCharArray()).Length;
+                        for (int u = 0; u < part; u++)
+                        {
+                            new Text("pixel.ttf", 20, 300, 130 + u * 20, d.Split("\n".ToCharArray())[u]).update();
+                        }
+                        if(canCraftSelected==false)
+                            new Text("pixel.ttf", 23, 300, 210, "Necessite:", 255, 0, 0).update();
+                        else
+                            new Text("pixel.ttf", 23, 300, 210, "Necessite:", 0, 255, 0).update();
+                        d = possibleList[index].getNeeds();
+                        part = d.Split(";".ToCharArray()).Length - 1;
+                        for (int y = 0; y < part; y++)
+                        {
+                            new Text("pixel.ttf", 20, 300, 240 + y * 18, (d.Split(";".ToCharArray())[y])).update();
+                        }
+                        if (canCraftSelected == false)
+                            new Text("pixel.ttf", 25, 450, 350, "  Assembler", 100, 100, 100).update();
+                        else
+                            new Text("pixel.ttf", 25, 450, 350, "> Assembler").update();
                     }
-                    new Text("pixel.ttf", 23, 300, 210, "Necessite:", 255, 0, 0).update();
-                    d = possibleList[index].getNeeds();
-                    part = d.Split(";".ToCharArray()).Length - 1;
-                    for (int y = 0; y < part; y++)
-                    {
-                        new Text("pixel.ttf", 20, 300, 240+y*18, (d.Split(";".ToCharArray())[y]+" > x"+owner.getInventory().howMany(d.Split(";".ToCharArray())[y]))).update();
-                    }
-                    if(canCraftSelected==false)
-                        new Text("pixel.ttf", 25, 450, 350, "  Assembler", 100, 100, 100).update();
-                    else
-                        new Text("pixel.ttf", 25, 450, 350, "> Assembler", 0, 255, 0).update();
 
 
                 }
             }
         }
 
+        //<summary>
+        //retourne true si la recette spécifiée peux etre realisée.
+        //</summary>
+        //<param name="par1">la recette a tester</param>
         private bool canCraft(Recipe par1)
         {
-            Item[] n = par1.getItemNeeds();
-            Item[] r = new Item[n.Length];
-            int d = 0;
-            for (int i = 0; i < n.Length; i++)
+            if (par1 != null)
             {
-                if (owner.getInventory().contains(n[i]))
+                Item[] n = par1.getItemNeeds();
+                Item[] r = new Item[n.Length];
+                int d = 0;
+                for (int i = 0; i < n.Length; i++)
                 {
-                    d += 1;
-                    r[i] = n[i];
-                    owner.getInventory().removeItem(n[i], false);
+                    if (owner.getInventory().contains(n[i]))
+                    {
+                        d += 1;
+                        r[i] = n[i];
+                        owner.getInventory().removeItem(n[i], false,null,false);
+                    }
                 }
+                for (int i = 0; i < r.Length; i++)
+                {
+                    if (r[i] != null)
+                        owner.getInventory().addItem(r[i], false);
+                }
+                if (d >= n.Length)
+                    return true;
+                else
+                    return false;
             }
-            for (int i = 0; i < r.Length; i++)
-            {
-                if (r[i] != null)
-                    owner.getInventory().addItem(r[i],false);
-            }
-            if (d >= n.Length)
-                return true;
             else
                 return false;
         }
 
+        //<summary>
+        //craft la recette specifiée
+        //</summary>
+        //<param name="par1">la recette a crafter</param>
         private void craft(Recipe par1)
         {
-                if(canCraft(par1))
+                if(par1 != null && canCraft(par1))
                 {
                     Item[] n = par1.getItemNeeds();
                     for (int i = 0; i < n.Length; i++)
@@ -122,13 +149,16 @@ namespace DW
 
         }
 
+        //<summary>
+        //actualise les entrées de touches
+        //</summary>
         public void inputUpdate()
         {
             if (inSelection == false)
             {
                 if (DW.input.equals(SdlDotNet.Input.Key.DownArrow))
                 {
-                    if (index < 5 && possibleList[index] != null)
+                    if (index < 5 && possibleList[index+1] != null)
                         index += 1;
                     else if (possibleList[index] != null)
                     {
@@ -154,6 +184,7 @@ namespace DW
                 {
                     inSelection = true;
                     canCraftSelected = canCraft(possibleList[index]);
+                    Thread.Sleep(100);
                 }
             }
             else
@@ -163,6 +194,13 @@ namespace DW
                     inSelection = false;
                     Thread.Sleep(100);
                 }
+                else if (DW.input.equals(SdlDotNet.Input.Key.KeypadEnter) || DW.input.equals(SdlDotNet.Input.Key.Return) && canCraftSelected)
+                {
+                    craft(possibleList[index]);
+                    canCraftSelected=canCraft(possibleList[index]);
+                    Thread.Sleep(100);
+                }
+
             }
 
         }
@@ -174,14 +212,24 @@ namespace DW
         {
             if (opened == false)
             {
+                possibleList = new Recipe[100];
+                listIndex = 0;
+                index = 0;
+                inSelection=false;
+                canCraftSelected = false;
                 opened = true;
                 findPossible();
             }
             else
+            {
                 opened = false;
+            }
             Thread.Sleep(100);
         }
 
+        //<summary>
+        //détermine quelles sont les recettes pouvant etres réalisé avec la configuration courante.
+        //</summary>
         private void findPossible()
         {
             Recipe[] l=owner.getRecipes();
@@ -189,7 +237,7 @@ namespace DW
             {
                 if (tool != null)
                 {
-                    if (l[i] != null && l[i].getTool().GetType() == tool.GetType())
+                    if (l[i] != null && l[i].getTool() != null && l[i].getTool().GetType() == tool.GetType())
                     {
                         possibleList[i] = l[i];
                     }
@@ -201,6 +249,10 @@ namespace DW
             }
         }
 
+        //<summary>
+        //paramètre la fenetre pour utiliser l'outil de craft spécifié
+        //</summary>
+        //<param name="par1">l'outil de craft à utiliser</param>
         public void setTool(Special par1)
         {
             tool = par1;

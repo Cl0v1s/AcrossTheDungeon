@@ -9,8 +9,8 @@ namespace DW
     class Recipe
     {
 
-        public static Recipe RecipeIronIngot = new Recipe("Verre poli", "Du verre parfaitement \nLisse et transparent.", new Item[] { ItemMineral.ItemGlass, ItemMineral.ItemDust }, new Item[] { ItemMineral.ItemRefinedGlass });
-
+        public static Recipe RecipeRefinedGlass = new Recipe("Verre poli", "Du verre parfaitement \nLisse et transparent.", new Item[] { ItemMineral.ItemGlass, ItemMineral.ItemDust }, new Item[] { ItemMineral.ItemRefinedGlass });
+        public static Recipe RecipeForge = new Recipe("Forge", "Un four fait de pierre chauffe\n grace a de la lave.\n Vous pourrez forger des outils !", new Item[] { Item.ItemRock, Item.ItemRock, Item.ItemRock, Item.ItemRock, Item.ItemBucketLava }, new Item[] { Item.ItemForge });
 
 
 

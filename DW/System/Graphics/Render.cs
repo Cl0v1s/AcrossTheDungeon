@@ -186,38 +186,48 @@ namespace DW
             addToSpriteDictionnary("P", "Data/images/Entity/Pig.png");
             /*************************************************Elements*/
             /*Door*/
-            addToSpriteDictionnary("|", "Data/images/Elements/Door.png");
-            addToSpriteDictionnary("|o", "Data/images/Elements/Door_side.png");
+            addToSpriteDictionnary("|", "Data/images/Elements/Door.png",false);
+            addToSpriteDictionnary("|o", "Data/images/Elements/Door_side.png",false);
             /*Plant*/
-            addToSpriteDictionnary(",", "Data/images/Elements/Plant/1.png");
-            addToSpriteDictionnary("\"", "Data/images/Elements/Plant/2.png");
-            addToSpriteDictionnary("!", "Data/images/Elements/Plant/3.png");
-            addToSpriteDictionnary("T", "Data/images/Elements/Plant/4.png");
+            addToSpriteDictionnary(",", "Data/images/Elements/Plant/1.png",false);
+            addToSpriteDictionnary("\"", "Data/images/Elements/Plant/2.png",false);
+            addToSpriteDictionnary("!", "Data/images/Elements/Plant/3.png",false);
+            addToSpriteDictionnary("T", "Data/images/Elements/Plant/4.png",false);
             /*Pot*/
-            addToSpriteDictionnary("U", "Data/images/Elements/Pot.png");
-            /*Rock*/
-            addToSpriteDictionnary("rock", "Data/images/Elements/Rock.png");
+            addToSpriteDictionnary("U", "Data/images/Elements/Pot.png",false);
+            /*Rock(sur la map)*/
+            addToSpriteDictionnary("rock", "Data/images/Elements/Rock.png",false);
+            /*Forge(map et inventaire)*/
+            addToSpriteDictionnary("Forge", "Data/images/Elements/Forge.png");
             /*************************************************Items*/
             /*baie*/
-            addToSpriteDictionnary("baie", "Data/images/Items/Berry.png");
+            addToSpriteDictionnary("baie", "Data/images/Items/Berry.png",false);
             /*cookie*/
-            addToSpriteDictionnary("cookie", "Data/images/Items/Cookie.png");
+            addToSpriteDictionnary("cookie", "Data/images/Items/Cookie.png",false);
             /*Dust*/
-            addToSpriteDictionnary("Poussière fine", "Data/images/Items/Dust.png");
+            addToSpriteDictionnary("Poussière fine", "Data/images/Items/Dust.png",false);
             /*PickAxe*/
-            addToSpriteDictionnary("Pioche", "Data/images/Items/PickAxe.png");
+            addToSpriteDictionnary("Pioche", "Data/images/Items/PickAxe.png",false);
             /*IronMineral*/
-            addToSpriteDictionnary("Minerais de fer", "Data/images/Items/IronMineral.png");
+            addToSpriteDictionnary("Minerais de fer", "Data/images/Items/IronMineral.png",false);
             /*ObsidianMineral*/
-            addToSpriteDictionnary("Minerais d'obsidienne", "Data/images/Items/ObsidianMineral.png");
+            addToSpriteDictionnary("Minerais d'obsidienne", "Data/images/Items/ObsidianMineral.png",false);
             /*IronIngot*/
-            addToSpriteDictionnary("Morceau de fer", "Data/images/Items/IronIngot.png");
+            addToSpriteDictionnary("Morceau de fer", "Data/images/Items/IronIngot.png",false);
             /*Obsidian*/
-            addToSpriteDictionnary("Obsidienne", "Data/images/Items/Obsidian.png");
+            addToSpriteDictionnary("Obsidienne", "Data/images/Items/Obsidian.png",false);
             /*Axe*/
-            addToSpriteDictionnary("Hache", "Data/images/Items/Axe.png");
+            addToSpriteDictionnary("Hache", "Data/images/Items/Axe.png",false);
             /*Wood*/
-            addToSpriteDictionnary("Bois", "Data/images/Items/Wood.png");
+            addToSpriteDictionnary("Bois", "Data/images/Items/Wood.png",false);
+            /*Rock*/
+            addToSpriteDictionnary("Roche", "Data/images/Items/Rock.png",false);
+            /*Bucket*/
+            addToSpriteDictionnary("Seau", "Data/images/Items/Bucket.png", false);
+            /*BucketLava*/
+            addToSpriteDictionnary("Seau de lave", "Data/images/Items/BucketLava.png", false);
+            /*BucketWater*/
+            addToSpriteDictionnary("Seau d'eau", "Data/images/Items/BucketWater.png", false);
         }
 
         //<summary>

@@ -39,6 +39,9 @@ namespace DW
                     par1.showMsg("Seul un fragment de " + content.getName() + " subsiste sur le sol.");
                     if (rand.Next(0, 5) == 0)
                         stair.spawnItem(DW.Clone<Item>(Item.ItemDust), x, y);
+                int r=rand.Next(0, 10);
+                    if (r>=0 && r<=2)
+                        stair.spawnItem(DW.Clone<Item>(Item.ItemRock), x, y);
             }
             else if (par1.getInventory().contains(Item.ItemPickAxe))
             {

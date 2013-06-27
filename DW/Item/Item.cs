@@ -177,6 +177,12 @@ namespace DW
         public static Item ItemAxe = new Item("Hache", "Ca v'hache yeah !", 15);
         public static Item ItemDust=new Item("Poussière fine", "Le caillou a du tomber... en poussière...", 4);
         public static Item ItemWood=new Item("Bois", "Comme le bûcheron Kébécoué que vous etes, un tronc de \nplus ou de moins ne vous fait pas peur Tabernacle !", 4);
+        public static Item ItemRock = new Item("Roche", "Un banal caillou qui roule au creux de votre main... \nROCK'N ROLL !", 4);
+        public static Item ItemBucket = new Bucket();
+        public static Item ItemBucketWater = new BucketWater();
+        public static Item ItemBucketLava = new Item("Seau de lave", "Un seau extrémement brulant rempli de lave.", 11);
+        public static Item ItemForge = new ItemForge();
+
 
         private string name;
         private string description;
@@ -238,6 +244,11 @@ namespace DW
         public virtual Item clone()
         {
             return (Item)this.MemberwiseClone();
+        }
+
+        public virtual void onAddingInInventory(Entity par1)
+        {
+
         }
 
     }

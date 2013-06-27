@@ -71,6 +71,7 @@ namespace DW
             }
             if (DW.input.equals(Key.C))
             {
+                DW.render.setRecipe(null);
                 DW.render.openRecipe();
             }
             if (DW.input.equals(Key.UpArrow) == true)

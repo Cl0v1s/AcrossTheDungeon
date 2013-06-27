@@ -35,12 +35,17 @@ namespace DW
 
         private void inputUpdate()
         {
+            if (DW.render.isUIOpenned())
+                return;
             if (DW.input.equals(Key.I))
             {
                 DW.render.openInventory();
             }
-            if (DW.render.isUIOpenned())
-                return;
+            if (DW.input.equals(Key.C))
+            {
+                DW.render.setRecipe(null);
+                DW.render.openRecipe();
+            }
             if (DW.input.equals(Key.UpArrow) == true)
                 changePlayerPos(DW.player.getX(), DW.player.getY() - 1, "back");
             else if (DW.input.equals(Key.DownArrow) == true)

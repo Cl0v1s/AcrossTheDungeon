@@ -73,13 +73,13 @@ namespace DW
                         string d = contents[index].getDescription();
                         int part = d.Split("\n".ToCharArray()).Length;
                         if (part <= 1)
-                            new Text("pixel.ttf", 20, 90 + 60, 262, contents[index].getDescription()).update();
+                            new Text("pixel.ttf", 20, 90 + 70, 262, contents[index].getDescription()).update();
                         else if (part > 1)
                         {
                             int yu = 262 - (part * 25 / 2) + 25 / 2;
                             for (int i = 0; i < part; i++)
                             {
-                                new Text("pixel.ttf", 20, 90 + 60, yu + i * 25, d.Split("\n".ToCharArray())[i]).update();
+                                new Text("pixel.ttf", 20, 90 + 70, yu + i * 25, d.Split("\n".ToCharArray())[i]).update();
                             }
                         }
                         if (contents[index].getAction() == null)
