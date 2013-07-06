@@ -38,7 +38,7 @@ namespace DW
                 if(tool==null)
                     new Text("pixel.ttf", 30, 90, 100, "Assemblage", 200, 200, 200).update();
                 else
-                    new Text("pixel.ttf", 30, 90, 100, "Assemblage ("+tool.getValue()+")", 200, 200, 200).update();
+                    new Text("pixel.ttf", 30, 90, 100, "Assemblage ("+tool.getName()+")", 200, 200, 200).update();
                 for (int i = listIndex; i < listIndex+5; i++)
                 {
                     if (possibleList[i] != null)
@@ -160,7 +160,7 @@ namespace DW
                 {
                     if (index < 5 && possibleList[index+1] != null)
                         index += 1;
-                    else if (possibleList[index] != null)
+                    else if (possibleList[index+1] != null)
                     {
                         listIndex += 1;
                         index -= 1;
@@ -242,7 +242,7 @@ namespace DW
                         possibleList[i] = l[i];
                     }
                 }
-                else if (l[i] != null)
+                else if (l[i] != null && l[i].getTool()==null)
                 {
                         possibleList[i] = l[i];
                 }

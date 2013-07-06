@@ -14,8 +14,8 @@ namespace DW
         private Biome[] biomesList = new Biome[]
         {
             //new Biome(),
-            new BiomeDungeon(),
-            new BiomeGarden(),
+            //new BiomeDungeon(),
+            //new BiomeGarden(),
             new BiomeCave(),
         };
         private int[,] map;

@@ -14,11 +14,8 @@ namespace DW
             owner = par1owner;
             size = par2size;
             contents = new Item[par2size];
-            addItem(Item.ItemRock);
-            addItem(Item.ItemRock);
-            addItem(Item.ItemRock);
-            addItem(Item.ItemRock);
-            addItem(Item.ItemBucketLava);
+            addItem(Item.ItemBucket);
+            addItem(ItemFood.ItemPickAxe);
         }
 
         //<summary>
@@ -50,20 +47,24 @@ namespace DW
         //<param name="par1">Item à ajouter</param>
         public bool addItem(Item par1,bool par2talk=true)
         {
-            for (int i = 0; i < size; i++)
+            if (par1 != null)
             {
-                if (contents[i] == null)
+                for (int i = 0; i < size; i++)
                 {
-                    contents[i] = par1;
-                    if(owner is Entity)
-                        contents[i].onAddingInInventory((Entity)owner);
-                    if (owner is Player && par2talk)
-                        ((Player)owner).showMsg("Vous placez l'objet " + par1.getName() + " dans votre sac.");
-                    return true;
+                    if (contents[i] == null)
+                    {
+                        contents[i] = par1;
+                        if (owner is Entity)
+                            contents[i].onAddingInInventory((Entity)owner);
+                        if (owner is Player && par2talk)
+                            ((Player)owner).showMsg("Vous placez l'objet " + par1.getName() + " dans votre sac.");
+                        return true;
+                    }
                 }
+                if (owner is Player && par2talk)
+                    ((Player)owner).showMsg("Votre sac est trop lourd, vous ne pouvez emporter plus d'objets");
+                return false;
             }
-            if (owner is Player && par2talk)
-                ((Player)owner).showMsg("Votre sac est trop lourd, vous ne pouvez emporter plus d'objets");
             return false;
         }
 

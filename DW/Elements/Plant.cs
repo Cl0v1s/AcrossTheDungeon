@@ -65,7 +65,7 @@ namespace DW
                 age = 2;
                 return;
             }
-            if (age >= 2 && par1.getInventory().contains(Item.ItemAxe))
+            if (age >= 2 && par1 is Player && ((Player)par1).getItemInHand()==Item.ItemAxe)
             {
                 if (((Player)par1).skills.tryAction("survival", 2F))
                 {

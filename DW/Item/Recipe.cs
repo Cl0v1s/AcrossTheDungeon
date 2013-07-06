@@ -10,9 +10,10 @@ namespace DW
     {
 
         public static Recipe RecipeRefinedGlass = new Recipe("Verre poli", "Du verre parfaitement \nLisse et transparent.", new Item[] { ItemMineral.ItemGlass, ItemMineral.ItemDust }, new Item[] { ItemMineral.ItemRefinedGlass });
-        public static Recipe RecipeForge = new Recipe("Forge", "Un four fait de pierre chauffe\n grace a de la lave.\n Vous pourrez forger des outils !", new Item[] { Item.ItemRock, Item.ItemRock, Item.ItemRock, Item.ItemRock, Item.ItemBucketLava }, new Item[] { Item.ItemForge });
-
-
+        public static Recipe RecipeForge = new Recipe("Forge", "Un kit complet pour monter\nun four fait de pierre chauffe\n grace a de la lave.\n Vous pourrez forger des outils !", new Item[] { ItemMineral.ItemRock, ItemMineral.ItemRock, ItemMineral.ItemRock, ItemMineral.ItemRock, Item.ItemBucketLava }, new Item[] { Item.ItemForge });
+        public static Recipe RecipeGlass = new Recipe("Verre Brut", "Du verre grossier, coupant.\nInutilisable en l'état.", new Item[] { Item.ItemChaux, Item.itemSilice }, new Item[] { Item.ItemGlass }, new Forge());
+        public static Recipe RecipeSilice = new Recipe("Silice", "En tamisant du sable vous obtiendez\nfacilement de la silice.", new Item[] { Item.ItemBucketSand }, new Item[] { Item.itemSilice, Item.itemSilice,Item.ItemBucket });
+        public static Recipe RecipeChaux = new Recipe("Chaux", "Une poudre blanche. Element de base\nde la maconnerie.", new Item[] { Item.ItemBucketSand, ItemMineral.ItemDust }, new Item[] { Item.ItemChaux, Item.ItemBucket }, new Forge());
 
 
 

@@ -19,6 +19,7 @@ namespace DW
         protected string originalValue = "";
         protected Color color = Color.Gray;
         protected string face = "front";
+        protected string name;
 
 
         public Special(Stair par1stair)
@@ -45,6 +46,11 @@ namespace DW
         public Color getColor()
         {
             return color;
+        }
+
+        public string getName()
+        {
+            return name;
         }
 
 

@@ -18,6 +18,7 @@ namespace DW
         public Skills skills;
         private int stairId = -1;
         protected Recipe[] recipeList = new Recipe[100];
+        protected Item itemInHand;
         
 
         //<summary>
@@ -44,7 +45,19 @@ namespace DW
             DW.render.setUI(this);
             skills = new Skills(this);
             learnRecipe(Recipe.RecipeForge);
-            learnRecipe(Recipe.RecipeRefinedGlass);
+            learnRecipe(Recipe.RecipeSilice);
+            learnRecipe(Recipe.RecipeChaux);
+            learnRecipe(Recipe.RecipeGlass);
+        }
+
+        public void setItemInHand(Item par1)
+        {
+            itemInHand = par1;
+        }
+
+        public Item getItemInHand()
+        {
+            return itemInHand;
         }
 
         //<summary>
@@ -150,38 +163,26 @@ namespace DW
             return dead; 
         }
 
-
+        /**
+         * Allow the player to interact with his environment
+         */
         public void interact()
         {
             if (isFighting == false)
             {
-                Special[,] s = stair.getSpecial();
-                if (s[x, y] != null)
+                if (itemInHand != null)
+                    itemInHand = itemInHand.interact(this);
+                else
                 {
-                    s[x, y].interact(this);
-                    return;
+                    if (getFace() == "front")
+                        getStair().getSpecial()[getX(), getY() + 1].interact(this);
+                    else if (getFace() == "back")
+                        getStair().getSpecial()[getX(), getY() - 1].interact(this);
+                    else if (getFace() == "left")
+                        getStair().getSpecial()[getX() - 1, getY()].interact(this);
+                    else if (getFace() == "right")
+                        getStair().getSpecial()[getX() + 1, getY()].interact(this);
                 }
-                else if (s[x - 1, y] != null)
-                {
-                    s[x - 1, y].interact(this);
-                    return;
-                }
-                else if (s[x + 1, y] != null)
-                {
-                    s[x + 1, y].interact(this);
-                    return;
-                }
-                else if (s[x, y - 1] != null)
-                {
-                    s[x, y - 1].interact(this);
-                    return;
-                }
-                else if (s[x, y + 1] != null)
-                {
-                    s[x, y + 1].interact(this);
-                    return;
-                }
-                
             }
         }
 

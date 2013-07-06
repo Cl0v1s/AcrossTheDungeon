@@ -164,11 +164,9 @@ namespace DW
     [Serializable]
     class Item
     {
-
-        
         public static Item ItemStick=new Item("Bâton", "Un bâton long et fin...", 4);
         public static Item ItemIronIngot = new Item("Morceau de fer", "Un morceau de fer forge de maniere tres artisanale...", 10);
-        public static Item ItemGlass=new Item("Verre brute", "Il brille de milles feux, mais attention ! Il est coupant...", 2);
+        public static Item ItemGlass=new Item("Verre brut", "Il brille de milles feux, mais attention ! Il est coupant...", 2);
         public static Item ItemRefinedGlass=new Item("Verre raffiné", "Fin prêt à l'emploi", 5);
         public static Item ItemEmeral=new Item("Emeraude", "Prête à être incrustée dans un bâton.", 4);
         public static Item ItemRuby=new Item("Ruby", "Une pierre rouge écarlate. On dirait un coeur... de pierre...", 4);
@@ -177,12 +175,13 @@ namespace DW
         public static Item ItemAxe = new Item("Hache", "Ca v'hache yeah !", 15);
         public static Item ItemDust=new Item("Poussière fine", "Le caillou a du tomber... en poussière...", 4);
         public static Item ItemWood=new Item("Bois", "Comme le bûcheron Kébécoué que vous etes, un tronc de \nplus ou de moins ne vous fait pas peur Tabernacle !", 4);
-        public static Item ItemRock = new Item("Roche", "Un banal caillou qui roule au creux de votre main... \nROCK'N ROLL !", 4);
         public static Item ItemBucket = new Bucket();
         public static Item ItemBucketWater = new BucketWater();
         public static Item ItemBucketLava = new Item("Seau de lave", "Un seau extrémement brulant rempli de lave.", 11);
         public static Item ItemForge = new ItemForge();
-
+        public static Item ItemChaux = new Item("Chaux", "Une poudre grise calcaire. Servant dans de nombreuses\n préparations de maconnerie.", 5);
+        public static Item itemSilice = new Item("Silice", "Une poudre blanche abondante et\nassechante.", 2);
+        public static Item ItemBucketSand = new Item("Seau de sable", "Un seau rempli de sable\nétrangement doux.", 11);
 
         private string name;
         private string description;
@@ -223,6 +222,19 @@ namespace DW
         //<param name="par1">entité à affecter</param>
         public virtual Item interact(Entity par1)
         {
+            try
+            {
+                if (par1.getFace() == "front")
+                    par1.getStair().getSpecial()[par1.getX(), par1.getY() + 1].interact(par1);
+                else if (par1.getFace() == "back")
+                    par1.getStair().getSpecial()[par1.getX(), par1.getY() - 1].interact(par1);
+                else if (par1.getFace() == "left")
+                    par1.getStair().getSpecial()[par1.getX() - 1, par1.getY()].interact(par1);
+                else if (par1.getFace() == "right")
+                    par1.getStair().getSpecial()[par1.getX() + 1, par1.getY()].interact(par1);
+            }
+            catch (Exception)
+            { }
             return this;
         }
 

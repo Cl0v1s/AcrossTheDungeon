@@ -84,6 +84,39 @@ namespace DW
             rooms = par1;
         }
 
+        public void genCaseInZone(int par1case,Room par2room)
+        {
+            int tried = 0;
+            int xp = rand.Next(1, par2room.getW() - 1);
+            int yp = rand.Next(1, par2room.getH() - 1);
+            while (par2room.getMap()[xp, yp] != 1)
+            {
+                if (tried >= 500)
+                    return;
+                xp = rand.Next(1, par2room.getW() - 1);
+                yp = rand.Next(1, par2room.getH() - 1);
+                tried += 1;
+            }
+            tried = 0;
+            par2room.set(par1case, xp, yp);
+            stair.set(par1case, par2room.getX() + xp, par2room.getY() + yp);
+            for (int i = 0; i < rand.Next(5, 15); i++)
+            {
+                xp = rand.Next(1, par2room.getW() - 1);
+                yp = rand.Next(1, par2room.getH() - 1);
+                while (!(par2room.getMap()[xp - 1, yp] == par1case || par2room.getMap()[xp + 1, yp] == par1case || par2room.getMap()[xp, yp - 1] == par1case || par2room.getMap()[xp, yp + 1] == par1case) || par2room.getMap()[xp, yp] != 1)
+                {
+                    if (tried >= 500)
+                        return;
+                    xp = rand.Next(1, par2room.getW() - 1);
+                    yp = rand.Next(1, par2room.getH() - 1);
+                    tried += 1;
+                }
+                par2room.set(par1case, xp, yp);
+                stair.set(par1case, par2room.getX() + xp, par2room.getY() + yp);
+            }
+        }
+
         //<summary>
         //retourne la hauteur du biome
         //</summary>
@@ -149,8 +182,8 @@ namespace DW
 
             int x=rand.Next(1,par1room.getW()-1);
             int y=rand.Next(1,par1room.getH()-1);
-            int w = rand.Next(2, 7);
-            int h = rand.Next(2, 7);
+            int w = rand.Next(4, 10);
+            int h = rand.Next(4, 10);
             for (int i = x; i < w; i++)
             {
                 for (int u = y; u < h; u++)

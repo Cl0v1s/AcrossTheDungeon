@@ -8,9 +8,12 @@ namespace DW
     [Serializable]
     class Forge : Special
     {
+
+
         public Forge()
         {
-            value = "Forge";
+            value = "F/";
+            name = "Forge";
         }
 
         public override void interact(Entity par1)

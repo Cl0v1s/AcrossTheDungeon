@@ -431,7 +431,7 @@ namespace DW
             {
                 if (stair != null)
                 {
-                    if (stair.getMap()[x + 1, y] == par1 || stair.getMap()[x - 1, y] == par1 || stair.getMap()[x, y + 1] == par1 || stair.getMap()[x, y - 1] == par1)
+                    if (stair.getMap()[x + 1, y] == par1 || stair.getMap()[x - 1, y] == par1 || stair.getMap()[x, y + 1] == par1 || stair.getMap()[x, y - 1] == par1 || stair.getMap()[x, y] == par1)
                         return true;
                 }
             }
@@ -606,7 +606,7 @@ namespace DW
         {
             try
             {
-                if (stair != null && stair.getMap()[par1x, par2y] == 1 || stair.getMap()[par1x, par2y] == 100 || stair.getMap()[par1x, par2y] == 6 || stair.getMap()[par1x, par2y] == 3 || stair.getMap()[par1x, par2y] == 5 || stair.getMap()[par1x, par2y] == 101)
+                if (stair != null && stair.getMap()[par1x, par2y] == 1 || stair.getMap()[par1x, par2y] == 7 || stair.getMap()[par1x, par2y] == 100 || stair.getMap()[par1x, par2y] == 6 || stair.getMap()[par1x, par2y] == 3 || stair.getMap()[par1x, par2y] == 5 || stair.getMap()[par1x, par2y] == 101)
                 {
                     if (stair != null && stair.getSpecial()[par1x, par2y] != null)
                         return stair.getSpecial()[par1x, par2y].canPass();
@@ -632,10 +632,12 @@ namespace DW
         //</summary>
         public static bool canWalkOn(int par1x, int par2y,Stair stair)
         {
+
             try
             {
-                if (stair != null && stair.getMap()[par1x, par2y] == 1 || stair.getMap()[par1x, par2y] == 100 || stair.getMap()[par1x, par2y] == 4 || stair.getMap()[par1x, par2y] == 3 || stair.getMap()[par1x, par2y] == 5)
+                if (stair != null && stair.getMap()[par1x, par2y] == 1 || stair.getMap()[par1x, par2y] == 7 || stair.getMap()[par1x, par2y] == 100 || stair.getMap()[par1x, par2y] == 4 || stair.getMap()[par1x, par2y] == 3 || stair.getMap()[par1x, par2y] == 5)
                 {
+                    
                     if (stair != null && stair.getSpecial()[par1x, par2y] != null)
                         return stair.getSpecial()[par1x, par2y].canPass();
                     else
@@ -649,7 +651,10 @@ namespace DW
                         return true;
                     }
                 }
-                return false;
+                {
+                    
+                    return false;
+                }
             }
             catch (Exception)
             { return true; }

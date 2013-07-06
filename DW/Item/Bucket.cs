@@ -14,10 +14,25 @@ namespace DW
 
         public override Item interact(Entity par1)
         {
+            int[,] s = par1.getStair().getMap();
+            int x = par1.getX();
+            int y = par1.getY();
             if (par1.isNear(100))
                 return Item.ItemBucketWater;
             else if (par1.isNear(101))
                 return Item.ItemBucketLava;
+            else if (par1.isNear(7))
+            {
+                if (s[x + 1, y] == 7 && par1.getFace() == "right")
+                    par1.getStair().set(8,x+1,y);
+                else if (s[x - 1, y] == 7 && par1.getFace() == "left")
+                    par1.getStair().set(8, x - 1, y);
+                else if (s[x, y + 1] == 7 && par1.getFace() == "front")
+                    par1.getStair().set(8, x, y + 1);
+                else if (s[x, y - 1] == 7 && par1.getFace() == "back")
+                    par1.getStair().set(8, x, y - 1);                
+                return Item.ItemBucketSand;
+            }
             else
                 return this;
         }

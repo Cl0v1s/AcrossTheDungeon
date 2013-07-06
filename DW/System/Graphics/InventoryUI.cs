@@ -61,7 +61,7 @@ namespace DW
                         x = 0;
                     }
                     Video.Screen.Blit(slot, new Point(105 + (40 * x), 145 + 40 * y));
-                    if (contents[i] != null)
+                    if (contents[i] != null && DW.render.getSprite(contents[i].getName())!=null )
                         Video.Screen.Blit(DW.render.getSprite(contents[i].getName()), new Point(107 + (40 * x), 147 + 40 * y));
                     x += 1;
                 }
@@ -82,12 +82,16 @@ namespace DW
                                 new Text("pixel.ttf", 20, 90 + 70, yu + i * 25, d.Split("\n".ToCharArray())[i]).update();
                             }
                         }
-                        if (contents[index].getAction() == null)
-                            new Text("pixel.ttf", 20, 100, 350, "Utiliser", 150, 150, 150).update();
-                        else
-                            new Text("pixel.ttf", 20, 100, 350, contents[index].getAction()).update();
+                        new Text("pixel.ttf", 20, 100, 350, "Prendre en Main").update();
+                        if(contents[index].getAction() != null)
+                            new Text("pixel.ttf", 20, 640/2, 360, contents[index].getAction(),255,255,255,TypePos.Center).update();
                         new Text("pixel.ttf", 20, 490, 350, "Lacher").update();
-                        new Text("pixel.ttf", 20, 90 + (SelectionIndex * 390), 350, ">").update();
+                        int xt = 90;
+                        if (SelectionIndex == 1)
+                            xt = 270;
+                        else if (SelectionIndex == 2)
+                            xt = 390+90;
+                        new Text("pixel.ttf", 20, xt, 350, ">").update();
                     }
                     else
                         inSelection = false;
@@ -133,14 +137,10 @@ namespace DW
                     {
                         Icon = new Surface(new Size(30, 30)).Convert(Video.Screen);
                         Icon.Fill(Color.Fuchsia);
-                        Icon.Blit(DW.render.getSprite(contents[index].getName()), new Point(0, 0));
+                        if(DW.render.getSprite(contents[index].getName()) != null)
+                            Icon.Blit(DW.render.getSprite(contents[index].getName()), new Point(0, 0));
                         Icon = Icon.CreateScaledSurface(2D, false);
                         Icon.SourceColorKey = Color.Fuchsia;
-                        string[] i;
-                        if (contents[index].getAction() == null)
-                            i = new string[] { "Lacher" };
-                        else
-                            i = new string[] { contents[index].getAction(), "Lacher" };
                         inSelection = true;
                         Thread.Sleep(100);
                     }
@@ -154,21 +154,48 @@ namespace DW
                     Thread.Sleep(100);
                 }
                 else if (DW.input.equals(SdlDotNet.Input.Key.LeftArrow))
-                    SelectionIndex = 0;
+                {
+                    if (contents[index].getAction() != null)
+                        SelectionIndex -= 1;
+                    else
+                        SelectionIndex -= 2;
+                    Thread.Sleep(100);
+                }
                 else if (DW.input.equals(SdlDotNet.Input.Key.RightArrow))
-                    SelectionIndex = 1;
+                {
+                    if(contents[index].getAction() != null)
+                        SelectionIndex += 1;
+                    else
+                        SelectionIndex += 2;
+                    Thread.Sleep(100);
+                }
+                if (SelectionIndex < 0)
+                    SelectionIndex = 0;
+                else if (SelectionIndex > 2)
+                    SelectionIndex = 2;
                 else if (DW.input.equals(SdlDotNet.Input.Key.KeypadEnter) || DW.input.equals(SdlDotNet.Input.Key.Return))
                 {
                     if (SelectionIndex == 0)
-                        inventory.setSlot(index, contents[index].interact((Entity)inventory.getOwner()));
-                    else
+                    {
+                        Item i = ((Player)inventory.getOwner()).getItemInHand();
+                        ((Player)inventory.getOwner()).setItemInHand(contents[index]);
+                        contents[index] = i;
+                    }
+                    else if(SelectionIndex==2)
                     {
                         inventory.removeItem(index, true);
                         contents = inventory.getContents();
                     }
+                    else if (SelectionIndex == 1)
+                    {
+                        contents[index] = contents[index].interact(((Entity)inventory.getOwner()));
+                    }
+                    inSelection = false;
+                    SelectionIndex = 0;
+                    Thread.Sleep(100);
                 }
             }
-            Video.Screen.Blit(selector, new Point(107 + 40 * xIndex, 147 + 25 * yIndex));
+            Video.Screen.Blit(selector, new Point(107 + 40 * xIndex, 147 + 40 * yIndex));
         }
 
         //<summary>

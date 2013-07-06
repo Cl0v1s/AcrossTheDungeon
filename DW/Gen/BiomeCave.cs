@@ -44,6 +44,8 @@ namespace DW
                 if (rooms[i] != null)
                 {
                     applySpecialCase(rooms[i]);
+                    if(rand.Next(0,3)==0)
+                        genCaseInZone(7, rooms[i]);
                     applyWater(rooms[i]);
                     applyGravel(rooms[i]);
                     applyLava(rooms[i]);
@@ -61,11 +63,16 @@ namespace DW
             {
                 for (int u = y; u < h; u++)
                 {
-                    if (stair.getMap()[i + par1room.getX(), u + par1room.getY()] != 2)
+                    try
                     {
-                        stair.set(101, i + par1room.getX(), u + par1room.getY());
-                        par1room.set(101, i, u);
+                        if (stair.getMap()[i + par1room.getX(), u + par1room.getY()] != 2)
+                        {
+                            stair.set(101, i + par1room.getX(), u + par1room.getY());
+                            par1room.set(101, i, u);
+                        }
                     }
+                    catch(Exception)
+                    {}
                 }
             }
             /*
@@ -177,7 +184,7 @@ namespace DW
             {
                 for (int u = 1; u < h - 1; u++)
                 {
-                    if (par2room.getMap()[i, u] == 1 && rand.Next(0, 100) == 1)
+                    if (par2room.getMap()[i, u] == 1 && rand.Next(0, 70) == 1)
                     {
                         int r = rand.Next(0, specialCase.Length);
                         try

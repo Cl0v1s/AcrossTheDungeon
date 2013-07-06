@@ -37,6 +37,7 @@ namespace DW
 
         public override Item interact(Entity par1)
         {
+            Console.WriteLine("t");
             float e = par1.getHungry();
             par1.setHungry(e + eatAmount);
             e = par1.getThrirst();

@@ -22,6 +22,8 @@ namespace DW
          * gravier
          * herbe
          * transition sol-herbe
+         * sable
+         * trou
          */
         public int[] id = new int[]
         {
@@ -32,56 +34,8 @@ namespace DW
             -1,
             13,
             12,
-        };
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /* Valeurs des différents ID contenus par les cases
-         * 0-vide
-         * 1-sol donjon
-         * 2-mur donjon
-         * 3-piège donjon
-         * 4-herbe
-         * 5-gravier
-         * 6-herbe
-         * 7-transition sol donjon-herbe
-         * 100-eau
-         */
-        public object[] value = new object[]{
-            "",Color.Firebrick,
-            ".",Color.DarkSlateGray,
-            "H",Color.DarkGray,
-            ",",Color.DarkSlateGray,
-            "'",Color.Green,
-            "*",Color.LightGray,
-            "'",Color.Green,
-            "]",Color.Green,
-            
-        };
-
-
-
-
-        public object[] animated = new object[]{
-            "_",Color.Blue,
-            "-",Color.Blue,
-            "_",Color.Red,
-            "-",Color.Red,
+            23,
+            24,
         };
 
 
@@ -100,7 +54,7 @@ namespace DW
         protected AnimationCollection lavaAnimation;
         protected AnimatedSprite lava;
         private SdlDotNet.Graphics.Font font = new SdlDotNet.Graphics.Font(Directory.GetCurrentDirectory() + "\\Data\\" + "pixel.ttf", 30);
-
+        private KeyValuePair<int, Surface>[] translate=new KeyValuePair<int,Surface>[80];
 
         public Render(int par1x, int par2y)
         {
@@ -109,6 +63,92 @@ namespace DW
             shadow.AlphaBlending = true;
             setAnimatedTile();
             registerDictionnary();
+            registerTranslate();
+        }
+
+        private void registerTranslate()
+        {
+            /*Sand*/
+            addTranslation(7);
+            /*Water*/
+            addTranslation(100);
+            /*Lava*/
+            addTranslation(101);
+            
+        }
+
+        private void addTranslation(int par1idcase)
+        {
+            int index = 0;
+            for (int i = 0; i < translate.Length; i++)
+            {
+                if (translate[i].Value == null)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            Surface a = Video.Screen.CreateCompatibleSurface(30, 30);
+            if (par1idcase >= 100)
+            {
+                Sprite s=null;
+                if (par1idcase == 100)
+                    s = (Sprite)water;
+                else if (par1idcase == 101)
+                    s = (Sprite)lava;
+                
+                a.Blit(s, new Point(0, 0));
+            }
+            else
+            {
+                a.Blit(tileset, new Point(0, 0), new Rectangle(id[par1idcase] * 30, 0, 30, 30));
+            }
+            a.Fill(a.GetPixel(new Point(0, 0)));
+            Console.WriteLine(a.GetPixel(new Point(0, 0)));
+            Surface t=new Surface("Data/images/Translate.png");
+            for (int i = 0; i < 8; i++)
+            {
+                Surface c = (Surface)a.Clone();
+                c.Blit(t, new Point(0, 0), new Rectangle(i * 30, 0, 30, 30));
+                translate[index + i] = new KeyValuePair<int, Surface>(par1idcase, c);
+            }
+        }
+
+        private Surface getTranslation(int par1case,string par2dir)
+        {
+            Surface[] c = new Surface[8];
+            int index=0;
+            bool found = false;
+            for (int i = 0; i < translate.Length; i++)
+            {
+                if (translate[i].Key == par1case)
+                {
+                    c[index] = translate[i].Value;
+                    index += 1;
+                    found = true;
+                }
+            }
+            if (found)
+            {
+                if (par2dir == "top")
+                    return c[0];
+                else if (par2dir == "left")
+                    return c[1];
+                else if (par2dir == "right")
+                    return c[3];
+                else if (par2dir == "bottom")
+                    return c[2];
+                else if (par2dir == "top-left")
+                    return c[4];
+                else if (par2dir == "bottom-left")
+                    return c[5];
+                else if (par2dir == "bottom-right")
+                    return c[6];
+                else
+                    return c[7];
+            }
+            else
+                return null;
         }
 
         private void setAnimatedTile()
@@ -197,8 +237,8 @@ namespace DW
             addToSpriteDictionnary("U", "Data/images/Elements/Pot.png",false);
             /*Rock(sur la map)*/
             addToSpriteDictionnary("rock", "Data/images/Elements/Rock.png",false);
-            /*Forge(map et inventaire)*/
-            addToSpriteDictionnary("Forge", "Data/images/Elements/Forge.png");
+            /*Forge(map)*/
+            addToSpriteDictionnary("F/", "Data/images/Elements/Forge.png");
             /*************************************************Items*/
             /*baie*/
             addToSpriteDictionnary("baie", "Data/images/Items/Berry.png",false);
@@ -228,6 +268,10 @@ namespace DW
             addToSpriteDictionnary("Seau de lave", "Data/images/Items/BucketLava.png", false);
             /*BucketWater*/
             addToSpriteDictionnary("Seau d'eau", "Data/images/Items/BucketWater.png", false);
+            /*BucketSand*/
+            addToSpriteDictionnary("Seau de sable", "Data/images/Items/BucketSand.png", false);
+            /*Forge(inventaire)*/
+            addToSpriteDictionnary("Forge", "Data/images/Items/Pack.png");
         }
 
         //<summary>
@@ -306,30 +350,6 @@ namespace DW
             if (recipeUI != null)
                 recipeUI.update();
         }
-
-
-        //<summary>
-        //affiche la map entière dans la fenetre
-        //</summary>
-        //<param name="par1map">la map à afficher</param>
-        //<param name="par2width">la largeur de la map à afficher</param>
-        //<param name="par3height">la hauteur de la map à afficher</param>
-        public void renderMap(int[,] par1map, int par2width, int par3height)
-        {
-            for (int i = 0; i < par2width; i++)
-            {
-                for (int u = 0; u < par3height; u++)
-                {
-
-                    if (par1map[i, u] * 2 <= value.Length && par1map[i, u] * 2 + 1 <= value.Length && par1map[i, u] < 100)
-                        Video.Screen.Blit(font.Render((string)value[par1map[i, u] * 2], (Color)value[par1map[i, u] * 2 + 1]), new Point(x + i * 30, y + u * 30));
-                    else
-                        renderAnimated(par1map, i, u);
-                }
-            }
-        }
-
-
 
         //<summary>
         //retourne le sprite animé associé à l'objet spécifié precedemment enregistré grace à la méthode registerSprite
@@ -423,18 +443,17 @@ namespace DW
                     {
                         if (u >= 0 && i >= 0 && i <= par1.getStair().getW() && u <= par1.getStair().getH() && (Math.Abs(par1.getX() - i) + Math.Abs(par1.getY() - u))<9)
                         {
-                                if (par1map[i, u] * 2 <= value.Length && par1map[i, u] * 2 + 1 <= value.Length && par1map[i, u] < 100)
+                                if (par1map[i, u] < 100)
                                 {
                                     if (par1map[i, u] < id.Length && id[par1map[i, u]] != -1)
                                     {
-                                        if (par1map[i, u] != 2 && par1map[i, u] != 1)
-                                            Video.Screen.Blit(tileset, new Point(x + i * 30, y + u * 30), new Rectangle(id[par1map[i, u]] * 30, 0, 30, 30));
-                                        else
+                                        if (par1map[i, u] == 1 || par1map[i, u] == 2)
                                             connectionTile(par1map, i, u);
+                                        else
+                                            Video.Screen.Blit(tileset, new Point(x + i * 30, y + u * 30), new Rectangle(id[par1map[i, u]] * 30, 0, 30, 30));
+                                       
+                                            
                                     }
-                                    else
-                                        Video.Screen.Blit(font.Render((string)value[par1map[i, u] * 2], (Color)value[par1map[i, u] * 2 + 1]), new Point(x + i * 30, y + u * 30));
-
                                 }
                                 else
                                     renderAnimated(par1map, i, u);
@@ -489,53 +508,41 @@ namespace DW
                         idToRender = id[2] + 1;
                     else
                         idToRender = id[2] + 2;
+                    Video.Screen.Blit(tileset, new Point(x + par2x * 30, y + par3y * 30), new Rectangle(idToRender * 30, 0, 30, 30));
+                    return;
                 }
                 else if (idToRender == 1)
                 {
-
-                                        /*Lava Side*/
-                    if (par1map[par2x - 1, par3y] == 101)
-                        idToRender = 17;
-                    else if (par1map[par2x + 1, par3y] == 101)
-                        idToRender = 22;
-                    else if (par1map[par2x, par3y - 1] == 101)
-                        idToRender = 21;
-                    else if (par1map[par2x, par3y + 1] == 101)
-                        idToRender = 16;
-                    else if (par1map[par2x, par3y + 1] == 1 && par1map[par2x + 1, par3y] == 1 && par1map[par2x + 1, par3y + 1] == 101)
-                        idToRender = 18;
-                    else if (par1map[par2x, par3y - 1] == 1 && par1map[par2x - 1, par3y] == 1 && par1map[par2x - 1, par3y - 1] == 101)
-                        idToRender = 19;
-                    else if (par1map[par2x, par3y - 1] == 1 && par1map[par2x + 1, par3y] == 1 && par1map[par2x + 1, par3y - 1] == 101)
-                        idToRender = 20;
-                    else if (par1map[par2x, par3y + 1] == 1 && par1map[par2x - 1, par3y] == 1 && par1map[par2x - 1, par3y + 1] == 101)
-                        idToRender = 15;
-                    else idToRender = id[1];
-                    /*Water Side*/
-                    if (par1map[par2x - 1, par3y] == 100)
-                        idToRender = 6;
-                    else if (par1map[par2x + 1, par3y] == 100)
-                        idToRender = 11;
-                    else if (par1map[par2x, par3y - 1] == 100)
-                        idToRender = 10;
-                    else if (par1map[par2x, par3y + 1] == 100)
-                        idToRender = 5;
-                    else if (par1map[par2x, par3y + 1] == 1 && par1map[par2x + 1, par3y] == 1 && par1map[par2x + 1, par3y + 1] == 100)
-                        idToRender = 7;
-                    else if (par1map[par2x, par3y - 1] == 1 && par1map[par2x - 1, par3y] == 1 && par1map[par2x - 1, par3y - 1] == 100)
-                        idToRender = 8;
-                    else if (par1map[par2x, par3y - 1] == 1 && par1map[par2x + 1, par3y] == 1 && par1map[par2x + 1, par3y - 1] == 100)
-                        idToRender = 9;
-                    else if (par1map[par2x, par3y + 1] == 1 && par1map[par2x - 1, par3y] == 1 && par1map[par2x - 1, par3y + 1] == 100)
-                        idToRender = 4;
+                    Surface torender = null;/*
+                    if (par1map[par2x - 1, par3y -1] != idToRender)
+                        torender = getTranslation(par1map[par2x - 1, par3y-1], "bottom-right");
+                    if (par1map[par2x + 1, par3y - 1] != idToRender)
+                        torender = getTranslation(par1map[par2x + 1, par3y-1], "bottom-left");
+                    if (par1map[par2x - 1, par3y + 1] != idToRender)
+                        torender = getTranslation(par1map[par2x - 1, par3y + 1], "top-right");
+                    if (par1map[par2x + 1, par3y + 1] != idToRender)
+                        torender = getTranslation(par1map[par2x + 1, par3y + 1], "top-left");
+                    if (par1map[par2x, par3y + 1] != idToRender)
+                        torender = getTranslation(par1map[par2x, par3y + 1], "top");
+                    if (par1map[par2x, par3y - 1] != idToRender)
+                        torender = getTranslation(par1map[par2x, par3y - 1], "bottom");
+                    if (par1map[par2x-1, par3y] != idToRender)
+                        torender = getTranslation(par1map[par2x-1, par3y], "right");
+                    if (par1map[par2x + 1, par3y] != idToRender)
+                        torender = getTranslation(par1map[par2x + 1, par3y], "left");*/
 
 
-
+                    if(torender != null)
+                        Video.Screen.Blit(torender, new Point(x + par2x * 30, y + par3y * 30));
+                    else
+                        Video.Screen.Blit(tileset, new Point(x + par2x * 30, y + par3y * 30), new Rectangle(id[idToRender] * 30, 0, 30, 30));
                 }
-                Video.Screen.Blit(tileset, new Point(x + par2x * 30, y + par3y * 30), new Rectangle(idToRender * 30, 0, 30, 30));
+                
             }
             catch (Exception)
-            { }
+            {
+                Console.WriteLine("Erreur lors de l'affichage des tuiles de connexion");
+            }
         }
 
 
@@ -575,21 +582,6 @@ namespace DW
                 Video.Screen.Blit(water, new Point(x + par2x * 30, y + par3y * 30));
             else if(par1map[par2x, par3y] == 101)
                 Video.Screen.Blit(lava, new Point(x + par2x * 30, y + par3y * 30));
-            else
-            {
-                try
-                {
-                    if (frame < 40 / 2)
-                        Video.Screen.Blit(font.Render((string)animated[(par1map[par2x, par3y] - 100) * 4], (Color)animated[(par1map[par2x, par3y] - 100) * 4 + 1]), new Point(x + par2x * 30, y + par3y * 30));
-                    else
-                        Video.Screen.Blit(font.Render((string)animated[(par1map[par2x, par3y] - 100) * 4 + 2], (Color)animated[(par1map[par2x, par3y] - 100) * 4 + 3]), new Point(x + par2x * 30, y + par3y * 30));
-                }
-                catch (Exception)
-                {
-
-
-                }
-            }
         }
 
 

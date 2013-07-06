@@ -74,6 +74,11 @@ namespace DW
                 DW.render.setRecipe(null);
                 DW.render.openRecipe();
             }
+            if (DW.input.equals(Key.B))
+            {
+                DW.player.getInventory().addItem(DW.player.getItemInHand(), false);
+                DW.player.setItemInHand(null);
+            }
             if (DW.input.equals(Key.UpArrow) == true)
             {
                 DW.player.move(0, -1);

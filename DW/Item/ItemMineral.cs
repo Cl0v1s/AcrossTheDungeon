@@ -44,6 +44,8 @@ namespace DW
     {
         public static ItemMineral ItemMineralIron=new ItemMineral("Minerais de fer", "Un minerais de fer trouvé dans une cavité.\n Il y aura de quoi fer !", 6);
         public static ItemMineral ItemMineralObsidian=new ItemMineral("Minerais d'obsidienne", "'Raffines-moi',\n semble dire cette pierre noire comme ce donjon...", 4);
+        public static ItemMineral ItemRock = new ItemMineral("Roche", "Un banal caillou qui roule au creux de votre main... \nROCK'N ROLL !", 4);
+        
 
         public ItemMineral(string par1name, string par2desc, int par3price,string par4action=null): base(par1name,par2desc,par3price,par4action=null)
         {
