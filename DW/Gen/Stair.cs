@@ -14,8 +14,8 @@ namespace DW
         private Biome[] biomesList = new Biome[]
         {
             //new Biome(),
-            //new BiomeDungeon(),
-            //new BiomeGarden(),
+            new BiomeDungeon(),
+            new BiomeGarden(),
             new BiomeCave(),
         };
         private int[,] map;
@@ -69,7 +69,7 @@ namespace DW
                 for (int u = 0; u < height; u++)
                 {
                     if (special[i, u] != null)
-                        special[i, u].update();
+                        special[i, u]=special[i, u].update();
                 }
             }
         }

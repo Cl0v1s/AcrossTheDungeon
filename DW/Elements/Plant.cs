@@ -30,8 +30,11 @@ namespace DW
         //<summary>
         //gère l'evolution de la plante 
         //</summary>
-        public override void update()
+        public override Special update()
         {
+            if (stair.getMap()[x, y] == 100)
+                return null;
+
             grow += (float)rand.NextDouble()*2;
             if(grow>5000+limit)
             {
@@ -48,6 +51,7 @@ namespace DW
                 value = "!";
             else
                 value = "T";
+            return this;
         }
 
         //<summary>

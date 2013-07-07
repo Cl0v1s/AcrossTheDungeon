@@ -15,7 +15,6 @@ namespace DW
             size = par2size;
             contents = new Item[par2size];
             addItem(Item.ItemBucket);
-            addItem(ItemFood.ItemPickAxe);
         }
 
         //<summary>

@@ -19,6 +19,7 @@ namespace DW
         private int stairId = -1;
         protected Recipe[] recipeList = new Recipe[100];
         protected Item itemInHand;
+        protected Item lastItemInHand;
         
 
         //<summary>
@@ -53,6 +54,16 @@ namespace DW
         public void setItemInHand(Item par1)
         {
             itemInHand = par1;
+        }
+
+        public bool itemInHandChanged()
+        {
+            if (itemInHand != lastItemInHand)
+            {
+                lastItemInHand = itemInHand;
+                return true;
+            }
+            return false;
         }
 
         public Item getItemInHand()

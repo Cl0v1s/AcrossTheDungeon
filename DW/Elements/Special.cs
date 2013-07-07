@@ -106,10 +106,9 @@ namespace DW
         }
 
 
-        public virtual void update()
+        public virtual Special update()
         {
-
-
+            return this;
         }
 
         public void setFace(string par1)

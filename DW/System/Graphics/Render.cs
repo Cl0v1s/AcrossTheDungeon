@@ -54,7 +54,8 @@ namespace DW
         protected AnimationCollection lavaAnimation;
         protected AnimatedSprite lava;
         private SdlDotNet.Graphics.Font font = new SdlDotNet.Graphics.Font(Directory.GetCurrentDirectory() + "\\Data\\" + "pixel.ttf", 30);
-        private KeyValuePair<int, Surface>[] translate=new KeyValuePair<int,Surface>[80];
+        private KeyValuePair<string, Surface>[] handledItem = new KeyValuePair<string, Surface>[2];
+        
 
         public Render(int par1x, int par2y)
         {
@@ -63,92 +64,6 @@ namespace DW
             shadow.AlphaBlending = true;
             setAnimatedTile();
             registerDictionnary();
-            registerTranslate();
-        }
-
-        private void registerTranslate()
-        {
-            /*Sand*/
-            addTranslation(7);
-            /*Water*/
-            addTranslation(100);
-            /*Lava*/
-            addTranslation(101);
-            
-        }
-
-        private void addTranslation(int par1idcase)
-        {
-            int index = 0;
-            for (int i = 0; i < translate.Length; i++)
-            {
-                if (translate[i].Value == null)
-                {
-                    index = i;
-                    break;
-                }
-            }
-            Surface a = Video.Screen.CreateCompatibleSurface(30, 30);
-            if (par1idcase >= 100)
-            {
-                Sprite s=null;
-                if (par1idcase == 100)
-                    s = (Sprite)water;
-                else if (par1idcase == 101)
-                    s = (Sprite)lava;
-                
-                a.Blit(s, new Point(0, 0));
-            }
-            else
-            {
-                a.Blit(tileset, new Point(0, 0), new Rectangle(id[par1idcase] * 30, 0, 30, 30));
-            }
-            a.Fill(a.GetPixel(new Point(0, 0)));
-            Console.WriteLine(a.GetPixel(new Point(0, 0)));
-            Surface t=new Surface("Data/images/Translate.png");
-            for (int i = 0; i < 8; i++)
-            {
-                Surface c = (Surface)a.Clone();
-                c.Blit(t, new Point(0, 0), new Rectangle(i * 30, 0, 30, 30));
-                translate[index + i] = new KeyValuePair<int, Surface>(par1idcase, c);
-            }
-        }
-
-        private Surface getTranslation(int par1case,string par2dir)
-        {
-            Surface[] c = new Surface[8];
-            int index=0;
-            bool found = false;
-            for (int i = 0; i < translate.Length; i++)
-            {
-                if (translate[i].Key == par1case)
-                {
-                    c[index] = translate[i].Value;
-                    index += 1;
-                    found = true;
-                }
-            }
-            if (found)
-            {
-                if (par2dir == "top")
-                    return c[0];
-                else if (par2dir == "left")
-                    return c[1];
-                else if (par2dir == "right")
-                    return c[3];
-                else if (par2dir == "bottom")
-                    return c[2];
-                else if (par2dir == "top-left")
-                    return c[4];
-                else if (par2dir == "bottom-left")
-                    return c[5];
-                else if (par2dir == "bottom-right")
-                    return c[6];
-                else
-                    return c[7];
-            }
-            else
-                return null;
         }
 
         private void setAnimatedTile()
@@ -447,12 +362,10 @@ namespace DW
                                 {
                                     if (par1map[i, u] < id.Length && id[par1map[i, u]] != -1)
                                     {
-                                        if (par1map[i, u] == 1 || par1map[i, u] == 2)
+                                        if (par1map[i, u] == 2)
                                             connectionTile(par1map, i, u);
                                         else
-                                            Video.Screen.Blit(tileset, new Point(x + i * 30, y + u * 30), new Rectangle(id[par1map[i, u]] * 30, 0, 30, 30));
-                                       
-                                            
+                                            Video.Screen.Blit(tileset, new Point(x + i * 30, y + u * 30), new Rectangle(id[par1map[i, u]] * 30, 0, 30, 30));      
                                     }
                                 }
                                 else
@@ -496,53 +409,27 @@ namespace DW
         //<param name="par3y">La position y de la tuile a afficher</param>
         private void connectionTile(int[,] par1map, int par2x,int par3y)
         {
-            try
-            {
                 int idToRender = par1map[par2x, par3y];
                 if (idToRender == 2)
                 {
-                    /*Wall*/
-                    if (par1map[par2x - 1, par3y] != 2 && par1map[par2x + 1, par3y] != 2 && par1map[par2x, par3y + 1] != 2)
-                        idToRender = id[2];
-                    else if (par1map[par2x, par3y + 1] != 2 && par1map[par2x, par3y + 1] != 0)
-                        idToRender = id[2] + 1;
-                    else
+                    try
+                    {
+                        /*Wall*/
+                        if (par1map[par2x - 1, par3y] != 2 && par1map[par2x + 1, par3y] != 2 && par1map[par2x, par3y + 1] != 2)
+                            idToRender = id[2];
+                        else if (par1map[par2x, par3y + 1] != 2 && par1map[par2x, par3y + 1] != 0)
+                            idToRender = id[2] + 1;
+                        else
+                            idToRender = id[2] + 2;
+                     }
+                    catch (Exception)
+                    {
                         idToRender = id[2] + 2;
+                    }
                     Video.Screen.Blit(tileset, new Point(x + par2x * 30, y + par3y * 30), new Rectangle(idToRender * 30, 0, 30, 30));
                     return;
                 }
-                else if (idToRender == 1)
-                {
-                    Surface torender = null;/*
-                    if (par1map[par2x - 1, par3y -1] != idToRender)
-                        torender = getTranslation(par1map[par2x - 1, par3y-1], "bottom-right");
-                    if (par1map[par2x + 1, par3y - 1] != idToRender)
-                        torender = getTranslation(par1map[par2x + 1, par3y-1], "bottom-left");
-                    if (par1map[par2x - 1, par3y + 1] != idToRender)
-                        torender = getTranslation(par1map[par2x - 1, par3y + 1], "top-right");
-                    if (par1map[par2x + 1, par3y + 1] != idToRender)
-                        torender = getTranslation(par1map[par2x + 1, par3y + 1], "top-left");
-                    if (par1map[par2x, par3y + 1] != idToRender)
-                        torender = getTranslation(par1map[par2x, par3y + 1], "top");
-                    if (par1map[par2x, par3y - 1] != idToRender)
-                        torender = getTranslation(par1map[par2x, par3y - 1], "bottom");
-                    if (par1map[par2x-1, par3y] != idToRender)
-                        torender = getTranslation(par1map[par2x-1, par3y], "right");
-                    if (par1map[par2x + 1, par3y] != idToRender)
-                        torender = getTranslation(par1map[par2x + 1, par3y], "left");*/
 
-
-                    if(torender != null)
-                        Video.Screen.Blit(torender, new Point(x + par2x * 30, y + par3y * 30));
-                    else
-                        Video.Screen.Blit(tileset, new Point(x + par2x * 30, y + par3y * 30), new Rectangle(id[idToRender] * 30, 0, 30, 30));
-                }
-                
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Erreur lors de l'affichage des tuiles de connexion");
-            }
         }
 
 
@@ -553,8 +440,58 @@ namespace DW
         private void renderEntityAt(Entity par1)
         {
             AnimatedSprite e=(AnimatedSprite)getSprite(par1);
-            if(e != null)
+            if (e != null)
+            {
                 Video.Screen.Blit(e, new Point(x + par1.getX() * 30, y + par1.getY() * 30));
+                if (par1 is Player && ((Player)par1).getItemInHand() != null)
+                {
+                    Player p = ((Player)par1);
+                    int ind = -1;
+                    if (p.itemInHandChanged())
+                    {
+                        for (int i = 0; i < handledItem.Length; i++)
+                        {
+                            if (handledItem[i].Key == p.getName())
+                            {
+                                ind = i;
+                                break;
+                            }
+                        }
+                        Surface h = new Surface(new Size(30, 30)).Convert(Video.Screen);
+                        h.Fill(Color.Fuchsia);
+                        if (getSprite(p.getItemInHand().getName()) != null)
+                            h.Blit(getSprite(p.getItemInHand().getName()), new Point(0, 0));
+                        h = h.CreateScaledSurface(0.53D, false);
+                        h.SourceColorKey = Color.Fuchsia;
+                        if (ind != -1)
+                            handledItem[ind] = new KeyValuePair<string, Surface>(p.getName(), h);
+                        else
+                        {
+                            for (int i = 0; i < handledItem.Length; i++)
+                            {
+                                if(handledItem[i].Key==null)
+                                    handledItem[i] = new KeyValuePair<string, Surface>(p.getName(), h);
+                            }
+                        }
+                    }
+                    for (int i = 0; i < handledItem.Length; i++)
+                    {
+                        if (handledItem[i].Key == p.getName())
+                        {
+                            Point r;
+                            if(p.getFace() != "left" && p.getFace() != "right")
+                                r=new Point(x + par1.getX() * 30 +14, y + par1.getY() * 30+10);
+                            else
+                                r=new Point(x + par1.getX() * 30 +5, y + par1.getY() * 30 + 10);
+
+                                Video.Screen.Blit(handledItem[i].Value, r);
+                            break;
+                        }
+                    }
+                    
+
+                }
+            }
             else
                 Video.Screen.Blit(font.Render(par1.getChar(), par1.getColor()), new Point(x + par1.getX() * 30, y + par1.getY() * 30));
         }
