@@ -17,7 +17,7 @@ namespace DW
         public static EditorMenu editorMenu;
         public static GameMenu gameMenu = new GameMenu();
         public static IpMenu ipMenu;
-        public static Server dungeon;
+        public static Server server;
         public static Client client;
         public static String Scene;
         public static Player player;
@@ -70,7 +70,7 @@ namespace DW
             else if (Scene == "EditorMenu")
                 editorMenu.update();
             else if (Scene == "Server")
-                dungeon.update();
+                server.update();
             else if (Scene == "Client")
                 client.update();
             else if (Scene == "IpMenu")
@@ -85,7 +85,7 @@ namespace DW
         {
 
             if (par1 == "Server")
-                dungeon = new Server(true);
+                server = new Server(true);
             else if (par1 == "EditorMenu" && par2 != null)
                 editorMenu = new EditorMenu(par2);
             else if (par1 == "IpMenu")

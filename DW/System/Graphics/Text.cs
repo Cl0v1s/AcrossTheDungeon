@@ -106,7 +106,12 @@ namespace DW
         //</summary>
         public void update()
         {
-            Video.Screen.Blit(text,new Rectangle(new Point(x,y),text.Size));
+            try
+            {
+                Video.Screen.Blit(text, new Rectangle(new Point(x, y), text.Size));
+            }
+            catch (Exception)
+            { }
         }
     }
 }

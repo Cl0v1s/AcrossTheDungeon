@@ -6,7 +6,7 @@ using System.Text;
 namespace DW
 {
     [Serializable]
-    class Recipe
+    public class Recipe
     {
 
         public static Recipe RecipeRefinedGlass = new Recipe("Verre poli", "Du verre parfaitement \nLisse et transparent.", new Item[] { ItemMineral.ItemGlass, ItemMineral.ItemDust }, new Item[] { ItemMineral.ItemRefinedGlass });

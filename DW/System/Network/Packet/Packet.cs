@@ -11,25 +11,22 @@ using System.Threading;
 
 namespace DW
 {
-    public enum TypePaquet
-    {
-        Data,
-        Command,
-        Chat
-    }
 
     [Serializable] // Pour que la classe soit sérialisable
     public class Packet //Une superclasse pour les paquets
     {
-        public TypePaquet Type { get; protected set; }
 
-        public Packet(TypePaquet Type)
+        public Packet()
         {
-            this.Type = Type;
+        }
+
+        public virtual void processPacket(PacketManager par1)
+        {
+
         }
 
         //Méthode statique pour l'envoi et la réception
-        public static void Send(Packet paquet, UdpClient link, IPEndPoint ie = null)
+        public static void Send(Packet paquet, UdpClient link, IPEndPoint ie)
         {
             BinaryFormatter bf = new BinaryFormatter();
             MemoryStream ms = new MemoryStream();
@@ -42,7 +39,7 @@ namespace DW
             {
                 Console.WriteLine("Packet trop volumineux");
             }
-            link.Send(dgram, dgram.Length);
+            link.Send(dgram, dgram.Length, ie);
         }
 
         public static Packet Receive(UdpClient link)
@@ -55,7 +52,7 @@ namespace DW
             }
             catch (SocketException)
             {
-                DW.close(DW.dungeon);
+                DW.close(DW.server);
                 DW.close(DW.client);
                 DW.changeScene("GameMenu", "Impossible de joindre l'hote distant");
                 return null;
@@ -83,25 +80,6 @@ namespace DW
                 Console.WriteLine(_Exception.ToString());
             }
             return null;
-        }
-
-        //Méthode statique pour l'envoi et la réception
-        public static void Send(Packet paquet, NetworkStream stream)
-        {
-            BinaryFormatter bf = new BinaryFormatter();
-
-            bf.Serialize(stream, paquet);
-            stream.Flush();
-        }
-
-        public static Packet Receive(NetworkStream stream)
-        {
-            Packet p = null;
-
-            BinaryFormatter bf = new BinaryFormatter();
-            p = (Packet)bf.Deserialize(stream);
-
-            return p;
         }
     }
 }

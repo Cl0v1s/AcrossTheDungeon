@@ -4,8 +4,10 @@ using System.Threading;
 namespace DW
 {
     [Serializable]
-    class OtherPlayer :  Player
+    public class OtherPlayer :  Player
     {
+        public bool initialized = false;
+
         //<summary>
         //créer et gère le joueur coté client
         //</summary>
@@ -42,7 +44,7 @@ namespace DW
         //<summary>
         //permet au joueur coté client de se déplacer
         //</summary>
-        public void move(int par1x, int par2y)
+        public bool move(int par1x, int par2y)
         {
             if (isFighting == false)
             {
@@ -50,8 +52,10 @@ namespace DW
                 {
                     x = par1x;
                     y = par2y;
+                    return true;
                 }
             }
+            return false;
         }
 
 

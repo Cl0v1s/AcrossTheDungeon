@@ -3,7 +3,7 @@
 namespace DW
 {
     [Serializable]
-    class Inventory
+    public class Inventory
     {
         private Special owner;
         private int size;
@@ -15,7 +15,6 @@ namespace DW
             size = par2size;
             contents = new Item[par2size];
             addItem(Item.ItemBucket);
-            addItem(ItemFood.ItemPickAxe);
         }
 
         //<summary>
@@ -130,24 +129,7 @@ namespace DW
                     }
                     else
                     {
-                        Packet.Send(new CommandPacket("spawnitem", new object[] { contents[par1], owner.getX(), owner.getY() }), DW.client.getServer());
-                        while (true)
-                        {
-                            Packet e=Packet.Receive(DW.client.getServer());
-                            if (e is DataPacket && ((DataPacket)e).get() is bool)
-                            {
-                                bool result = (bool)((DataPacket)e).get();
-                                if (result)
-                                    contents[par1] = null;
-                                else
-                                {
-                            if(owner is Entity)
-                                ((Entity)owner).showMsg("Vous ne pouvez deposer un objet ici.");
-                                    return;
-                                }
-                                break;
-                            }
-                        }
+                        //TOADD
                     }
                 }
                 else

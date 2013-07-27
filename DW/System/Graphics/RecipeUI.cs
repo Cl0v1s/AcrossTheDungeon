@@ -18,6 +18,7 @@ namespace DW
         private int index = 0;
         private bool inSelection=false;
         private bool canCraftSelected = false;
+        private bool recentlyOpenned = false;
 
 
         public RecipeUI(Player par1owner, Special par2tool = null)
@@ -202,6 +203,11 @@ namespace DW
                 }
 
             }
+            if(recentlyOpenned)
+            {
+                inSelection=false;
+                recentlyOpenned = false;
+            }
 
         }
 
@@ -218,6 +224,7 @@ namespace DW
                 inSelection=false;
                 canCraftSelected = false;
                 opened = true;
+                recentlyOpenned = true;
                 findPossible();
             }
             else
@@ -233,18 +240,21 @@ namespace DW
         private void findPossible()
         {
             Recipe[] l=owner.getRecipes();
+            int it = 0;
             for (int i = 0; i < l.Length; i++)
             {
                 if (tool != null)
                 {
                     if (l[i] != null && l[i].getTool() != null && l[i].getTool().GetType() == tool.GetType())
                     {
-                        possibleList[i] = l[i];
+                        possibleList[it] = l[i];
+                        it += 1;
                     }
                 }
                 else if (l[i] != null && l[i].getTool()==null)
                 {
-                        possibleList[i] = l[i];
+                        possibleList[it] = l[i];
+                        it += 1;
                 }
             }
         }

@@ -35,7 +35,7 @@ namespace DW
         {
             if (other != null)
             {
-                Packet.Send(new ChatPacket(par1player, par2msg), other);
+                //TOADD;
             }
         }
 

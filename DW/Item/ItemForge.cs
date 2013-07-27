@@ -5,6 +5,7 @@ using System.Text;
 
 namespace DW
 {
+    [Serializable]
     class ItemForge : Item
     {
         public ItemForge()

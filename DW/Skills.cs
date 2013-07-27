@@ -6,7 +6,7 @@ using System.Text;
 namespace DW
 {
     [Serializable]
-    class Skills
+    public class Skills
     {
         private Player owner;
         private Random rand = new Random();

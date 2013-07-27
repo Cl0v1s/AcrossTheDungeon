@@ -5,7 +5,7 @@ using System.Drawing;
 namespace DW
 {
     [Serializable]
-    class Entity : Special
+    public class Entity : Special
     {
 
         protected Random rand = new Random();
@@ -27,10 +27,10 @@ namespace DW
         protected int agilite;
         protected int range = 5;
 
-        protected float faim = 0;
-        protected float soif = 0;
-        protected float sommeil = 0;
-        protected float sale = 0;
+        protected float faim = 89;
+        protected float soif = 89;
+        protected float sommeil = 89;
+        protected float sale = 89;
         protected double peur = 0;
         protected int timer = 40;
         protected int speed = 40;

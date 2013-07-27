@@ -13,30 +13,31 @@ namespace DW
 {
     class Server
     {
-        private Stair[] stairs;
-        private int stairNb = -1;
-        IPEndPoint send;
-        IPEndPoint listen = new IPEndPoint(Dns.GetHostByName(Dns.GetHostName()).AddressList[0], 1212);
-        private Thread exchange;
-        private UdpClient client;
-        private bool connected = false;
-        private bool online;
-        OtherPlayer other;
-        private Chat chat;
+        //server
+        private UdpClient server;
+        private IPEndPoint customer;
+        private PacketManager packetManager=new PacketManager();
+        private Thread listen;
+        private Thread talk;
+        private Packet[] queue = new Packet[20];
+        public OtherPlayer other;
         private string[] otherChatMsg = new string[6];
         private int otherChatMsgIndex = 0;
-        private int tmp = 40;
+        private int clientFrame = 0;
+        //local
+        private Stair[] stairs;
+        private int stairNb = -1;
+        private Chat chat;
+
 
         public Server(bool par1 = false)
         {
             int rand = new Random().Next(10, 25);
-            online = par1;
             stairs = new Stair[rand];
             up(DW.player);
             spawnPlayer(DW.player);
             chat = new Chat();
-            if (online == true)
-                createConnexion();
+            waitForConnexion();
         }
 
         public Server(int stairsNumber)
@@ -57,8 +58,24 @@ namespace DW
             inputUpdate();
             DW.player.update();
             DW.player.getStair().time();
+            if(customer != null)
+                updateClientData();
             if (chat != null)
                 chat.update();
+        }
+
+        //<summary>
+        //met à jour les informations coté client
+        //</summary>
+        private void updateClientData()
+        {
+            clientFrame += 1;
+            if (clientFrame >= 30)
+            {
+                if(other != null)
+                    addPacketToQueue(new PacketPlayer(other));
+                clientFrame = 0;
+            }
         }
 
         private void inputUpdate()
@@ -123,27 +140,78 @@ namespace DW
 
         }
 
-        public bool isConnected()
+        //<summary>
+        //attends la connexion d'un autre joueur
+        //</summary>
+        private void waitForConnexion()
         {
-            return connected;
+            server = new UdpClient(1212);
+            showMsg("Server Started",DW.player);
+            listen = new Thread(new ThreadStart(listenData));
+            listen.Start();
+            talk = new Thread(new ThreadStart(talkData));
+            talk.Start();
         }
 
-        public void setConnected(bool par1)
+        //<summary>
+        //retourne le gestionnaire de connexion coté serveur
+        //</summary>
+        public UdpClient getServer()
         {
-            connected = par1;
+            return server;
         }
 
-        private void createConnexion()
+        //<summary>
+        //ecoute le gestionnaire de connexion afin de recevoir des paquets et de la traiter
+        //</summary>
+        public void listenData()
         {
-            client = new UdpClient(listen);
-            showMsg("Serveur lancé à l'adresse locale "+listen.Address.ToString(),DW.player);
-            exchange = new Thread(new ThreadStart(exchangeData));
-            exchange.Start();
+            while (true)
+            {
+                Packet packet = Packet.Receive(server);
+                packet.processPacket(packetManager);
+            }
         }
 
-        public UdpClient getClient()
+        //<summary>
+        //parcours la liste de paquet a envoyer et envoie les paquets
+        //</summary>
+        public void talkData()
         {
-            return client;
+            int queueIndex = 0;
+            while (true)
+            {
+                if (queueIndex < queue.Length && queue[queueIndex] != null)
+                {
+                    Console.WriteLine("Sending " + queue[queueIndex]);
+                    Packet.Send(queue[queueIndex], server, customer);
+                    queue[queueIndex] = null;
+                    queueIndex += 1;
+                }
+                else if (queueIndex < queue.Length)
+                    queueIndex = 0;
+                Thread.Sleep(200);
+            }
+        }
+
+        public void addPacketToQueue(Packet par1)
+        {
+            for (int i = 0; i < queue.Length; i++)
+            {
+                if (queue[i] == null)
+                {
+                    queue[i] = par1;
+                    break;
+                }
+            }
+        }
+
+        //<summary>
+        //paramètre l'adresse de destination des paquets
+        //</summary>
+        public void setCustomer(IPEndPoint par1)
+        {
+            customer = par1;
         }
 
         public void showMsg(string par1,Player par2receiver)
@@ -160,95 +228,5 @@ namespace DW
 
         }
 
-        public void exchangeData()
-        {
-            while (true)
-            {
-                Packet packet = Packet.Receive(client);
-                if (packet is CommandPacket)
-                {
-                    CommandPacket p = (CommandPacket)packet;
-                    examine(p.getCommand(), p.getArgs());
-                }
-                else if (packet is ChatPacket && chat != null)
-                {
-                    chat.add(((ChatPacket)packet));
-                }
-            }
-
-        }
-
-        private void examine(string par1command, object par2args)
-        {
-            switch (par1command)
-            {
-                case "sendip":
-                    if (par2args is IPAddress)
-                    {
-                        send = new IPEndPoint((IPAddress)par2args, 1213);
-                        client.Connect(send);
-                        chat.setOther(client);
-                        setConnected(true);
-                        Console.WriteLine("Client (" + par2args.ToString() + ") est connecté.");
-                    }
-                    break;
-                case "getstair":
-                    DataPacket ap = new DataPacket(DW.player.getStair());
-                    Packet.Send(ap, client, send);
-                    break;
-                case "sendplayer":
-                    if (par2args is OtherPlayer)
-                    {
-                        other = (OtherPlayer)par2args;
-                        other.setStair(DW.player.getStair());
-                        Point p = other.getStair().getFreeSpecialCase();
-                        other.setPos(p.X, p.Y);
-                        DW.player.getStair().putEntity(other);
-                        Packet.Send(new DataPacket(other), client);
-                    }
-                    break;
-                case "moveplayer":
-                    if (par2args is object[])
-                    {
-                        object[] o = (object[])par2args;
-                        Point p = (Point)o[0];
-                        other.move(p.X, p.Y);
-                        other.setFace((string)o[1]);
-                        Entity[] e = other.getStair().getEntities();
-                        for (int i = 0; i < e.Length; i++)
-                        {
-                            if(e[i] != null && !(e[i] is Player) && other.isNear(e[i]))
-                            {
-                                other.fight(other,e[i]);
-                                break;
-                            }
-                        }
-                        Packet.Send(new DataPacket(other), client);
-                    }
-                    break;
-                case "updatechat":
-                    Packet.Send(new DataPacket(chat.getValues()), client);
-                    break;
-                case "interactplayer":
-                    other.interact();
-                    Packet.Send(new DataPacket(other), client);
-                    break;
-                case "getchatmsg":
-                    Packet.Send(new DataPacket(otherChatMsg), client);
-                    otherChatMsg = new string[6];
-                    otherChatMsgIndex = 0;
-                    break;
-                case "spawnitem":
-                    if (par2args is object[])
-                    {
-                        object[] d = (object[])par2args;
-                        bool r=DW.player.getStair().spawnItem((Item)d[0], (int)d[1], (int)d[2]);
-                        Packet.Send(new DataPacket(r), client);
-                        other.getInventory().removeItem((Item)d[0], false);
-                    }
-                    break;
-
-            }
-        }
     }
 }

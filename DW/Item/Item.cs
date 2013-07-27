@@ -162,7 +162,7 @@ namespace DW
 
 
     [Serializable]
-    class Item
+    public class Item
     {
         public static Item ItemStick=new Item("Bâton", "Un bâton long et fin...", 4);
         public static Item ItemIronIngot = new Item("Morceau de fer", "Un morceau de fer forge de maniere tres artisanale...", 10);

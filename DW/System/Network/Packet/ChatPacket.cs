@@ -11,7 +11,6 @@ namespace DW
 
 
         public ChatPacket(Player par1player, string par2msg)
-            : base(TypePaquet.Chat)
         {
             sender = par1player;
             msg = par2msg;

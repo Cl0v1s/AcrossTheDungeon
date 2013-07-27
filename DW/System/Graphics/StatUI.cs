@@ -16,6 +16,9 @@ namespace DW
         private Surface Icons = new Surface("Data/images/Gui/Icon.png");
         private Surface itemInHand = null;
         private string lastItemInHand="";
+        private Surface[] statsIcon = new Surface[4];
+        private float frame;
+        private Random rand = new Random();
 
 
 
@@ -35,7 +38,9 @@ namespace DW
 
         public void update()
         {
-            int dec = 1;
+            frame += (float)3.14/50;
+            if (frame >= 100)
+                frame = 0;
             Video.Screen.Blit(background_left,new Point(-440,400));
             Video.Screen.Blit(background_left, new Point(455, 400));
             new Text("pixel.ttf", 25, 20, 410, subject.getName(), 200, 200, 200).update();
@@ -43,27 +48,6 @@ namespace DW
             Video.Screen.Fill(new Rectangle(45, 447, subject.getStat()[0] * 98 / subject.getLife(), 16), Color.FromArgb(50, 250, 50));
             Video.Screen.Blit(jauge, new Point(45, 445));
             Video.Screen.Blit(Icons, new Point(22, 442), new Rectangle(0, 0, 30, 30));
-            /*Hungry*/
-            if (subject.getStat()[1] >= 70)
-            {
-                Video.Screen.Blit(Icons, new Point(100*dec+65, 442), new Rectangle(30, 0, 30, 30));
-                new Text("pixel.ttf",20,100*dec+65+35,447,(subject.getStat()[1]*-1+100).ToString()).update();
-                dec += 1;
-            }
-            /*thrirst*/
-            if (subject.getStat()[2] >= 70)
-            {
-                Video.Screen.Blit(Icons, new Point(100*dec+65, 442), new Rectangle(60, 0, 30, 30));
-                new Text("pixel.ttf", 20, 100*dec+65 + 35, 447, (subject.getStat()[2] * -1 + 100).ToString()).update();
-                dec += 1;
-            }
-            /*sleep*/
-            if (subject.getStat()[3] >= 70)
-            {
-                Video.Screen.Blit(Icons, new Point(100*dec+65, 442), new Rectangle(90, 0, 30, 30));
-                new Text("pixel.ttf", 20, 100*dec+65 + 35, 447, (subject.getStat()[3] * -1 + 100).ToString()).update();
-                dec += 1;
-            }
             /*ItemInHand*/
             if (itemInHand != null)
                 Video.Screen.Blit(itemInHand, new Point(475, 422));
@@ -81,6 +65,51 @@ namespace DW
                 itemInHand.Blit(new Surface("Data/images/GUI/Slot.png"));
                 itemInHand.CreateScaledSurface(6, 6, false);
             }
+            renderSurvivalStat();
         }
+
+        public void renderSurvivalStat()
+        {
+            manageStatIcon();
+            int yd = 0;
+            int xd = 0;
+            for (int i = 1; i < 4; i++)
+            {
+                if (statsIcon[i] != null)
+                {
+                    if (subject.getStat()[i] >= 90)
+                    {
+                        int m = (int)(8 * Math.Sin((double)frame)*i/3);
+                        Video.Screen.Blit(statsIcon[i], new Point(540 + 45 * xd, 415 + yd+m));
+                    }
+                    else
+                        Video.Screen.Blit(statsIcon[i], new Point(540 + 45 * xd, 415 + yd));
+
+                    xd += 1;
+                    if (xd >= 2)
+                    {
+                        xd = 0;
+                        yd += 35;
+                    }
+                }
+            }
+        }
+
+        public void manageStatIcon()
+        {
+            for (int i = 1; i < 4; i++)
+            {
+                if (subject.getStat()[i] >= 70 && statsIcon[i] == null)
+                {
+                    Surface h = new Surface(30, 30).Convert(Video.Screen);
+                    h.Fill(Color.Fuchsia);
+                    h.Blit(Icons, new Point(0,0), new Rectangle(30*i, 0, 30, 30));
+                    h.SourceColorKey = Color.Fuchsia;
+                    statsIcon[i] = h;
+                }
+            }
+        }
+
+
     }
 }

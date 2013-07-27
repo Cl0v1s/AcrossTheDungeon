@@ -5,6 +5,7 @@ using System.Text;
 
 namespace DW
 {
+    [Serializable]
     class Bucket : Item
     {
         public Bucket()
@@ -37,7 +38,7 @@ namespace DW
                 return this;
         }
     }
-
+    [Serializable]
     class BucketWater : Item
     {
         public BucketWater()

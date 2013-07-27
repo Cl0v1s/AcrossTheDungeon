@@ -92,6 +92,11 @@
     <Compile Include="Item\ItemFood.cs" />
     <Compile Include="Elements\Rock.cs" />
     <Compile Include="Item\Recipe.cs" />
+    <Compile Include="PacketsCommand.cs" />
+    <Compile Include="System\Network\Packet\PacketsPlayer.cs" />
+    <Compile Include="System\Network\Packet\PacketStair.cs" />
+    <Compile Include="System\Network\Packet\PacketsAuth.cs" />
+    <Compile Include="System\Network\PacketManager.cs" />
     <Compile Include="System\Graphics\RecipeUI.cs" />
     <Compile Include="System\Graphics\InventoryUI.cs" />
     <Compile Include="Entity\Bat.cs" />
@@ -102,16 +107,14 @@
     <Compile Include="Elements\ItemOnMap.cs" />
     <Compile Include="Item\Inventory.cs" />
     <Compile Include="System\Graphics\Chat.cs" />
-    <Compile Include="System\Network\ChatPacket.cs" />
+    <Compile Include="System\Network\Packet\ChatPacket.cs" />
     <Compile Include="Elements\Chest.cs" />
     <Compile Include="Scene\Client.cs" />
-    <Compile Include="System\Network\CommandPacket.cs" />
-    <Compile Include="System\Network\DataPacket.cs" />
     <Compile Include="Elements\Door.cs" />
     <Compile Include="Scene\IpMenu.cs" />
     <Compile Include="Item\Item.cs" />
     <Compile Include="Entity\OtherPlayer.cs" />
-    <Compile Include="System\Network\Packet.cs" />
+    <Compile Include="System\Network\Packet\Packet.cs" />
     <Compile Include="Entity\Pig.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

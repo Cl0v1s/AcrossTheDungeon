@@ -12,13 +12,14 @@ using SdlDotNet.Input;
 namespace DW
 {
     [Serializable]
-    class Player : Entity
+    public class Player : Entity
     {
         protected String pclass;
         public Skills skills;
         private int stairId = -1;
         protected Recipe[] recipeList = new Recipe[100];
         protected Item itemInHand;
+        protected Item lastItemInHand;
         
 
         //<summary>
@@ -53,6 +54,16 @@ namespace DW
         public void setItemInHand(Item par1)
         {
             itemInHand = par1;
+        }
+
+        public bool itemInHandChanged()
+        {
+            if (itemInHand != lastItemInHand)
+            {
+                lastItemInHand = itemInHand;
+                return true;
+            }
+            return false;
         }
 
         public Item getItemInHand()
@@ -129,8 +140,8 @@ namespace DW
         {
             if (DW.client != null)
                 DW.client.showMsg(par1);
-            else if(DW.dungeon != null)
-                DW.dungeon.showMsg(par1,this);
+            else if(DW.server != null)
+                DW.server.showMsg(par1,this);
         }
 
 
@@ -208,15 +219,6 @@ namespace DW
         //</summary>
         public void move(int par1x, int par2y)
         {
-            Entity[] e = stair.getEntities();
-            for (int i = 0; i < e.Length; i++)
-            {
-                if (e[i] != null && !(e[i] is Player) && isNear(e[i]))
-                {
-                    fight(this, e[i]);
-                    break;
-                }
-            }
             if (isFighting == false)
             {
                 if (canWalkOn(x + par1x, y + par2y))
@@ -228,8 +230,19 @@ namespace DW
             setCanvas();
             turn();
             Thread.Sleep(100);
+        }
 
-
+        public void attack()
+        {
+            Entity[] e = stair.getEntities();
+            for (int i = 0; i < e.Length; i++)
+            {
+                if (e[i] != null && !(e[i] is Player) && isNear(e[i]))
+                {
+                    fight(this, e[i]);
+                    break;
+                }
+            }
         }
 
 

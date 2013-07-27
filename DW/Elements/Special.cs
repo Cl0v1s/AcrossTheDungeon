@@ -10,7 +10,7 @@ using SdlDotNet.Graphics.Sprites;
 namespace DW
 {
     [Serializable]
-    class Special
+    public class Special
     {
         protected Stair stair;
         protected int x;
@@ -106,10 +106,9 @@ namespace DW
         }
 
 
-        public virtual void update()
+        public virtual Special update()
         {
-
-
+            return this;
         }
 
         public void setFace(string par1)

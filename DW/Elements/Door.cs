@@ -40,6 +40,20 @@ namespace DW
             return open;
         }
 
+        public override Special update()
+        {
+            int[,] s = stair.getMap();
+            if (s[x, y - 1] == 2 && s[x, y + 1] != 2 && (s[x + 1, y] != 2 || s[x - 1, y] != 2))
+                return null;
+            else if (s[x, y - 1] != 2 && s[x, y + 1] == 2 && (s[x + 1, y] != 2 || s[x - 1, y] != 2))
+                return null;
+            else if (s[x + 1, y] == 2 && s[x - 1, y] != 2 && (s[x, y + 1] != 2 || s[x, y - 1] != 2))
+                return null;
+            else if (s[x - 1, y] == 2 && s[x + 1, y] != 2 && (s[x, y + 1] != 2 || s[x, y - 1] != 2))
+                return null;
+            return this;
+        }
+
         //<summary>
         //permet au joueur d'interagir avec la porte (ouverture/fermeture)
         //</summary>

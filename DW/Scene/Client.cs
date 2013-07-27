@@ -15,13 +15,15 @@ namespace DW
 {
     class Client
     {
-        private Thread exchange;
-        UdpClient server;
-        IPEndPoint send;
-        IPEndPoint listen = new IPEndPoint(IPAddress.Any, 1213);
-        private bool connected = false;
+        private Packet[] queue = new Packet[20];
+        private Thread listen;
+        private Thread talk;
+        private UdpClient client;
+        private IPEndPoint server;
+        private int ValidationTimeOut = 100;
+        public bool connected = false;
         private Chat chat;
-        private bool isWriting=false;
+        private PacketManager packetManager=new PacketManager();
 
         //<summary>
         //créer le client
@@ -35,30 +37,37 @@ namespace DW
 
         private void inputUpdate()
         {
-            if (DW.render.isUIOpenned())
-                return;
-            if (DW.input.equals(Key.I))
+            try
             {
-                DW.render.openInventory();
+                if (DW.render.isUIOpenned())
+                    return;
+                if (DW.input.equals(Key.I))
+                {
+                    DW.render.openInventory();
+                }
+                if (DW.input.equals(Key.C))
+                {
+                    DW.render.setRecipe(null);
+                    DW.render.openRecipe();
+                }
+                if (DW.input.equals(Key.UpArrow) == true)
+                    changePlayerPos(DW.player.getX(), DW.player.getY() - 1, "back");
+                else if (DW.input.equals(Key.DownArrow) == true)
+                    changePlayerPos(DW.player.getX(), DW.player.getY() + 1, "front");
+                else if (DW.input.equals(Key.RightArrow) == true)
+                    changePlayerPos(DW.player.getX() + 1, DW.player.getY(), "right");
+                else if (DW.input.equals(Key.LeftArrow) == true)
+                    changePlayerPos(DW.player.getX() - 1, DW.player.getY(), "left");
+                else if (DW.input.equals(Key.L))
+                    ((OtherPlayer)DW.player).lap();
+                else if (DW.input.equals(Key.KeypadEnter) || DW.input.equals(Key.Return))
+                    interactPlayer();
+                DW.render.move(DW.player.getX() * -30 + 640 / 2, DW.player.getY() * -30 + 480 / 2);
             }
-            if (DW.input.equals(Key.C))
+            catch (Exception)
             {
-                DW.render.setRecipe(null);
-                DW.render.openRecipe();
+
             }
-            if (DW.input.equals(Key.UpArrow) == true)
-                changePlayerPos(DW.player.getX(), DW.player.getY() - 1, "back");
-            else if (DW.input.equals(Key.DownArrow) == true)
-                changePlayerPos(DW.player.getX(), DW.player.getY() + 1, "front");
-            else if (DW.input.equals(Key.RightArrow) == true)
-                changePlayerPos(DW.player.getX() + 1, DW.player.getY(), "right");
-            else if (DW.input.equals(Key.LeftArrow) == true)
-                changePlayerPos(DW.player.getX() - 1, DW.player.getY(), "left");
-            else if (DW.input.equals(Key.L))
-                ((OtherPlayer)DW.player).lap();
-            else if (DW.input.equals(Key.KeypadEnter) || DW.input.equals(Key.Return))
-                interactPlayer();
-            DW.render.move(DW.player.getX() * -30 + 640 / 2, DW.player.getY() * -30 + 480 / 2);
         }
 
         //<summary>
@@ -66,8 +75,20 @@ namespace DW
         //</summary>
         public void update()
         {
+            if (!connected)
+            {
+                ValidationTimeOut -= 1;
+                if (ValidationTimeOut < 0)
+                {
+                    listen.Abort();
+                    talk.Abort();
+                    DW.close(DW.client);
+                    DW.changeScene("GameMenu", "Aucune réponse de l'hote distant.");
+                }
+            }
             inputUpdate();
-            DW.render.renderEntityVision(DW.player);
+            if(DW.render != null)
+                DW.render.renderEntityVision(DW.player);
             if (chat != null)
                 chat.update();
             Thread.Sleep(100);
@@ -81,19 +102,10 @@ namespace DW
         //<param name="par3dir">la direction du sprite dui joueur à afficher</param>
         private void changePlayerPos(int par1x, int par2y,string par3dir)
         {
-            Packet.Send(new CommandPacket("moveplayer", new object[]{new Point(par1x, par2y),par3dir}), server);
-            while (true)
-            {
-                Packet p = Packet.Receive(server);
-                if (p is DataPacket && ((DataPacket)p).get() is OtherPlayer)
-                {
-                    DW.player = (OtherPlayer)((DataPacket)p).get();
-                    DW.player.turn();
-                    break;
-                }
-                else
-                    break;
-            }
+            DW.player.setFace(par3dir);
+            if (((OtherPlayer)DW.player).move(par1x, par2y))
+                Packet.Send(new PacketPlayerMove((OtherPlayer)DW.player),client,server);
+            Thread.Sleep(50);
         }
 
         //<summary>
@@ -101,81 +113,76 @@ namespace DW
         //</summary>
         private void interactPlayer()
         {
-            Packet.Send(new CommandPacket("interactplayer"), server);
+        }
+
+        //<summary>
+        //attends la connexion d'un autre joueur
+        //</summary>
+        private void createConnexion(string par1)
+        {
+            client = new UdpClient(1213);
+            server = new IPEndPoint(IPAddress.Parse(par1), 1212);
+            addPacketToQueue(new PacketAuth());
+            listen = new Thread(new ThreadStart(listenData));
+            listen.Start();
+            talk = new Thread(new ThreadStart(talkData));
+            talk.Start();
+        }
+
+        //<summary>
+        //retourne le gestionnaire de connexion coté client
+        //</summary>
+        public UdpClient getClient()
+        {
+            return client;
+        }
+
+        //<summary>
+        //ecoute le gestionnaire de connexion afin de recevoir des paquets et de la traiter
+        //</summary>
+        public void listenData()
+        {
             while (true)
             {
-                Packet p = Packet.Receive(server);
-                if (p is DataPacket && ((DataPacket)p).get() is OtherPlayer)
-                {
-                    DW.player = (OtherPlayer)((DataPacket)p).get();
-                    break;
-                }
-                else
-                    break;
-            }
-            Thread.Sleep(200);
-        }
-
-        //<summary>
-        //retourne si le client est connecté ou non
-        //</summary>
-        public bool isConnected()
-        {
-            return connected;
-        }
-
-        public void setConnected(bool par1)
-        {
-            connected = par1;
-        }
-
-        //<summary>
-        //entamme al procedure de connexion au client
-        //</summary>
-        //<param name="par1"> l'adresse ip du serveur à rejoindre</param>
-        private void createConnexion(String par1)
-        {
-            server = new UdpClient(listen);
-            send = new IPEndPoint(IPAddress.Parse(par1), 1212);
-            server.Connect(send);
-            Packet.Send(new CommandPacket("sendip", Dns.GetHostByName(Dns.GetHostName()).AddressList[0]), server);
-            setConnected(true);
-            chat.setOther(server);
-            exchange = new Thread(new ThreadStart(exchangeData));
-            exchange.Start();
-        }
-
-        //<summary>
-        //demande au serveur de retourner le contenu de la boite de chat
-        //afin del'actualiser conté client
-        //</summary>
-        private void getChatMsg()
-        {
-            Packet.Send(new CommandPacket("getchatmsg"), server);
-            while (true)
-            {
-                Packet p = Packet.Receive(server);
-                if (p is DataPacket && ((DataPacket)p).get() is string[])
-                {
-                    string[] s = (string[])((DataPacket)p).get();
-                    for (int i = 0; i < s.Length; i++)
-                    {
-                        if(s[i] != null && s[i] != "")
-                            chat.add(s[i]);
-                    }
-                    break;
-                }
-                else 
-                    break;
+                Packet packet = Packet.Receive(client);
+                packet.processPacket(packetManager);
             }
         }
 
         //<summary>
-        //retourne le client udp chargé de la connexion
+        //parcours la liste de paquet a envoyer et envoie les paquets
         //</summary>
-        public UdpClient getServer()
+        public void talkData()
         {
-            return server;
+            int queueIndex = 0;
+            while (true)
+            {
+                if (queueIndex < queue.Length && queue[queueIndex] != null)
+                {
+                    Console.WriteLine("Sending " + queue[queueIndex]);
+                    Packet.Send(queue[queueIndex], client, server);
+                    queue[queueIndex] = null;
+                    queueIndex += 1;
+                }
+                else if (queueIndex < queue.Length)
+                    queueIndex = 0;
+                Thread.Sleep(200);
+            }
+        }
+
+        //<summary>
+        //ajoute un paquet à la file d'attente pour l'envoi vers le serveur
+        //</summary>
+        public void addPacketToQueue(Packet par1)
+        {
+            for (int i = 0; i < queue.Length; i++)
+            {
+                if (queue[i] == null)
+                {
+                    queue[i] = par1;
+                    break;
+                }
+            }
         }
 
         //<summary>
@@ -184,72 +191,6 @@ namespace DW
         public void showMsg(string par1)
         {
             chat.add(par1);
-        }
-
-        //<summary>
-        //fnction chargé de l'actualisation des données entre le serveur et le client
-        //</summary>
-        public void exchangeData()
-        {
-            sendPlayer();
-            while (true)
-            {
-                updateStair();
-                getChatMsg();
-                Thread.Sleep(100);
-            }
-        }
-
-        //<summary>
-        //envoie le joueur coté client au serveur afin de l'intégrer au jeu
-        //</summary>
-        private void sendPlayer()
-        {
-            CommandPacket ap = new CommandPacket("sendplayer", DW.player);
-            Console.WriteLine(DW.player.GetType());
-            Packet.Send(ap, server);
-            while (true)
-            {
-                Packet p = Packet.Receive(server);
-                if (p is DataPacket && ((DataPacket)p).get() is OtherPlayer)
-                {
-                    DW.player = (OtherPlayer)((DataPacket)p).get();
-                    Console.WriteLine("Joueur " + DW.player.getName() + " inséré en " + DW.player.getX() + ":" + DW.player.getY());
-                    break;
-                }
-            }
-        }
-
-        //<summary>
-        //fonction chargé d'actualiser le client en téléchargeant les données du donjon depuis le serveur
-        //</summary>
-        private void updateStair()
-        {
-            CommandPacket ap = new CommandPacket("getstair");
-            Packet.Send(ap, server);
-            Stair stair = null;
-            while (stair == null)
-            {
-                Packet d = Packet.Receive(server);
-                if (d is DataPacket && ((DataPacket)d).get() is Stair)
-                {
-                    stair = (Stair)((DataPacket)d).get();
-                }
-                else
-                    return;
-   
-            }
-            Entity[] e = stair.getEntities();
-            for (int i = 0; i < e.Length; i++)
-            {
-                if (e[i] != null && e[i] is Player && e[i].getName() == DW.player.getName())
-                {
-                    DW.render.getStatUI().setOwner((Player)e[i]);
-                    DW.player = (Player)e[i];
-                    DW.render.setInventory(DW.player.getInventory());
-                }
-            }
-            DW.player.setStair(stair);
         }
     }
 }
