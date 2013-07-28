@@ -46,15 +46,12 @@ namespace DW
         //</summary>
         public bool move(int par1x, int par2y)
         {
-            if (isFighting == false)
-            {
                 if (canWalkOn(par1x, par2y))
                 {
                     x = par1x;
                     y = par2y;
                     return true;
                 }
-            }
             return false;
         }
 

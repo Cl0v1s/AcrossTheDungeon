@@ -27,10 +27,10 @@ namespace DW
         protected int agilite;
         protected int range = 5;
 
-        protected float faim = 89;
-        protected float soif = 89;
-        protected float sommeil = 89;
-        protected float sale = 89;
+        protected float faim = 0;
+        protected float soif = 0;
+        protected float sommeil = 0;
+        protected float sale = 0;
         protected double peur = 0;
         protected int timer = 40;
         protected int speed = 40;
@@ -42,9 +42,9 @@ namespace DW
         protected Point objective = new Point(-1, -1);
         protected bool isSleeping = false;
         protected int sleepingTime = 0;
-        protected bool isFighting = false;
         protected bool isburning = false;
         protected int attempt = 0;
+        public bool WantFight = false;
 
 
         public Entity(String par1name, int par3force, int par4endurance, int par5volonte, int par6agilite, Stair par7stair)
@@ -77,7 +77,10 @@ namespace DW
 
         public Entity()
         {
-
+            lifeTmp = life;
+            enduranceTmp = endurance;
+            originalValue = value;
+            turn();
         }
 
         public virtual void showMsg(string par1)
@@ -142,7 +145,9 @@ namespace DW
                     enduranceTmp += 0.5;
                 if (isSleeping == false)
                 {
-                    if (isFighting == false)
+                    if (worstEnemy != null && isNear(worstEnemy) == false)
+                        WantFight = false;
+                    if (WantFight == false)
                     {
                         survivalIA();
                         choiceIA();
@@ -156,11 +161,6 @@ namespace DW
                     sleepingTime = 0;
                 }
             }
-        }
-
-        public bool isInFight()
-        {
-            return isFighting;
         }
 
         protected void survivalIA()
@@ -183,11 +183,20 @@ namespace DW
             }
         }
 
+        //<summary>
+        //retourne la force présumé de l'entité
+        //</summary>
         protected double getPower()
         {
-            return (double)((force * agilite) / (faim + soif + sommeil));
+            return (double)((force*(enduranceTmp*100/endurance)/100)/ (faim + soif + sommeil+1));
         }
 
+        //<summary>
+        //l'entité active cherche d'autres entitées et interagit avec elles en fonction de son taux de peur
+        //peur=0 : indiférence
+        //peur<0 : agressivité
+        //peur>0 : fuite
+        //</summary>
         protected void lookForOther()
         {
             if (peur != 0)
@@ -219,14 +228,16 @@ namespace DW
                         }
                     }
                     if (worstEnemy != null && worstEnemy.getPower() > getPower())
-                        peur = peur + (worstEnemy.getPower() - getPower());
+                    {
+                        peur = peur + (worstEnemy.getPower()-getPower())/10;
+                        Console.WriteLine("peur : " + peur);
+                    }
                 }
             }
         }
 
         protected void choiceIA()
         {
-
             if (worstEnemy != null)
             {
                 if (peur > 0 && canSee(worstEnemy.getX(), worstEnemy.getY()))
@@ -330,8 +341,7 @@ namespace DW
         {
             if(isNear(worstEnemy))
             {
-                isFighting = true;
-                fight(this, worstEnemy);
+                fight(worstEnemy);
             }
             if (isNear(4) == true && regime != "carnivore")
                 faim = 0;
@@ -349,20 +359,51 @@ namespace DW
             lifeTmp = par1;
         }
 
-        public void fight(Entity par1cause, Entity par2victim)
+        //<summary>
+        //inflige des degats à l'unité attaquée et paramètre son comportement en cas de danger de mort
+        //</summary>
+        //<param name="par2victim">l'entité victime de l'attaque</param>
+        public void fight(Entity par2victim)
         {
-            par1cause.setFighting(true);
-            par2victim.setFighting(true);
-            par1cause.atk(par2victim);
-            par1cause.setEnemy(par2victim);
-            par2victim.setEnemy(par1cause);
-            par1cause.lookTo(par2victim);
-            par2victim.lookTo(par1cause);
-            if (par2victim.getStat()[0] <= 0 || par1cause.isNear(par2victim) == false)
+            if (peur == 0)
+                peur = -5;
+            setEnemy(par2victim);
+            par2victim.setEnemy(this);
+            lookTo(par2victim);
+            par2victim.lookTo(this);
+            WantFight = true;
+            par2victim.WantFight = true;
+            int atk = 0;
+            atk=(int)(force*(enduranceTmp*100/endurance)/100);
+            double cc = rand.NextDouble();
+            enduranceTmp -= atk * cc * enduranceTmp / 100;
+            cc=rand.NextDouble();
+            if (cc <= 1 / 280 * agilite)
+                atk = (int)(atk * (1 + cc));
+            atk = atk * (1 - (par2victim.getAgilite() / 100));
+            par2victim.setLife(par2victim.getStat()[0] - atk);
+            if (par2victim.getStat()[0] <= 10 * par2victim.getLife() / 100)
             {
-                par1cause.setFighting(false);
-                return;
+                par2victim.WantFight = false;
+                WantFight = false;
+                par2victim.setFear(10);
             }
+            
+        }
+
+        public void setFear(int par1)
+        {
+            peur = par1;
+        }
+
+        public int getAgilite()
+        {
+            return agilite;
+        }
+
+        public string getName()
+        {
+            return name;
         }
 
         public void lookTo(Entity par1)
@@ -390,7 +431,7 @@ namespace DW
 
         protected bool isOn(int par1)
         {
-            if (stair.getMap()[x, y] == par1)
+            if (stair != null && stair.getMap()[x, y] == par1)
                 return true;
             return false;
         }
@@ -550,35 +591,6 @@ namespace DW
             return false;
         }
 
-        public int atk(Entity par1)
-        {
-            int atk = 0;
-            if (enduranceTmp > 0)
-            {
-                atk = (int)(force * (1 + (rand.Next(0, 5) / 100)) + enduranceTmp);
-                enduranceTmp -= atk / 50;
-                if (rand.Next(agilite, 100) == 100)
-                    atk = atk * 2;
-                if (par1.def(atk) <= 0)
-                    isFighting = false;
-            }
-            return atk;
-
-        }
-
-        public int def(int par1)
-        {
-            int def = 0;
-            if (enduranceTmp > 0)
-            {
-                def = (int)((enduranceTmp + 1.5 * enduranceTmp) + volonte);
-                if (rand.Next(agilite, 100) == 100)
-                    def = def * 2;
-            }
-            lifeTmp -= par1 * (1 - def / 100);
-            return lifeTmp;
-        }
-
         public void kill()
         {
             dead = true;
@@ -587,16 +599,6 @@ namespace DW
         public string getSpecies()
         {
             return espece;
-        }
-
-        public void setFighting(bool par1)
-        {
-            isFighting = par1;
-        }
-
-        public string getName()
-        {
-            return name;
         }
 
         //<summary>

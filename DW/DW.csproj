@@ -85,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation.cs" />
     <Compile Include="Elements\Forge.cs" />
     <Compile Include="Item\ItemForge.cs" />
     <Compile Include="Item\Bucket.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Elements\Rock.cs" />
     <Compile Include="Item\Recipe.cs" />
     <Compile Include="PacketsCommand.cs" />
+    <Compile Include="System\Graphics\Particles.cs" />
     <Compile Include="System\Network\Packet\PacketsPlayer.cs" />
     <Compile Include="System\Network\Packet\PacketStair.cs" />
     <Compile Include="System\Network\Packet\PacketsAuth.cs" />

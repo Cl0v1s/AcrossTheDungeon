@@ -121,6 +121,10 @@ namespace DW
                 DW.player.interact();
                 Thread.Sleep(200);
             }
+            else if (DW.input.equals(Key.Space))
+            {
+                DW.player.attack();
+            }
             else if (DW.input.equals(Key.L))
                 DW.player.lap();
         }

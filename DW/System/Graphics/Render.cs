@@ -55,7 +55,7 @@ namespace DW
         protected AnimatedSprite lava;
         private SdlDotNet.Graphics.Font font = new SdlDotNet.Graphics.Font(Directory.GetCurrentDirectory() + "\\Data\\" + "pixel.ttf", 30);
         private KeyValuePair<string, Surface>[] handledItem = new KeyValuePair<string, Surface>[2];
-        
+        private Animation[] animationsList = new Animation[50];
 
         public Render(int par1x, int par2y)
         {
@@ -66,64 +66,30 @@ namespace DW
             registerDictionnary();
         }
 
-        private void setAnimatedTile()
+        private void updateAnimations()
         {
-            waterAnimation = new AnimationCollection();
-            SurfaceCollection e = new SurfaceCollection();
-            e.Add("Data/images/Water.png", new Size(30, 30));
-            waterAnimation.Add(e);
-            waterAnimation.Delay = 1200;
-            water = new AnimatedSprite(waterAnimation);
-            water.Animate = true;
-
-            lavaAnimation = new AnimationCollection();
-            e = new SurfaceCollection();
-            e.Add("Data/images/Lava.png", new Size(30, 30));
-            lavaAnimation.Add(e);
-            lavaAnimation.Delay = 1200;
-            lava = new AnimatedSprite(lavaAnimation);
-            lava.Animate = true;
+            for (int i = 0; i < animationsList.Length; i++)
+            {
+                if(animationsList[i] != null)
+                    animationsList[i] = animationsList[i].update();
+            }
         }
 
-        public void setUI(Player par1)
+        public void addAnimation(Animation par0, int par1x, int par2y)
         {
-            statUI = new StatUI(par1);
-            inventoryUI = new InventoryUI(par1.getInventory());
-            recipeUI = new RecipeUI(par1, null);
+            Animation a = par0.clone();
+            for (int i = 0; i < animationsList.Length; i++)
+            {
+                if (animationsList[i] == null)
+                {
+                    animationsList[i] = a;
+                    animationsList[i].start(par1x, par2y);
+                    return;
+                }
+            }
         }
 
-        public void openInventory()
-        {
-            inventoryUI.open();
-        }
 
-        public void openRecipe()
-        {
-            recipeUI.open();
-        }
-
-        public void setRecipe(Special par1)
-        {
-            recipeUI.setTool(par1);
-        }
-
-        public void setInventory(Inventory par1)
-        {
-            inventoryUI.setInventory(par1);
-        }
-
-        public bool isUIOpenned()
-        {
-            if (inventoryUI.isOpenned() || recipeUI.isOpenned())
-                return true;
-            else
-                return false;
-        }
-
-        public StatUI getStatUI()
-        {
-            return statUI;
-        }
 
         //<summary>
         //Associe chaque caractère de texte à un sprite correspondant
@@ -188,6 +154,66 @@ namespace DW
             /*Forge(inventaire)*/
             addToSpriteDictionnary("Forge", "Data/images/Items/Pack.png");
         }
+
+        private void setAnimatedTile()
+        {
+            waterAnimation = new AnimationCollection();
+            SurfaceCollection e = new SurfaceCollection();
+            e.Add("Data/images/Water.png", new Size(30, 30));
+            waterAnimation.Add(e);
+            waterAnimation.Delay = 1200;
+            water = new AnimatedSprite(waterAnimation);
+            water.Animate = true;
+
+            lavaAnimation = new AnimationCollection();
+            e = new SurfaceCollection();
+            e.Add("Data/images/Lava.png", new Size(30, 30));
+            lavaAnimation.Add(e);
+            lavaAnimation.Delay = 1200;
+            lava = new AnimatedSprite(lavaAnimation);
+            lava.Animate = true;
+        }
+
+        public void setUI(Player par1)
+        {
+            statUI = new StatUI(par1);
+            inventoryUI = new InventoryUI(par1.getInventory());
+            recipeUI = new RecipeUI(par1, null);
+        }
+
+        public void openInventory()
+        {
+            inventoryUI.open();
+        }
+
+        public void openRecipe()
+        {
+            recipeUI.open();
+        }
+
+        public void setRecipe(Special par1)
+        {
+            recipeUI.setTool(par1);
+        }
+
+        public void setInventory(Inventory par1)
+        {
+            inventoryUI.setInventory(par1);
+        }
+
+        public bool isUIOpenned()
+        {
+            if (inventoryUI.isOpenned() || recipeUI.isOpenned())
+                return true;
+            else
+                return false;
+        }
+
+        public StatUI getStatUI()
+        {
+            return statUI;
+        }
+
 
         //<summary>
         //associe la case spéciale passé en paramètre au sprite donné
@@ -264,6 +290,7 @@ namespace DW
                 inventoryUI.update();
             if (recipeUI != null)
                 recipeUI.update();
+            updateAnimations();
         }
 
         //<summary>

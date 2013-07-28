@@ -12,17 +12,20 @@ namespace DW
         {
             inventory = new Inventory(this);
             name = "Chauve-Souris";
-            life = 50;
-            lifeTmp = life;
-            force = 2;
-            endurance = 2;
-            speed = 20;
+            regime = "carnivore";
+            value = "V";
+
+            life = 40;
+            force = 13;
+            endurance = 20;
             volonte = 0;
             agilite = 7;
-            regime = "carnivore";
-            range = 3;
-            value = "V";
+            speed = 20;
             peur = -10;
+            range = 3;
+
+            enduranceTmp = endurance;
+            lifeTmp = life;
             originalValue = value;
             turn();
         }

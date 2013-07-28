@@ -39,7 +39,12 @@ namespace DW
             pos = par6type;
             value = par5text;
             font = new SdlDotNet.Graphics.Font(Directory.GetCurrentDirectory()+"\\Data\\"+par1file, par2size);
-            text = font.Render(par5text, Color.FromArgb(r,v,b));
+            try
+            {
+                text = font.Render(par5text, Color.FromArgb(r, v, b));
+            }
+            catch (Exception)
+            { }
             setPos(par3x, par4y);
         }
 

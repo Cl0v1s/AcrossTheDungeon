@@ -35,6 +35,7 @@ namespace DW
             enduranceTmp = endurance;
             volonte = par5volonte;
             agilite = par6agilite;
+            speed = 100;
             pclass = par2class;
             espece = "human";
             regime = "omnivore";
@@ -159,6 +160,7 @@ namespace DW
         //</summary>
         public new virtual bool update()
         {
+            timer -= 1;
             if (stair != null)
                 stair.update();
             DW.render.renderEntityVision(this);
@@ -179,8 +181,6 @@ namespace DW
          */
         public void interact()
         {
-            if (isFighting == false)
-            {
                 if (itemInHand != null)
                     itemInHand = itemInHand.interact(this);
                 else
@@ -194,7 +194,6 @@ namespace DW
                     else if (getFace() == "right")
                         getStair().getSpecial()[getX() + 1, getY()].interact(this);
                 }
-            }
         }
 
         //<summary>
@@ -219,28 +218,40 @@ namespace DW
         //</summary>
         public void move(int par1x, int par2y)
         {
-            if (isFighting == false)
-            {
                 if (canWalkOn(x + par1x, y + par2y))
                 {
                     x = x + par1x;
                     y = y + par2y;
                 }
-            }
             setCanvas();
             turn();
             Thread.Sleep(100);
         }
 
+        //<summary>
+        //permet au joueur d'attaquer un ennemi dans la direction qu'il regarde
+        //</summary>
         public void attack()
         {
-            Entity[] e = stair.getEntities();
-            for (int i = 0; i < e.Length; i++)
+            if (timer <= 0)
             {
-                if (e[i] != null && !(e[i] is Player) && isNear(e[i]))
+                Entity[] e = stair.getEntities();
+                for (int i = 0; i < e.Length; i++)
                 {
-                    fight(this, e[i]);
-                    break;
+                    if (e[i] != null && !(e[i] is Player) && isNear(e[i]))
+                    {
+                        if (face == "left" && y == e[i].getY() && x > e[i].getX())
+                            fight(e[i]);
+                        else if (face == "right" && y == e[i].getY() && x < e[i].getX())
+                            fight(e[i]);
+                        else if (face == "back" && y > e[i].getY() && x == e[i].getX())
+                            fight(e[i]);
+                        else if (face == "front" && y < e[i].getY() && x == e[i].getX())
+                            fight(e[i]);
+                        DW.render.addAnimation(Animation.Damage, e[i].getX(), e[i].getY());
+                        timer = speed;
+                        break;
+                    }
                 }
             }
         }

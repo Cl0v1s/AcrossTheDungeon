@@ -11,17 +11,21 @@ namespace DW
         {
             inventory = new Inventory(this);
             name = "Cochon";
-            life = 30;
-            lifeTmp = life;
-            force = 3;
-            endurance = 1;
-            volonte = 1;
-            agilite = 1;
             regime = "herbivore";
             value = "P";
+
+            life = 50;
+            force = 20;
+            endurance = 10;
+            volonte = 5;
+            agilite = 1;
+            speed = 50;
             peur = 0;
+            range = 5;
+
+            enduranceTmp = endurance;
+            lifeTmp = life;
             originalValue = value;
-            color = Color.Pink;
             turn();
         }
 

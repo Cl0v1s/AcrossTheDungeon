@@ -109,22 +109,22 @@ namespace DW
                 race = raceList[raceValue];
             if (race == raceList[0])
             {
-                endurance = 5;
-                force = 10;
+                endurance = 50;
+                force = 20;
                 volonte = 7;
-                agilite = 0;
+                agilite = 1;
             }
             else if (race == raceList[1])
             {
-                endurance = 1;
-                force = 5;
+                endurance = 20;
+                force = 15;
                 volonte = 7;
                 agilite = 10;
             }
             else if (race == raceList[2])
             {
-                endurance = 5;
-                force = 1;
+                endurance = 50;
+                force = 10;
                 volonte = 10;
                 agilite = 7;
             }
