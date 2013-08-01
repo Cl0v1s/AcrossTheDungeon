@@ -53,4 +53,22 @@ namespace DW
             par1.handlePlayerMove(this);
         }
     }
+
+    [Serializable]
+    public class PacketPlayerUseSpell : Packet
+    {
+        public int spell;
+        public Entity target;
+
+        public PacketPlayerUseSpell(int par1spellid, Entity par2target)
+        {
+            spell = par1spellid;
+            target = par2target;
+        }
+
+        public override void processPacket(PacketManager par1)
+        {
+            par1.handlePlayerUseSpell(this);
+        }
+    }
 }

@@ -86,12 +86,12 @@ namespace DW
             {
                 DW.render.openInventory();
             }
-            if (DW.input.equals(Key.C))
+            if (DW.input.equals(Key.X))
             {
                 DW.render.setRecipe(null);
                 DW.render.openRecipe();
             }
-            if (DW.input.equals(Key.B))
+            if (DW.input.equals(Key.C))
             {
                 DW.player.getInventory().addItem(DW.player.getItemInHand(), false);
                 DW.player.setItemInHand(null);
@@ -121,12 +121,27 @@ namespace DW
                 DW.player.interact();
                 Thread.Sleep(200);
             }
-            else if (DW.input.equals(Key.Space))
-            {
-                DW.player.attack();
-            }
             else if (DW.input.equals(Key.L))
                 DW.player.lap();
+            updateSpells();
+        }
+
+        private void updateSpells()
+        {
+            if ((DW.input.code >= 47 && DW.input.code <= 49) || DW.input.code == 57)
+            {
+                Spell e = null;
+                if (DW.input.equals(Key.Space))
+                    e=DW.render.spellsUI.getSpell(Key.Space);
+                else if (DW.input.equals(Key.V))
+                    e=DW.render.spellsUI.getSpell(Key.V);
+                else if (DW.input.equals(Key.B))
+                    e=DW.render.spellsUI.getSpell(Key.B);
+                else
+                    e=DW.render.spellsUI.getSpell(Key.N);
+                if (e != null)
+                    DW.player.attack(e);
+            }
         }
 
         public void up(Player par1)

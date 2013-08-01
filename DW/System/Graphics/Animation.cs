@@ -11,15 +11,17 @@ namespace DW
 
         public static Animation Damage=new Animation("Damage.png",100,300);
 
-
+        private Surface toRender;
         private AnimatedSprite animation;
         private Point destination=Point.Empty;
         private int speed;
         private int duration;
         private int x;
         private int y;
+        private int angle;
+        private bool adaptAngle;
 
-        public Animation(string par1file,int par3speed, int par2duration)
+        public Animation(string par1file,int par3speed, int par2duration, bool par4adaptAngle=false)
         {
             AnimationCollection a = new AnimationCollection();
             SurfaceCollection e = new SurfaceCollection();
@@ -30,6 +32,8 @@ namespace DW
             animation.AlphaBlending = true;
             speed = par3speed;
             duration = par2duration;
+            toRender = new Surface(30, 30).Convert(Video.Screen);
+            adaptAngle = par4adaptAngle;
         }
 
         public void start(int par1x,int par2y)
@@ -38,6 +42,10 @@ namespace DW
             animation.Frame = 0;
             x = par1x;
             y = par2y;
+            if (adaptAngle)
+            {
+                //TOADD
+            }
         }
 
         public void moveTo(int par1x, int par2y)
@@ -60,8 +68,17 @@ namespace DW
             }
             if (speed * animation.Frame >= duration)
                 return null;
-            Console.WriteLine("ANIMATED");
-            Video.Screen.Blit(animation, new Point(DW.render.getX() + x * 30, DW.render.getY() + y * 30));      
+            if (angle != 0)
+            {
+                toRender=new Surface(30,30);
+                toRender.Fill(Color.Black);
+                toRender.Blit(animation);
+                toRender=toRender.CreateRotatedSurface(angle);
+                toRender.SourceColorKey = Color.Black;
+                Video.Screen.Blit(toRender, new Point(DW.render.getX() + x * 30, DW.render.getY() + y * 30));
+            }
+            else
+                Video.Screen.Blit(animation, new Point(DW.render.getX() + x * 30, DW.render.getY() + y * 30));
             return this;
         }
 

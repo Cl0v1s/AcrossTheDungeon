@@ -63,12 +63,32 @@ namespace DW
                 else if (DW.input.equals(Key.KeypadEnter) || DW.input.equals(Key.Return))
                     interactPlayer();
                 DW.render.move(DW.player.getX() * -30 + 640 / 2, DW.player.getY() * -30 + 480 / 2);
+                updateSpells();
             }
             catch (Exception)
             {
 
             }
         }
+
+        private void updateSpells()
+        {
+            if ((DW.input.code >= 47 && DW.input.code <= 49) || DW.input.code == 57)
+            {
+                Spell e = null;
+                if (DW.input.equals(Key.Space))
+                    e = DW.render.spellsUI.getSpell(Key.Space);
+                else if (DW.input.equals(Key.V))
+                    e = DW.render.spellsUI.getSpell(Key.V);
+                else if (DW.input.equals(Key.B))
+                    e = DW.render.spellsUI.getSpell(Key.B);
+                else
+                    e = DW.render.spellsUI.getSpell(Key.N);
+                if (e != null)
+                    DW.player.attack(e);
+            }
+        }
+
 
         //<summary>
         //actualise le client de manière à géréer les entrées de touches et à afficher le donjon

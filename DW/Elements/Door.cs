@@ -26,7 +26,7 @@ namespace DW
                 value = "|o";
             else if (par1map[par2x - 1, par3y] == 2 && par1map[par2x + 1, par3y] == 2)
                 value = "|";
-            levelMax = rand.Next(1, 10);
+            levelMax = rand.Next(1, 20);
             level = (float)levelMax;
             color = Color.Chocolate;
             originalValue = value;
@@ -65,17 +65,22 @@ namespace DW
                 if (open == false)
                 {
                     if (level == levelMax)
+                    {
                         par1.showMsg("Vous essayez d'ouvrir cette porte manifestement vérouillée...");
-                    level -= (float)par1.skills.getCheat() * rand.Next(1, 10) / 10;
-                    if (level * 100 / levelMax <= 20 && already == false)
-                        par1.showMsg("Vous sentez la resistance de la porte faiblir.");
+                        level -= 0.01F;
+                    }
+                    if (par1.skills.tryAction("roublardise", 1F))
+                    {
+                        level -= par1.agilite * rand.Next(1, 10);
+                    }
+                    if (level * 100 / levelMax == 20 && !already)
+                        par1.showMsg("La serrure vous a presque livré tout ses secrets...");
                     if (level <= 0)
                     {
                         open = true;
                         value = ".";
-                        par1.showMsg("Vous avez reussi à ouvrir la porte !");
-                        if (already == false)
-                            par1.skills.upgradeCheat(2F);
+                        if(!already)
+                            par1.showMsg("Vous avez reussi à crocheter la serrure !");
                         already = true;
                     }
 

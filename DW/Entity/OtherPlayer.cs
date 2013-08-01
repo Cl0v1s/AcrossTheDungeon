@@ -55,6 +55,32 @@ namespace DW
             return false;
         }
 
+        public override void attack(Spell par1)
+        {
+            Entity[] e = stair.getEntities();
+            Entity target=null;
+            for (int i = 0; i < e.Length; i++)
+            {
+                if (e[i] != null && !(e[i] is Player) && isNear(e[i]))
+                {
+                    if (face == "left" && y == e[i].getY() && x > e[i].getX())
+                        target = e[i];
+                    else if (face == "right" && y == e[i].getY() && x < e[i].getX())
+                        target = e[i];
+                    else if (face == "back" && y > e[i].getY() && x == e[i].getX())
+                        target = e[i];
+                    else if (face == "front" && y < e[i].getY() && x == e[i].getX())
+                        target = e[i];
+                    break;
+                }
+            }
+            if (target != null)
+            {
+                DW.client.addPacketToQueue(new PacketPlayerUseSpell(par1.id, target));
+                par1.useSpell(this, target);
+            }
+        }
+
 
     }
 }

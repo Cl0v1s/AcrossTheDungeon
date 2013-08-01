@@ -20,11 +20,11 @@ namespace DW
 
         protected int life;
         protected int lifeTmp;
-        protected int force;
-        protected int endurance;
-        protected double enduranceTmp;
-        protected int volonte;
-        protected int agilite;
+        public int force;
+        public int endurance;
+        public double enduranceTmp;
+        public int volonte;
+        public int agilite;
         protected int range = 5;
 
         protected float faim = 0;
@@ -363,30 +363,29 @@ namespace DW
         //inflige des degats à l'unité attaquée et paramètre son comportement en cas de danger de mort
         //</summary>
         //<param name="par2victim">l'entité victime de l'attaque</param>
-        public void fight(Entity par2victim)
+        public virtual void fight(Entity par1victim)
         {
             if (peur == 0)
                 peur = -5;
-            setEnemy(par2victim);
-            par2victim.setEnemy(this);
-            lookTo(par2victim);
-            par2victim.lookTo(this);
+            setEnemy(par1victim);
+            par1victim.setEnemy(this);
+            lookTo(par1victim);
+            par1victim.lookTo(this);
             WantFight = true;
-            par2victim.WantFight = true;
-            int atk = 0;
-            atk=(int)(force*(enduranceTmp*100/endurance)/100);
+            par1victim.WantFight = true;
+            int atk=(int)(force*(enduranceTmp*100/endurance)/100);
             double cc = rand.NextDouble();
             enduranceTmp -= atk * cc * enduranceTmp / 100;
             cc=rand.NextDouble();
             if (cc <= 1 / 280 * agilite)
                 atk = (int)(atk * (1 + cc));
-            atk = atk * (1 - (par2victim.getAgilite() / 100));
-            par2victim.setLife(par2victim.getStat()[0] - atk);
-            if (par2victim.getStat()[0] <= 10 * par2victim.getLife() / 100)
+            atk = atk * (1 - (par1victim.getAgilite() / 100));
+            par1victim.setLife(par1victim.getStat()[0] - atk);
+            if (par1victim.getStat()[0] <= 10 * par1victim.getLife() / 100)
             {
-                par2victim.WantFight = false;
+                par1victim.WantFight = false;
                 WantFight = false;
-                par2victim.setFear(10);
+                par1victim.setFear(10);
             }
             
         }

@@ -46,6 +46,7 @@ namespace DW
         private StatUI statUI;
         private InventoryUI inventoryUI;
         private RecipeUI recipeUI;
+        public SpellsUI spellsUI;
         private Surface shadow = new Surface(30, 30).Convert(Video.Screen);
         private Surface tileset = new Surface("Data/images/TileSet.png");
         private KeyValuePair<string, Sprite>[] spriteDictionnary = new KeyValuePair<string, Sprite>[500];
@@ -179,6 +180,7 @@ namespace DW
             statUI = new StatUI(par1);
             inventoryUI = new InventoryUI(par1.getInventory());
             recipeUI = new RecipeUI(par1, null);
+            spellsUI = new SpellsUI(par1,210, 430,new Spell[]{Spell.weaponAttack});
         }
 
         public void openInventory()
@@ -286,6 +288,8 @@ namespace DW
                 frame = 0;
             if(statUI != null)
                 statUI.update();
+            if(spellsUI != null)
+                spellsUI.update();
             if (inventoryUI != null)
                 inventoryUI.update();
             if (recipeUI != null)

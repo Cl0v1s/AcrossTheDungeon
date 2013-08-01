@@ -10,118 +10,98 @@ namespace DW
     {
         private Player owner;
         private Random rand = new Random();
-        private int wizardry = 1;
-        private int survival = 1;
-        private int cheating = 1;
-        private int forge = 1;
-        private float wTemp = 0;
-        private float sTemp = 0;
-        private float cTemp = 0;
-        private float fTemp = 0;
+        /*[MANUEL]Tableau contenant tout les talents:
+         * 0=battle
+         * 1=wizardry
+         * 2=survival
+         * 3=cheating
+         * 4=forge*/
+        private int[] levels = new int[5];
+        /*[MANUEL]Tableau contenant les noms des talents*/
+        private string[] levelsName = new string[] 
+        { 
+            "combat", 
+            "magie", 
+            "survie", 
+            "roublardise", 
+            "forge" 
+        };
+        /*[AUTO]Tableau contenant l'xp par talent, même ordre que levels[]*/
+        private float[] levelsTemp;
 
         public Skills(Player par1)
         {
             owner = par1;
+            levelsTemp = new float[levels.Length];
+            for (int i = 0; i < levels.Length; i++)
+                levels[i] = 1;
             if (owner.getClass() == "Barbare")
-                survival = 5;
+                levels[0] = 5;
             else if (owner.getClass() == "Pretre")
-                wizardry = 5;
+                levels[1] = 5;
             else if (owner.getClass() == "Escroc")
-                cheating = 5;
+                levels[3] = 5;
         }
 
-        public bool tryAction(string par1skill,float par2amount)
+        //<summary>
+        //attente une action avec l'un des talents définis plus haut et le cas present fait evoluer le niveau dudit talent du joueur.
+        //</summary>
+        //<param name="par1skill">Le nom du talent a utiliser</param>
+        //param name="par2amount">Le gain d'xp maximal en cas de reussite</param>
+        public bool tryAction(string par1skill, float par2amount)
         {
-            bool v = true;
-            if (par1skill == "wizardry")
+            bool result=true;
+            int index = nameToIndex(par1skill);
+            if (index == -1)
+                return false;
+            int r = rand.Next(0, 100);
+            if (r >= levels[index]+((-5/10)*levels[index]+5))
             {
-                double r = rand.NextDouble();
-                r = r * wizardry;
-                if (r >= 0 && r <= wizardry * 0.25)
+                levelsTemp[index] += par2amount * rand.Next(0, 30) / 100;
+                result = false;
+            }
+            else
+            {
+                levelsTemp[index] += par2amount * rand.Next(50, 100) / 100;
+                if (levelsTemp[index] >= 5 * levels[index] + 30)
                 {
-                    wTemp += par2amount * rand.Next(0, 30) / 100;
-                    v = false;
-                }
-                wTemp += par2amount * rand.Next(50, 100) / 100;
-                if (wTemp >= 5 * wizardry + 30)
-                {
-                    wTemp = 0;
-                    wizardry += 1;
-                    owner.showMsg("Votre lien avec le monde des arcanes est visiblement plus fort désormais.");
+                    levelsTemp[index] = 0;
+                    levels[index] += 1;
+                    owner.showMsg("Vous vous sentez plus a l'aise dans le domaine de la "+levelsName[index]);
                 }
             }
-            else if (par1skill == "cheating")
-            {
-                double r = rand.NextDouble();
-                r = r * cheating;
-                if (r >= 0 && r <= cheating * 0.25)
-                {
-                    cTemp += par2amount * rand.Next(0, 30) / 100;
-                    v = false;
-                }
-                cTemp += par2amount * rand.Next(50, 100) / 100;
-                if (cTemp >= 5 * cheating + 60)
-                {
-                    cTemp = 0;
-                    cheating += 1;
-                    owner.showMsg("Vous commencez à devenir un véritable expert serrurier !");
-                }
-            }
-            else if (par1skill == "survival")
-            {
-                double r = rand.NextDouble();
-                r = r * survival;
-                if (r >= 0 && r <= survival * 0.25)
-                {
-                    sTemp += par2amount * rand.Next(0, 30) / 100;
-                    v = false;
-                }
-                sTemp += par2amount * rand.Next(50, 100) / 100;
-                if (sTemp >= 5 * survival + 30)
-                {
-                    sTemp = 0;
-                    survival += 1;
-                    owner.showMsg("Vous commencez à vous sentir vraiment aventurier.");
-                }
-            }
-            else if (par1skill == "forge")
-            {
-                double r=rand.NextDouble();
-                r = r * forge;
-                if (r >=0 && r<=forge*0.25)
-                {
-                    fTemp += par2amount * rand.Next(0, 30) / 100;
-                    v = false;
-                }
-                fTemp += par2amount * rand.Next(50, 100) / 100;
-                if (fTemp >= 5 * forge + 30)
-                {
-                    fTemp = 0;
-                    forge += 1;
-                    owner.showMsg("Grace à l'expérience que vous avez acquise vous vous entez plus a l'aise avec les mineraux.");
-                }
-            }
-
-            return v;
+            return result;
         }
 
-        public int getCheat()
+        //<summary>
+        //retourne le niveau du joueur du talent passé en paramètre
+        //</summary>
+        //<param name="par1">Le nom du talent à retourner</param>
+        public int getTalentLevel(string par1)
         {
-            return cheating;
+            int index = nameToIndex(par1);
+            if (index == -1)
+                return 0;
+            else
+                return levels[index];
+
         }
 
-        public void upgradeCheat(float par1)
+        //<summary>
+        //retourne l'index du talent dans le tabelau levels en fonction du nom trouvé dans levelsName
+        //</summary>
+        //<param name="par1">le nom du talent a "traduire"</param>
+        private int nameToIndex(string par1)
         {
-            cTemp += par1 * rand.Next(50, 100) / 100;
-            if (cTemp >= 5 * cheating + 45)
+            for (int i = 0; i < levelsName.Length; i++)
             {
-                cTemp = 0;
-                cheating += 1;
-                owner.showMsg("Vous commencez à devenir un vrai roublard !");
+                if (levelsName[i] == par1)
+                {
+                    return i;
+                }
             }
+            Console.WriteLine("Le talent " + par1 + " n'existe pas.");
+            return -1;
         }
-
-
-
     }
 }

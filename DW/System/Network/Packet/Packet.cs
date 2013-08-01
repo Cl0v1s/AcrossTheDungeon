@@ -39,7 +39,8 @@ namespace DW
             {
                 Console.WriteLine("Packet trop volumineux");
             }
-            link.Send(dgram, dgram.Length, ie);
+            else
+                link.Send(dgram, dgram.Length, ie);
         }
 
         public static Packet Receive(UdpClient link)

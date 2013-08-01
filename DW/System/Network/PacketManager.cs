@@ -78,5 +78,15 @@ namespace DW
             DW.server.other.setPos(par1.coords.X, par1.coords.Y);
             DW.server.other.setFace(par1.face);
         }
+
+        //<summary>
+        //recu par le serveur, indique que le joueur a lancéun sort.
+        //</summary>
+        public void handlePlayerUseSpell(PacketPlayerUseSpell par1)
+        {
+            Console.WriteLine("before:" + par1.target.getStat()[0]);
+            DW.server.other.fight(par1.target, Spell.list[par1.spell]);
+            Console.WriteLine("after:" + par1.target.getStat()[0]);
+        }
     }
 }

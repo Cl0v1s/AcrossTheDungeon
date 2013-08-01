@@ -7,7 +7,8 @@ namespace DW
 {
     class Input
     {
-        private Key key=Key.BackQuote;
+        public Key key=Key.BackQuote;
+        public int code = 0;
 
         public Input()
         {
@@ -17,12 +18,14 @@ namespace DW
 
         public void push(object sender, KeyboardEventArgs e)
         {
+            code = e.Scancode;
             key = e.Key;
         }
 
         public void release(object sender,KeyboardEventArgs e)
         {
             key = Key.BackQuote;
+            code = 0;
         }
 
         public bool equals(Key k)

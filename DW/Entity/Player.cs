@@ -14,6 +14,8 @@ namespace DW
     [Serializable]
     public class Player : Entity
     {
+
+        protected int recoveryAmount = 100;
         protected String pclass;
         public Skills skills;
         private int stairId = -1;
@@ -30,19 +32,20 @@ namespace DW
         {
             inventory = new Inventory(this);
             name = par1name;
+
             force = par3force;
             endurance = par4endurance;
             enduranceTmp = endurance;
             volonte = par5volonte;
             agilite = par6agilite;
-            speed = 100;
+            life = force * endurance * rand.Next(1, par1name.Length);
+            
             pclass = par2class;
             espece = "human";
             regime = "omnivore";
             value = "@";
             originalValue = "@";
             color = Color.Purple;
-            life = force * endurance * rand.Next(1, par1name.Length);
             lifeTmp = life;
             DW.render.setUI(this);
             skills = new Skills(this);
@@ -161,6 +164,11 @@ namespace DW
         public new virtual bool update()
         {
             timer -= 1;
+            if (enduranceTmp < endurance && timer<=0)
+            {
+                enduranceTmp += 1;
+                timer = recoveryAmount;
+            }
             if (stair != null)
                 stair.update();
             DW.render.renderEntityVision(this);
@@ -185,13 +193,13 @@ namespace DW
                     itemInHand = itemInHand.interact(this);
                 else
                 {
-                    if (getFace() == "front")
+                    if (getFace() == "front" && getStair().getSpecial()[getX(), getY() + 1] != null)
                         getStair().getSpecial()[getX(), getY() + 1].interact(this);
-                    else if (getFace() == "back")
+                    else if (getFace() == "back" && getStair().getSpecial()[getX(), getY() - 1] != null)
                         getStair().getSpecial()[getX(), getY() - 1].interact(this);
-                    else if (getFace() == "left")
+                    else if (getFace() == "left" && getStair().getSpecial()[getX() - 1, getY()] != null)
                         getStair().getSpecial()[getX() - 1, getY()].interact(this);
-                    else if (getFace() == "right")
+                    else if (getFace() == "right" && getStair().getSpecial()[getX() + 1, getY()] !=null)
                         getStair().getSpecial()[getX() + 1, getY()].interact(this);
                 }
         }
@@ -231,29 +239,58 @@ namespace DW
         //<summary>
         //permet au joueur d'attaquer un ennemi dans la direction qu'il regarde
         //</summary>
-        public void attack()
+        public virtual void attack(Spell par1)
         {
-            if (timer <= 0)
-            {
                 Entity[] e = stair.getEntities();
                 for (int i = 0; i < e.Length; i++)
                 {
                     if (e[i] != null && !(e[i] is Player) && isNear(e[i]))
                     {
                         if (face == "left" && y == e[i].getY() && x > e[i].getX())
-                            fight(e[i]);
+                            fight(e[i],par1);
                         else if (face == "right" && y == e[i].getY() && x < e[i].getX())
-                            fight(e[i]);
+                            fight(e[i],par1);
                         else if (face == "back" && y > e[i].getY() && x == e[i].getX())
-                            fight(e[i]);
+                            fight(e[i],par1);
                         else if (face == "front" && y < e[i].getY() && x == e[i].getX())
-                            fight(e[i]);
-                        DW.render.addAnimation(Animation.Damage, e[i].getX(), e[i].getY());
-                        timer = speed;
+                            fight(e[i],par1);
                         break;
                     }
                 }
+        }
+
+        //<summary>
+        //inflige des degats à l'unité attaquée et paramètre son comportement en cas de danger de mort
+        //</summary>
+        //<param name="par2victim">l'entité victime de l'attaque</param>
+        public void fight(Entity par1victim, Spell par2spell)
+        {
+            if (peur == 0)
+                peur = -5;
+            setEnemy(par1victim);
+            par1victim.setEnemy(this);
+            lookTo(par1victim);
+            par1victim.lookTo(this);
+            WantFight = true;
+            par1victim.WantFight = true;
+            int d = par2spell.useSpell(this, par1victim);
+            if (d < 0)
+                return;
+            int atk = (int)(d * (enduranceTmp * 100 / endurance) / 100);
+            double cc = rand.NextDouble();
+            enduranceTmp -= atk * cc * enduranceTmp / 100;
+            cc = rand.NextDouble();
+            if (cc <= 1 / 280 * agilite)
+                atk = (int)(atk * (1 + cc));
+            atk = atk * (1 - (par1victim.getAgilite() / 100));
+            par1victim.setLife(par1victim.getStat()[0] - atk);
+            if (par1victim.getStat()[0] <= 10 * par1victim.getLife() / 100)
+            {
+                par1victim.WantFight = false;
+                WantFight = false;
+                par1victim.setFear(10);
             }
+
         }
 
 

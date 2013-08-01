@@ -117,10 +117,16 @@ namespace DW
                         }
                         catch (System.InvalidCastException)
                         {
-                            Special s = (((Special)specialCase[r]).clone());
-                            stair.setSpecial(s, par2room.getX() + i, par2room.getY() + u);
-                            stair.getSpecial()[par2room.getX() + i, par2room.getY() + u].setPos(stair, par2room.getX() + i, par2room.getY() + u);
-                            par2room.setSpecial(s, i, u);
+                            try
+                            {
+                                Special s = (((Special)specialCase[r]).clone());
+                                stair.setSpecial(s, par2room.getX() + i, par2room.getY() + u);
+                                stair.getSpecial()[par2room.getX() + i, par2room.getY() + u].setPos(stair, par2room.getX() + i, par2room.getY() + u);
+                                par2room.setSpecial(s, i, u);
+                            }
+                            catch (Exception)
+                            {
+                            }
                         }
                         catch (System.IndexOutOfRangeException) { }
                     }
