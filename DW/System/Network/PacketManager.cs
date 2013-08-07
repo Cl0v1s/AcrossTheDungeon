@@ -85,7 +85,7 @@ namespace DW
         public void handlePlayerUseSpell(PacketPlayerUseSpell par1)
         {
             Console.WriteLine("before:" + par1.target.getStat()[0]);
-            DW.server.other.fight(par1.target, Spell.list[par1.spell]);
+            DW.server.other.fight(par1.target, par1.power);
             Console.WriteLine("after:" + par1.target.getStat()[0]);
         }
     }

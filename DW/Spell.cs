@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using SdlDotNet.Graphics;
+using System.Threading;
 
 namespace DW
 {
@@ -28,6 +29,12 @@ namespace DW
         public string description;
         private Surface shadow;
         public int id;
+        public int targetStat = 0;
+        Surface target = new Surface("Data/images/GUI/target.png");
+        Point targetPoint=Point.Empty;
+        Entity caller = null;
+        Entity victim = null;
+        Random rand = new Random();
 
         //<summary>
         //créer un sort.
@@ -55,7 +62,104 @@ namespace DW
             
         }
 
-        public int useSpell(Entity par1caller,Entity par2victim)
+        //<summary>
+        //Affecte les effets du sort à la victim
+        //</summary>
+        public void useSpell(Entity par1caller)
+        {
+            Entity par2victim=null;
+            caller = par1caller;
+            if (targetStat == 0 && range > 1)
+            {
+                targetStat = 1;
+                targetPoint = new Point(par1caller.getX(), par1caller.getY());
+                return;
+            }
+            else if (targetStat == 1 && range>1)
+                return;
+            else if (targetStat == 2 && range > 1)
+            {
+                if (victim == null)
+                {
+                    caller = null;
+                    targetPoint = Point.Empty;
+                    targetStat = 0;
+                    victim = null;
+                    Console.WriteLine("ya rien ici.");
+                    return;
+                }
+                else
+                {
+                    par2victim = victim;
+                    victim = null;
+                }
+            }
+            else if (range <= 1)
+            {
+                par2victim=par1caller.getEntityInFront();
+                if (par2victim == null)
+                {
+                    caller = null;
+                    victim = null;
+                    targetPoint = Point.Empty;
+                    targetStat = 0;
+                    return;
+                }
+            }
+
+            if (damage < 0)
+            {
+                switch (damage)
+                {
+                    case -1:
+                        damage = par1caller.force;
+                        break;
+                }
+            }
+
+            if (coolDownFrame <= 0)
+            {
+                if (isInRange(par1caller, par2victim))
+                {
+                    par2victim.setEnemy(par1caller);
+                    par1caller.setEnemy(par2victim);
+                    par1caller.lookTo(par2victim);
+                    par2victim.lookTo(par1caller);
+                    par2victim.WantFight = true;
+                    int d = damage;
+                    damage = realDamage;
+                    if (d < 0)
+                        return;
+                    int atk = (int)(d * (par1caller.enduranceTmp * 100 / par1caller.endurance) / 100);
+                    double cc = rand.NextDouble();
+                    par1caller.enduranceTmp -= atk * cc * par1caller.enduranceTmp / 100;
+                    cc = rand.NextDouble();
+                    if (cc <= 1 / 280 * par1caller.agilite)
+                        atk = (int)(atk * (1 + cc));
+                    atk = atk * (1 - (par2victim.getAgilite() / 100));
+                    par2victim.setLife(par2victim.getStat()[0] - atk);
+                    if (par2victim.getStat()[0] <= 10 * par2victim.getLife() / 100)
+                    {
+                        par2victim.WantFight = false;
+                        par2victim.setFear(10);
+                    }
+                    coolDownFrame = coolDown;
+                    DW.render.addAnimation(animation,par2victim.getX(),par2victim.getY());
+                    caller = null;
+                    victim = null;
+                    targetPoint = Point.Empty;
+                    targetStat = 0;
+                }
+                else
+                    par1caller.showMsg("Cible hors de portée.");
+            }
+            return;
+        }
+
+        //<summary>
+        //Retourne les dommages infligés par le sort
+        //</summary>
+        public int getSpellDamage(Player par1caller)
         {
             if (damage < 0)
             {
@@ -67,25 +171,51 @@ namespace DW
 
                 }
             }
-
-            if (coolDownFrame <= 0)
-            {
-                if (isInRange(par1caller, par2victim))
-                {
-                    coolDownFrame = coolDown;
-                    int d = damage;
-                    damage = realDamage;
-                    DW.render.addAnimation(animation,par2victim.getX(),par2victim.getY());
-                    return d;
-                }
-                else
-                    par1caller.showMsg("Cible hors de portée.");
-            }
-            return -1;
+            int d = damage;
+            damage = realDamage;
+            return d;
         }
 
+        //<summary>
+        //Affiche l'icon du sort à l'écran et met à jour l'etat de visée du sort.
+        //</summary>
         public void update(int par1x,int par2y)
         {
+            if (targetStat == 1)
+            {
+                Video.Screen.Blit(target,new Point(DW.render.getX() + targetPoint.X * 30, DW.render.getY() + targetPoint.Y * 30));
+                if (DW.input.equals(SdlDotNet.Input.Key.LeftArrow) && isInRange(caller,targetPoint.X-1,targetPoint.Y))
+                {
+                    targetPoint.X -= 1;
+                    Thread.Sleep(50);
+                }
+                else if (DW.input.equals(SdlDotNet.Input.Key.RightArrow) && isInRange(caller, targetPoint.X + 1, targetPoint.Y))
+                {
+                    targetPoint.X += 1;
+                    Thread.Sleep(50);
+                }
+                else if (DW.input.equals(SdlDotNet.Input.Key.UpArrow) && isInRange(caller, targetPoint.X, targetPoint.Y - 1))
+                {
+                    targetPoint.Y -= 1;
+                    Thread.Sleep(50);
+                }
+                else if (DW.input.equals(SdlDotNet.Input.Key.DownArrow) && isInRange(caller, targetPoint.X, targetPoint.Y + 1))
+                {
+                    targetPoint.Y += 1;
+                    Thread.Sleep(50);
+                }
+                else if (DW.input.equals(SdlDotNet.Input.Key.Escape))
+                {
+                    targetPoint = Point.Empty;
+                    caller = null;
+                    targetStat = 0;
+                }
+                else if (DW.input.equals(SdlDotNet.Input.Key.Space) && caller.getStair().getEntityAt(targetPoint) != caller)
+                {
+                    victim=caller.getStair().getEntityAt(targetPoint);
+                    targetStat = 2;
+                }
+            }
             if(coolDownFrame>=1)
                 coolDownFrame -= 1;
             Video.Screen.Blit(icon, new Point(par1x, par2y));
@@ -94,12 +224,12 @@ namespace DW
                 int c = coolDownFrame * 20 / coolDown;
                 Video.Screen.Blit(shadow, new Point(par1x + 5, par2y + 5+c),new Rectangle(0,c,20,20-c));
             }
-
-
-
         }
 
-        public bool isInRange(Entity par1caller, Entity par2victim)
+        //<summary>
+        //Vérifie si l'entité visée est hors de portée ou non.
+        //</summary>
+        bool isInRange(Entity par1caller, Entity par2victim)
         {
             int par1x = par2victim.getX();
             int par2y = par2victim.getY();
@@ -132,6 +262,54 @@ namespace DW
                         ry += sy;
                     }
                     if (onAir==false && DW.player.canWalkOn(rx, ry) == false)
+                    {
+                        break;
+                    }
+                }
+                if (rx != par1x || ry != par2y)
+                    return false;
+                return true;
+            }
+            return false;
+        }
+
+
+        //<summary>
+        //Vérifie si l'entité visée est hors de portée ou non.
+        //</summary>
+        bool isInRange(Entity par1caller, int par2x,int par3y)
+        {
+            int par1x = par2x;
+            int par2y = par3y;
+            int x = par1caller.getX();
+            int y = par1caller.getY();
+            if (Math.Abs(x - par1x) + Math.Abs(y - par2y) <= range)
+            {
+                int dx = Math.Abs(par1x - x);
+                int dy = Math.Abs(par2y - y);
+                int sx = 1;
+                int rx = x;
+                int ry = y;
+                if (x > par1x)
+                    sx = -1;
+                int sy = 1;
+                if (y > par2y)
+                    sy = -1;
+                int err = dx - dy;
+                while (!((rx == par1x) && (ry == par2y)))
+                {
+                    int e2 = err << 1;
+                    if (e2 > -dy)
+                    {
+                        err -= dy;
+                        rx += sx;
+                    }
+                    if (e2 < dx)
+                    {
+                        err += dx;
+                        ry += sy;
+                    }
+                    if (onAir == false && DW.player.canWalkOn(rx, ry) == false)
                     {
                         break;
                     }

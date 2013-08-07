@@ -648,6 +648,19 @@ namespace DW
             return true;
         }
 
+        //<summary>
+        //Retourne l'entitée située aux coordonnées du point passé en paramètre.
+        //</summary>
+        public Entity getEntityAt(Point par1)
+        {
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (entities[i] != null && entities[i].getX() == par1.X && entities[i].getY() == par1.Y)
+                    return entities[i];
+            }
+            return null;
+        }
+
 
     }
 }

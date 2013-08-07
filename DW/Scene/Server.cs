@@ -82,6 +82,7 @@ namespace DW
         {
             if (DW.render.isUIOpenned())
                 return;
+            updateSpells();
             if (DW.input.equals(Key.I))
             {
                 DW.render.openInventory();
@@ -96,36 +97,41 @@ namespace DW
                 DW.player.getInventory().addItem(DW.player.getItemInHand(), false);
                 DW.player.setItemInHand(null);
             }
-            if (DW.input.equals(Key.UpArrow) == true)
+            if (DW.render.spellsUI.canPlayerMoves())
             {
-                DW.player.move(0, -1);
-                DW.player.setFace("back");
+                if (DW.input.equals(Key.UpArrow) == true)
+                {
+                    DW.player.move(0, -1);
+                    DW.player.setFace("back");
+                }
+                else if (DW.input.equals(Key.DownArrow) == true)
+                {
+                    DW.player.move(0, 1);
+                    DW.player.setFace("front");
+                }
+                else if (DW.input.equals(Key.RightArrow) == true)
+                {
+                    DW.player.move(1, 0);
+                    DW.player.setFace("right");
+                }
+                else if (DW.input.equals(Key.LeftArrow) == true)
+                {
+                    DW.player.move(-1, 0);
+                    DW.player.setFace("left");
+                }
+                else if (DW.input.equals(Key.KeypadEnter) || DW.input.equals(Key.Return))
+                {
+                    DW.player.interact();
+                    Thread.Sleep(200);
+                }
+                else if (DW.input.equals(Key.L))
+                    DW.player.lap();
             }
-            else if (DW.input.equals(Key.DownArrow) == true)
-            {
-                DW.player.move(0, 1);
-                DW.player.setFace("front");
-            }
-            else if (DW.input.equals(Key.RightArrow) == true)
-            {
-                DW.player.move(1, 0);
-                DW.player.setFace("right");
-            }
-            else if (DW.input.equals(Key.LeftArrow) == true)
-            {
-                DW.player.move(-1, 0);
-                DW.player.setFace("left");
-            }
-            else if (DW.input.equals(Key.KeypadEnter) || DW.input.equals(Key.Return))
-            {
-                DW.player.interact();
-                Thread.Sleep(200);
-            }
-            else if (DW.input.equals(Key.L))
-                DW.player.lap();
-            updateSpells();
         }
 
+        //<summary>
+        //Vérifie si le joueur desire lancer un sort ou non.
+        //</summary>
         private void updateSpells()
         {
             if ((DW.input.code >= 47 && DW.input.code <= 49) || DW.input.code == 57)
@@ -140,7 +146,7 @@ namespace DW
                 else
                     e=DW.render.spellsUI.getSpell(Key.N);
                 if (e != null)
-                    DW.player.attack(e);
+                    e.useSpell(DW.player);
             }
         }
 

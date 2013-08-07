@@ -73,20 +73,7 @@ namespace DW
 
         private void updateSpells()
         {
-            if ((DW.input.code >= 47 && DW.input.code <= 49) || DW.input.code == 57)
-            {
-                Spell e = null;
-                if (DW.input.equals(Key.Space))
-                    e = DW.render.spellsUI.getSpell(Key.Space);
-                else if (DW.input.equals(Key.V))
-                    e = DW.render.spellsUI.getSpell(Key.V);
-                else if (DW.input.equals(Key.B))
-                    e = DW.render.spellsUI.getSpell(Key.B);
-                else
-                    e = DW.render.spellsUI.getSpell(Key.N);
-                if (e != null)
-                    DW.player.attack(e);
-            }
+//TOADD
         }
 
 

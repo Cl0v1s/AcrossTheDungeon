@@ -236,64 +236,6 @@ namespace DW
             Thread.Sleep(100);
         }
 
-        //<summary>
-        //permet au joueur d'attaquer un ennemi dans la direction qu'il regarde
-        //</summary>
-        public virtual void attack(Spell par1)
-        {
-                Entity[] e = stair.getEntities();
-                for (int i = 0; i < e.Length; i++)
-                {
-                    if (e[i] != null && !(e[i] is Player) && isNear(e[i]))
-                    {
-                        if (face == "left" && y == e[i].getY() && x > e[i].getX())
-                            fight(e[i],par1);
-                        else if (face == "right" && y == e[i].getY() && x < e[i].getX())
-                            fight(e[i],par1);
-                        else if (face == "back" && y > e[i].getY() && x == e[i].getX())
-                            fight(e[i],par1);
-                        else if (face == "front" && y < e[i].getY() && x == e[i].getX())
-                            fight(e[i],par1);
-                        break;
-                    }
-                }
-        }
-
-        //<summary>
-        //inflige des degats à l'unité attaquée et paramètre son comportement en cas de danger de mort
-        //</summary>
-        //<param name="par2victim">l'entité victime de l'attaque</param>
-        public void fight(Entity par1victim, Spell par2spell)
-        {
-            if (peur == 0)
-                peur = -5;
-            setEnemy(par1victim);
-            par1victim.setEnemy(this);
-            lookTo(par1victim);
-            par1victim.lookTo(this);
-            WantFight = true;
-            par1victim.WantFight = true;
-            int d = par2spell.useSpell(this, par1victim);
-            if (d < 0)
-                return;
-            int atk = (int)(d * (enduranceTmp * 100 / endurance) / 100);
-            double cc = rand.NextDouble();
-            enduranceTmp -= atk * cc * enduranceTmp / 100;
-            cc = rand.NextDouble();
-            if (cc <= 1 / 280 * agilite)
-                atk = (int)(atk * (1 + cc));
-            atk = atk * (1 - (par1victim.getAgilite() / 100));
-            par1victim.setLife(par1victim.getStat()[0] - atk);
-            if (par1victim.getStat()[0] <= 10 * par1victim.getLife() / 100)
-            {
-                par1victim.WantFight = false;
-                WantFight = false;
-                par1victim.setFear(10);
-            }
-
-        }
-
-
         public void changeStair(Stair par1stair, int par2id)
         {
             stair = par1stair;

@@ -13,13 +13,13 @@ namespace DW
         protected int tour = 0;
         protected bool dead = false;
 
-        protected String name;
+        public String name;
         protected String gender;
         protected String regime;
-        protected String espece;
+        public string espece;
 
-        protected int life;
-        protected int lifeTmp;
+        public int life;
+        public int lifeTmp;
         public int force;
         public int endurance;
         public double enduranceTmp;
@@ -27,10 +27,10 @@ namespace DW
         public int agilite;
         protected int range = 5;
 
-        protected float faim = 0;
-        protected float soif = 0;
-        protected float sommeil = 0;
-        protected float sale = 0;
+        public float faim = 0;
+        public float soif = 0;
+        public float sommeil = 0;
+        public float sale = 0;
         protected double peur = 0;
         protected int timer = 40;
         protected int speed = 40;
@@ -701,6 +701,30 @@ namespace DW
         public float getThrirst()
         {
             return soif;
+        }
+
+        //<summary>
+        //Retourne l'entitée situé directment a coté de l'entité courante et dans la direction observé par cette dernière.
+        //</summary>
+        public Entity getEntityInFront()
+        {
+            Entity[] e = stair.getEntities();
+            for (int i = 0; i < e.Length; i++)
+            {
+                if (e[i] != null && !(e[i] is Player) && isNear(e[i]))
+                {
+                    if (face == "left" && y == e[i].getY() && x > e[i].getX())
+                        return e[i];
+                    else if (face == "right" && y == e[i].getY() && x < e[i].getX())
+                        return e[i];
+                    else if (face == "back" && y > e[i].getY() && x == e[i].getX())
+                        return e[i];
+                    else if (face == "front" && y < e[i].getY() && x == e[i].getX())
+                        return e[i];
+                    break;
+                }
+            }
+            return null;
         }
     }
 }

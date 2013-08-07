@@ -81,7 +81,7 @@ namespace DW
                         value = ".";
                         if(!already)
                             par1.showMsg("Vous avez reussi à crocheter la serrure !");
-                        already = true;
+                        stair.removeSpecial(x, y);
                     }
 
                 }

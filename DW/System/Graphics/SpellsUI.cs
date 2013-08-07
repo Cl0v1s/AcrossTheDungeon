@@ -2,6 +2,7 @@
 using System.Drawing;
 using SdlDotNet.Input;
 using SdlDotNet.Graphics;
+using System.Threading;
 
 namespace DW
 {
@@ -13,6 +14,7 @@ namespace DW
         private int y;
         private double enduranceB;
         private double enduranceOld;
+        private Thread worker;
 
         public SpellsUI(Player par3owner,int par1x, int par2y,Spell[] par4list)
         {
@@ -24,6 +26,7 @@ namespace DW
                 if (i < list.Length)
                     list[i] = par4list[i];
             }
+            worker = new Thread(new ThreadStart(updateStats));
 
         }
 
@@ -62,6 +65,15 @@ namespace DW
             return false;
         }
 
+        private void updateStats()
+        {
+            while (true)
+            {
+
+
+            }
+        }
+
         public void update()
         {
             for (int i = 0; i < list.Length; i++)
@@ -91,10 +103,25 @@ namespace DW
 
             }
             int l=(int)(enduranceB*150/DW.player.endurance);
-            Video.Screen.Fill(new Rectangle(640/2+19-l/2, y + 35, l, 10), Color.DarkCyan);
-            
+            Video.Screen.Fill(new Rectangle(640/2+19-l/2, y + 35, l, 10), Color.DarkCyan);   
         }
 
+        //<summary>
+        //Retourne si le joueur peut se déplacer 
+        //</summary>
+        public bool canPlayerMoves()
+        {
+            for(int i=0;i<list.Length;i++)
+            {
+                if (list[i] != null && list[i].targetStat == 1)
+                    return false;
+            }
+            return true;
+        }
+
+        //<summary>
+        //Retourne le sort associé à la touche enfoncée.
+        //</summary>
         public Spell getSpell(Key par1key)
         {
             try

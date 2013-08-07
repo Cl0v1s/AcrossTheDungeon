@@ -55,30 +55,38 @@ namespace DW
             return false;
         }
 
-        public override void attack(Spell par1)
+        //<summary>
+        //inflige des degats à l'unité attaquée et paramètre son comportement en cas de danger de mort
+        //</summary>
+        //<param name="par2victim">l'entité victime de l'attaque</param>
+        public void fight(Entity par1victim, int par2spellpower)
         {
-            Entity[] e = stair.getEntities();
-            Entity target=null;
-            for (int i = 0; i < e.Length; i++)
+            if (peur == 0)
+                peur = -5;
+            setEnemy(par1victim);
+            par1victim.setEnemy(this);
+            lookTo(par1victim);
+            par1victim.lookTo(this);
+            WantFight = true;
+            par1victim.WantFight = true;
+            int d = par2spellpower;
+            if (d < 0)
+                return;
+            int atk = (int)(d * (enduranceTmp * 100 / endurance) / 100);
+            double cc = rand.NextDouble();
+            enduranceTmp -= atk * cc * enduranceTmp / 100;
+            cc = rand.NextDouble();
+            if (cc <= 1 / 280 * agilite)
+                atk = (int)(atk * (1 + cc));
+            atk = atk * (1 - (par1victim.getAgilite() / 100));
+            par1victim.setLife(par1victim.getStat()[0] - atk);
+            if (par1victim.getStat()[0] <= 10 * par1victim.getLife() / 100)
             {
-                if (e[i] != null && !(e[i] is Player) && isNear(e[i]))
-                {
-                    if (face == "left" && y == e[i].getY() && x > e[i].getX())
-                        target = e[i];
-                    else if (face == "right" && y == e[i].getY() && x < e[i].getX())
-                        target = e[i];
-                    else if (face == "back" && y > e[i].getY() && x == e[i].getX())
-                        target = e[i];
-                    else if (face == "front" && y < e[i].getY() && x == e[i].getX())
-                        target = e[i];
-                    break;
-                }
+                par1victim.WantFight = false;
+                WantFight = false;
+                par1victim.setFear(10);
             }
-            if (target != null)
-            {
-                DW.client.addPacketToQueue(new PacketPlayerUseSpell(par1.id, target));
-                par1.useSpell(this, target);
-            }
+
         }
 
 

@@ -57,12 +57,12 @@ namespace DW
     [Serializable]
     public class PacketPlayerUseSpell : Packet
     {
-        public int spell;
+        public int power;
         public Entity target;
 
-        public PacketPlayerUseSpell(int par1spellid, Entity par2target)
+        public PacketPlayerUseSpell(int par1spellpower, Entity par2target)
         {
-            spell = par1spellid;
+            power = par1spellpower;
             target = par2target;
         }
 
