@@ -48,7 +48,7 @@ namespace DW
             DW.player.getStair().putEntity(player);
             DW.server.other = player;
             DW.server.other.setStair(DW.player.getStair());
-            Console.WriteLine("Joueur inséré en " + DW.server.other.getX() + ":" + DW.server.other.getY());
+            Console.WriteLine("Joueur inséré en " + DW.server.other.x + ":" + DW.server.other.y);
             DW.server.addPacketToQueue(new PacketPlayer(DW.server.other));
         }
 

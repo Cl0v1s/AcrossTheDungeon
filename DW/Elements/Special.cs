@@ -12,9 +12,9 @@ namespace DW
     [Serializable]
     public class Special
     {
-        protected Stair stair;
-        protected int x;
-        protected int y;
+        public Stair stair;
+        public int x;
+        public int y;
         protected string value = "";
         protected string originalValue = "";
         protected Color color = Color.Gray;

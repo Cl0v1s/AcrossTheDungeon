@@ -12,7 +12,6 @@ namespace DW
         private float level;
         private bool already=false;
         private Random rand=new Random();
-        private string originalValue;
 
 
         //<summary>
@@ -24,8 +23,9 @@ namespace DW
             open = false;
             if (par1map[par2x, par3y - 1] == 2 && par1map[par2x, par3y + 1] == 2)
                 value = "|o";
-            else if (par1map[par2x - 1, par3y] == 2 && par1map[par2x + 1, par3y] == 2)
+            else
                 value = "|";
+
             levelMax = rand.Next(1, 20);
             level = (float)levelMax;
             color = Color.Chocolate;
@@ -42,7 +42,9 @@ namespace DW
 
         public override Special update()
         {
-            int[,] s = stair.getMap();
+            int[,] s = stair.map;
+            if (s[x, y] != 1)
+                return null;
             if (s[x, y - 1] == 2 && s[x, y + 1] != 2 && (s[x + 1, y] != 2 || s[x - 1, y] != 2))
                 return null;
             else if (s[x, y - 1] != 2 && s[x, y + 1] == 2 && (s[x + 1, y] != 2 || s[x - 1, y] != 2))
@@ -73,14 +75,15 @@ namespace DW
                     {
                         level -= par1.agilite * rand.Next(1, 10);
                     }
-                    if (level * 100 / levelMax == 20 && !already)
+                    if (level * 100 / levelMax <= 20 && !already)
+                    {
                         par1.showMsg("La serrure vous a presque livré tout ses secrets...");
+                        already = true;
+                    }
                     if (level <= 0)
                     {
                         open = true;
-                        value = ".";
-                        if(!already)
-                            par1.showMsg("Vous avez reussi à crocheter la serrure !");
+                        par1.showMsg("Vous avez reussi à crocheter la serrure !");
                         stair.removeSpecial(x, y);
                     }
 

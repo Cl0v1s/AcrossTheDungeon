@@ -64,21 +64,21 @@ namespace DW
         //<param name="par1">salle à affecter</param>
         private void applyWeed(Room par1)
         {
-            Point c = new Point(par1.getW() / 2, par1.getH() / 2);
-            for (int i = 1; i < par1.getW() - 1; i++)
+            Point c = new Point(par1.width / 2, par1.height / 2);
+            for (int i = 1; i < par1.width - 1; i++)
             {
-                for (int u = 1; u < par1.getH() - 1; u++)
+                for (int u = 1; u < par1.height - 1; u++)
                 {
-                    if (rand.Next(0, 50) != 1 && par1.getMap()[i,u] == 1)
+                    if (rand.Next(0, 50) != 1 && par1.map[i,u] == 1)
                     {
                         int h = Math.Abs(c.X - i) + Math.Abs(c.Y - u);
                         int j=0;
                         if(c.X-i<0)
-                            j = Math.Abs(par1.getW() - i);
+                            j = Math.Abs(par1.width - i);
                         else 
                             j=Math.Abs(0-i);
                         if(c.Y-u<0)
-                            j+=Math.Abs(par1.getH()-u);
+                            j+=Math.Abs(par1.height-u);
                         else 
                             j+=Math.Abs(0-u);
                         int d = (h - j)*20;
@@ -88,7 +88,7 @@ namespace DW
                         if ( r ==0 )
                         {
                             par1.set(6, i, u);
-                            stair.set(6, par1.getX() + i, par1.getY() + u);
+                            stair.set(6, par1.x + i, par1.y + u);
                         }
                     }
                 }
@@ -101,18 +101,18 @@ namespace DW
         //<param name="par2room">salle à affecter</param>
         public void applySpecialCase(Room par2room)
         {
-            int w = par2room.getW();
-            int h = par2room.getH();
+            int w = par2room.width;
+            int h = par2room.height;
             for (int i = 1; i < w - 1; i++)
             {
                 for (int u = 1; u < h - 1; u++)
                 {
-                    if (par2room.getMap()[i, u] != 2 && rand.Next(0, 50) == 1)
+                    if (par2room.map[i, u] != 2 && rand.Next(0, 50) == 1)
                     {
                         int r = rand.Next(0, specialCase.Length);
                         try
                         {
-                            stair.set((int)specialCase[r], par2room.getX() + i, par2room.getY() + u);
+                            stair.set((int)specialCase[r], par2room.x + i, par2room.y + u);
                             par2room.set((int)specialCase[r], i, u);
                         }
                         catch (System.InvalidCastException)
@@ -120,8 +120,8 @@ namespace DW
                             try
                             {
                                 Special s = (((Special)specialCase[r]).clone());
-                                stair.setSpecial(s, par2room.getX() + i, par2room.getY() + u);
-                                stair.getSpecial()[par2room.getX() + i, par2room.getY() + u].setPos(stair, par2room.getX() + i, par2room.getY() + u);
+                                stair.setSpecial(s, par2room.x + i, par2room.y + u);
+                                stair.getSpecial()[par2room.x + i, par2room.y + u].setPos(stair, par2room.x + i, par2room.y + u);
                                 par2room.setSpecial(s, i, u);
                             }
                             catch (Exception)

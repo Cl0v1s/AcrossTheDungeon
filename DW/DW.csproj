@@ -85,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gen\BiomeVillage.cs" />
     <Compile Include="System\Graphics\SpellsUI.cs" />
     <Compile Include="System\Graphics\Animation.cs" />
     <Compile Include="Elements\Forge.cs" />

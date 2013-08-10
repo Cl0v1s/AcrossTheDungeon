@@ -75,10 +75,10 @@ namespace DW
                 toRender.Blit(animation);
                 toRender=toRender.CreateRotatedSurface(angle);
                 toRender.SourceColorKey = Color.Black;
-                Video.Screen.Blit(toRender, new Point(DW.render.getX() + x * 30, DW.render.getY() + y * 30));
+                Video.Screen.Blit(toRender, new Point(DW.render.x + x * 30, DW.render.y + y * 30));
             }
             else
-                Video.Screen.Blit(animation, new Point(DW.render.getX() + x * 30, DW.render.getY() + y * 30));
+                Video.Screen.Blit(animation, new Point(DW.render.x + x * 30, DW.render.y + y * 30));
             return this;
         }
 

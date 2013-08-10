@@ -15,9 +15,9 @@ namespace DW
 
         public override Item interact(Entity par1)
         {
-            int[,] s = par1.getStair().getMap();
-            int x = par1.getX();
-            int y = par1.getY();
+            int[,] s = par1.getStair().map;
+            int x = par1.x;
+            int y = par1.y;
             if (par1.isNear(100))
                 return Item.ItemBucketWater;
             else if (par1.isNear(101))
@@ -48,9 +48,9 @@ namespace DW
 
         public override Item interact(Entity par1)
         {
-            int[,] s = par1.getStair().getMap();
-            int x = par1.getX();
-            int y = par1.getY();
+            int[,] s = par1.getStair().map;
+            int x = par1.x;
+            int y = par1.y;
             if (s[x + 1, y] == 101)
                 par1.getStair().set(1, x + 1, y);
             else if (s[x - 1, y] == 101)

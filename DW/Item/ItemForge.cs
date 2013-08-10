@@ -16,10 +16,10 @@ namespace DW
 
         public override Item interact(Entity par1)
         {
-            int[,] s = par1.getStair().getMap();
+            int[,] s = par1.getStair().map;
             Special[,] u = par1.getStair().getSpecial();
-            int x = par1.getX();
-            int y = par1.getY();
+            int x = par1.x;
+            int y = par1.y;
             if(Entity.canWalkOn(x,y+1,par1.getStair()) && par1.getFace()=="front")
                 par1.getStair().setSpecial(new Forge(),x,y+1);
             else if (Entity.canWalkOn(x, y - 1, par1.getStair()) && par1.getFace() == "back")

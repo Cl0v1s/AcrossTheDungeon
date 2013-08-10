@@ -55,8 +55,8 @@ namespace DW
 
         private void applyLava(Room par1room)
         {
-            int x = rand.Next(1, par1room.getW() - 1);
-            int y = rand.Next(1, par1room.getH() - 1);
+            int x = rand.Next(1, par1room.width - 1);
+            int y = rand.Next(1, par1room.height - 1);
             int w = rand.Next(2, 7);
             int h = rand.Next(2, 7);
             for (int i = x; i < w; i++)
@@ -65,9 +65,9 @@ namespace DW
                 {
                     try
                     {
-                        if (stair.getMap()[i + par1room.getX(), u + par1room.getY()] != 2)
+                        if (stair.map[i + par1room.x, u + par1room.y] != 2)
                         {
-                            stair.set(101, i + par1room.getX(), u + par1room.getY());
+                            stair.set(101, i + par1room.x, u + par1room.y);
                             par1room.set(101, i, u);
                         }
                     }
@@ -77,33 +77,33 @@ namespace DW
             }
             /*
             int tried = 0;
-            int xp = rand.Next(1, par1room.getW() - 1);
-            int yp = rand.Next(1, par1room.getH() - 1);
-            while (par1room.getMap()[xp, yp] != 1)
+            int xp = rand.Next(1, par1room.width - 1);
+            int yp = rand.Next(1, par1room.height - 1);
+            while (par1room.map[xp, yp] != 1)
             {
                 if (tried >= 500)
                     return;
-                xp = rand.Next(1, par1room.getW() - 1);
-                yp = rand.Next(1, par1room.getH() - 1);
+                xp = rand.Next(1, par1room.width - 1);
+                yp = rand.Next(1, par1room.height - 1);
                 tried += 1;
             }
             tried = 0;
             par1room.set(101, xp, yp);
-            stair.set(101, par1room.getX() + xp, par1room.getY() + yp);
+            stair.set(101, par1room.x + xp, par1room.y + yp);
             for (int i = 0; i < rand.Next(5, 15); i++)
             {
-                xp = rand.Next(1, par1room.getW() - 1);
-                yp = rand.Next(1, par1room.getH() - 1);
-                while (!(par1room.getMap()[xp - 1, yp] == 101 || par1room.getMap()[xp + 1, yp] == 101 || par1room.getMap()[xp, yp - 1] == 101 || par1room.getMap()[xp, yp + 1] == 101) || par1room.getMap()[xp, yp] != 1)
+                xp = rand.Next(1, par1room.width - 1);
+                yp = rand.Next(1, par1room.height - 1);
+                while (!(par1room.map[xp - 1, yp] == 101 || par1room.map[xp + 1, yp] == 101 || par1room.map[xp, yp - 1] == 101 || par1room.map[xp, yp + 1] == 101) || par1room.map[xp, yp] != 1)
                 {
                     if (tried >= 500)
                         return;
-                    xp = rand.Next(1, par1room.getW() - 1);
-                    yp = rand.Next(1, par1room.getH() - 1);
+                    xp = rand.Next(1, par1room.width - 1);
+                    yp = rand.Next(1, par1room.height - 1);
                     tried += 1;
                 }
                 par1room.set(101, xp, yp);
-                stair.set(101, par1room.getX() + xp, par1room.getY() + yp);
+                stair.set(101, par1room.x + xp, par1room.y + yp);
             }*/
         }
 
@@ -116,20 +116,20 @@ namespace DW
             int tried = 0;
             for (int i = 0; i < u; i++)
             {
-                int xGravel = rand.Next(1, par2room.getW() - 1);
-                int yGravel = rand.Next(1, par2room.getH() - 1);
+                int xGravel = rand.Next(1, par2room.width - 1);
+                int yGravel = rand.Next(1, par2room.height - 1);
 
-                while (par2room.getMap()[xGravel, yGravel] != 1 && par2room.getMap()[xGravel - 1, yGravel] == 101 && par2room.getMap()[xGravel + 1, yGravel] == 101 && par2room.getMap()[xGravel, yGravel - 1] == 101 && par2room.getMap()[xGravel, yGravel+1] == 101)
+                while (par2room.map[xGravel, yGravel] != 1 && par2room.map[xGravel - 1, yGravel] == 101 && par2room.map[xGravel + 1, yGravel] == 101 && par2room.map[xGravel, yGravel - 1] == 101 && par2room.map[xGravel, yGravel+1] == 101)
                 {
                     if (tried >= 500)
                         return;
                     tried += 1;
-                    xGravel = rand.Next(1, par2room.getW() - 1);
-                    yGravel = rand.Next(1, par2room.getH() - 1);
+                    xGravel = rand.Next(1, par2room.width - 1);
+                    yGravel = rand.Next(1, par2room.height - 1);
                 }
 
                 par2room.set(5, xGravel, yGravel);
-                stair.set(5, par2room.getX() + xGravel, par2room.getY() + yGravel);
+                stair.set(5, par2room.x + xGravel, par2room.y + yGravel);
             }
         }
 
@@ -178,18 +178,18 @@ namespace DW
         //<param name="par2room">salle à affecter</param>
         public void applySpecialCase(Room par2room)
         {
-            int w = par2room.getW();
-            int h = par2room.getH();
+            int w = par2room.width;
+            int h = par2room.height;
             for (int i = 1; i < w - 1; i++)
             {
                 for (int u = 1; u < h - 1; u++)
                 {
-                    if (par2room.getMap()[i, u] == 1 && rand.Next(0, 70) == 1)
+                    if (par2room.map[i, u] == 1 && rand.Next(0, 70) == 1)
                     {
                         int r = rand.Next(0, specialCase.Length);
                         try
                         {
-                            stair.set((int)specialCase[r], par2room.getX() + i, par2room.getY() + u);
+                            stair.set((int)specialCase[r], par2room.x + i, par2room.y + u);
                             par2room.set((int)specialCase[r], i, u);
                         }
                         catch (System.InvalidCastException)
@@ -197,25 +197,25 @@ namespace DW
                             if (specialCase[r].GetType() != new Pot().GetType() || !(specialCase[r] is Chest))
                             {
                                 Special s = (((Special)specialCase[r]).clone());
-                                s.setPos(stair, par2room.getX() + i, par2room.getY() + u);
-                                stair.setSpecial(s, par2room.getX() + i, par2room.getY() + u);
+                                s.setPos(stair, par2room.x + i, par2room.y + u);
+                                stair.setSpecial(s, par2room.x + i, par2room.y + u);
                                 par2room.setSpecial(s, i, u);
                             }
                             else
                             {
-                                int xp = rand.Next(1, par2room.getW());
-                                int yp = rand.Next(1, par2room.getH());
-                                while (par2room.getMap()[xp + 1, yp] != 2 && par2room.getMap()[xp - 1, yp] != 2 && par2room.getMap()[xp, yp + 1] != 2 && par2room.getMap()[xp, yp - 1] != 2)
+                                int xp = rand.Next(1, par2room.width);
+                                int yp = rand.Next(1, par2room.height);
+                                while (par2room.map[xp + 1, yp] != 2 && par2room.map[xp - 1, yp] != 2 && par2room.map[xp, yp + 1] != 2 && par2room.map[xp, yp - 1] != 2)
                                 {
-                                    xp = rand.Next(1, par2room.getW());
-                                    yp = rand.Next(1, par2room.getH());
+                                    xp = rand.Next(1, par2room.width);
+                                    yp = rand.Next(1, par2room.height);
                                 }
                                 Special s = ((Special)specialCase[r]);
                                 s = (Special)s.clone();
-                                s.setPos(stair, par2room.getX() + xp, par2room.getY() + yp);
-                                stair.setSpecial(s, par2room.getX() + xp, par2room.getY() + yp);
+                                s.setPos(stair, par2room.x + xp, par2room.y + yp);
+                                stair.setSpecial(s, par2room.x + xp, par2room.y + yp);
                                 par2room.setSpecial(s, xp, yp);
-                                stair.getSpecial()[par2room.getX() + xp, par2room.getY() + yp].setPos(stair, par2room.getX() + xp, par2room.getY() + yp);
+                                stair.getSpecial()[par2room.x + xp, par2room.y + yp].setPos(stair, par2room.x + xp, par2room.y + yp);
                                 int nb = rand.Next(1, 6);
                                 if (specialCase[r] is Pot)
                                 {
@@ -223,18 +223,18 @@ namespace DW
                                     {
                                         try
                                         {
-                                            xp = rand.Next(1, par2room.getW());
-                                            yp = rand.Next(1, par2room.getH());
-                                            while ((par2room.getMap()[xp + 1, yp] != 2 && par2room.getMap()[xp - 1, yp] != 2 && par2room.getMap()[xp, yp + 1] != 2 && par2room.getMap()[xp, yp - 1] != 2) && (par2room.getSpecial()[xp + 1, yp].GetType() != specialCase[r].GetType() && par2room.getSpecial()[xp - 1, yp].GetType() != specialCase[r].GetType() && par2room.getSpecial()[xp, yp + 1].GetType() != specialCase[r].GetType() && par2room.getSpecial()[xp, yp - 1].GetType() != specialCase[r].GetType()))
+                                            xp = rand.Next(1, par2room.width);
+                                            yp = rand.Next(1, par2room.height);
+                                            while ((par2room.map[xp + 1, yp] != 2 && par2room.map[xp - 1, yp] != 2 && par2room.map[xp, yp + 1] != 2 && par2room.map[xp, yp - 1] != 2) && (par2room.getSpecial()[xp + 1, yp].GetType() != specialCase[r].GetType() && par2room.getSpecial()[xp - 1, yp].GetType() != specialCase[r].GetType() && par2room.getSpecial()[xp, yp + 1].GetType() != specialCase[r].GetType() && par2room.getSpecial()[xp, yp - 1].GetType() != specialCase[r].GetType()))
                                             {
-                                                xp = rand.Next(1, par2room.getW());
-                                                yp = rand.Next(1, par2room.getH());
+                                                xp = rand.Next(1, par2room.width);
+                                                yp = rand.Next(1, par2room.height);
                                             }
                                             s = ((Special)specialCase[r]);
                                             s = (Special)s.clone();
-                                            s.setPos(stair, par2room.getX() + xp, par2room.getY() + yp);
-                                            stair.setSpecial(s, par2room.getX() + xp, par2room.getY() + yp);
-                                            stair.getSpecial()[par2room.getX() + xp, par2room.getY() + yp].setPos(stair, par2room.getX() + xp, par2room.getY() + yp);
+                                            s.setPos(stair, par2room.x + xp, par2room.y + yp);
+                                            stair.setSpecial(s, par2room.x + xp, par2room.y + yp);
+                                            stair.getSpecial()[par2room.x + xp, par2room.y + yp].setPos(stair, par2room.x + xp, par2room.y + yp);
                                             par2room.setSpecial(s, xp, yp);
                                         }
                                         catch (Exception) { }

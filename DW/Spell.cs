@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using SdlDotNet.Graphics;
+using SdlDotNet.Graphics.Sprites;
 using System.Threading;
 
 namespace DW
@@ -30,7 +31,7 @@ namespace DW
         private Surface shadow;
         public int id;
         public int targetStat = 0;
-        Surface target = new Surface("Data/images/GUI/target.png");
+        AnimatedSprite target;
         Point targetPoint=Point.Empty;
         Entity caller = null;
         Entity victim = null;
@@ -59,6 +60,13 @@ namespace DW
             shadow.AlphaBlending = true;
             shadow.Fill(Color.Red);
             shadow.Alpha = 150;
+            AnimationCollection a = new AnimationCollection();
+            SurfaceCollection e = new SurfaceCollection();
+            e.Add("Data/images/GUI/Target.png", new Size(30, 30));
+            a.Add(e);
+            a.Delay = 150;
+            target = new AnimatedSprite(a);
+            target.Animate = true;
             
         }
 
@@ -72,7 +80,7 @@ namespace DW
             if (targetStat == 0 && range > 1)
             {
                 targetStat = 1;
-                targetPoint = new Point(par1caller.getX(), par1caller.getY());
+                targetPoint = new Point(par1caller.x, par1caller.y);
                 return;
             }
             else if (targetStat == 1 && range>1)
@@ -144,7 +152,7 @@ namespace DW
                         par2victim.setFear(10);
                     }
                     coolDownFrame = coolDown;
-                    DW.render.addAnimation(animation,par2victim.getX(),par2victim.getY());
+                    DW.render.addAnimation(animation,par2victim.x,par2victim.y);
                     caller = null;
                     victim = null;
                     targetPoint = Point.Empty;
@@ -183,7 +191,7 @@ namespace DW
         {
             if (targetStat == 1)
             {
-                Video.Screen.Blit(target,new Point(DW.render.getX() + targetPoint.X * 30, DW.render.getY() + targetPoint.Y * 30));
+                Video.Screen.Blit(target,new Point(DW.render.x + targetPoint.X * 30, DW.render.y + targetPoint.Y * 30));
                 if (DW.input.equals(SdlDotNet.Input.Key.LeftArrow) && isInRange(caller,targetPoint.X-1,targetPoint.Y))
                 {
                     targetPoint.X -= 1;
@@ -231,10 +239,10 @@ namespace DW
         //</summary>
         bool isInRange(Entity par1caller, Entity par2victim)
         {
-            int par1x = par2victim.getX();
-            int par2y = par2victim.getY();
-            int x = par1caller.getX();
-            int y = par1caller.getY();
+            int par1x = par2victim.x;
+            int par2y = par2victim.y;
+            int x = par1caller.x;
+            int y = par1caller.y;
             if (Math.Abs(x - par1x) + Math.Abs(y - par2y) <= range)
             {
                 int dx = Math.Abs(par1x - x);
@@ -281,8 +289,8 @@ namespace DW
         {
             int par1x = par2x;
             int par2y = par3y;
-            int x = par1caller.getX();
-            int y = par1caller.getY();
+            int x = par1caller.x;
+            int y = par1caller.y;
             if (Math.Abs(x - par1x) + Math.Abs(y - par2y) <= range)
             {
                 int dx = Math.Abs(par1x - x);

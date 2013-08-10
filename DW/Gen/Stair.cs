@@ -18,11 +18,11 @@ namespace DW
             new BiomeGarden(),
             new BiomeCave(),
         };
-        private int[,] map;
+        public int[,] map;
         private Special[,] special;
         private Point[] endlink;
-        private int width;
-        private int height;
+        public int width;
+        public int height;
         private int doors = 0;
         private Entity[] entities;
 
@@ -69,11 +69,14 @@ namespace DW
                 for (int u = 0; u < height; u++)
                 {
                     if (special[i, u] != null)
-                        special[i, u]=special[i, u].update();
+                        special[i, u] = special[i, u].update();
                 }
             }
         }
 
+        //<summary>
+        //Augmente le gestionnaire de temps de toutes les entités d'une unité.
+        //</summary>
         public void time()
         {
             for (int i = 0; i < entities.Length; i++)
@@ -87,6 +90,9 @@ namespace DW
             }
         }
 
+        //<summary>
+        //Génere les salles
+        //</summary>
         private void genRooms()
         {
             Console.WriteLine("Génération des salles.");
@@ -114,64 +120,68 @@ namespace DW
             }
         }
 
+        //<summary>
+        //Relis les salles entre elles 
+        //</summary>
         private void genLink()
         {
             Console.WriteLine("Génération des couloirs.");
-            for (int i = 0; i < rooms.Length; i++)
+            int i = 0;
+            int ended = 0;
+            Room old = null;
+            while(ended<rooms.Length)
             {
                 if (rooms[i] != null)
                 {
-                    Point[] doors = rooms[i].getDoors();
-                    for (int u = 0; u < doors.Length; u++)
-                    {
-                        if (rooms[i].isDoorChecked(u) == false)
-                        {
-                            int r = i + 1;
-                            int t = 0;
-                            while (rooms[r] == null)
+                    Point door = rooms[i].createDoor();
+                            int r=-1;
+                            for (int e = 0; e < rooms.Length; e++)
                             {
-                                if (t >= 50)
-                                    break;
-                                t += 1;
-                                r = rand.Next(0, rooms.Length - 1);
+                                if (rooms[e] != null && !rooms[e].Equals(rooms[i]) && (old==null || !old.Equals(rooms[e])) && !rooms[e].ended)
+                                {
+                                    int de = Math.Abs(rooms[i].x - rooms[e].x) + Math.Abs(rooms[i].y - rooms[e].y);
+                                    int dr = 9999999;
+                                    if (r >= 0)
+                                        dr = Math.Abs(rooms[r].x - rooms[i].x) + Math.Abs(rooms[r].y - rooms[i].y);
+                                    if (r == -1 || de < dr)
+                                    {
+                                        r = e;
+                                    }
+                                }
                             }
+                            old = rooms[i];
+                            rooms[i].ended = true;
+                            if (r > -1)
+                            {
+                                Console.WriteLine("salle la plus proche " + r + " " + rooms[r].ended);
+                            }
+                            else
+                                    return;
                             if (!rooms[i].Equals(rooms[r]) && rooms[r] != null)
                             {
-                                Point[] odoor = rooms[r].getDoors();
-                                int d = rand.Next(0, odoor.Length - 1);
-                                t = 0;
-                                while (rooms[r].isDoorChecked(d) == true)
-                                {
-                                    if (t >= 50)
-                                        break;
-                                    t += 1;
-                                    d = rand.Next(0, odoor.Length - 1);
-                                }
-                                if (rooms[r].isDoorChecked(d) == false)
-                                {
-                                    Point o = odoor[d];
-                                    pathfinding(new Point(doors[u].X + rooms[i].getX(), doors[u].Y + rooms[i].getY()), new Point(o.X + rooms[r].getX(), o.Y + rooms[r].getY()));
-                                    rooms[i].checkDoor(u);
-                                    rooms[r].checkDoor(d);
-                                    Console.WriteLine("Room id " + i + " reliée à Room id " + r + " via le corridor " + u + "/" + d);
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Impossible de relier Room id " + i + " à Room id " + r + " : corridor " + d + " déjà relié.");
-                                    continue;
-                                }
+                                Point o = rooms[r].createDoor();
+                                    pathfinding(new Point(door.X + rooms[i].getX(), door.Y + rooms[i].getY()), new Point(o.X + rooms[r].getX(), o.Y + rooms[r].getY()));
+                                    Console.WriteLine("Room id " + i + " reliée à Room id " + r);
+                                    i = r;
+                                    ended += 1;
                             }
                             else
                             {
                                 Console.WriteLine("Impossible de relier Room id " + i + " à Room id " + r + " : salle inexistante ou égale à l'orignale.");
-                                continue;
+                                i = rand.Next(0, rooms.Length);
+                                int f = 0;
+                                while (rooms[i] == null || rooms[i].ended)
+                                {
+                                    i = rand.Next(0, rooms.Length);
+                                    f += 1;
+                                    if (f < 200)
+                                        return;
+                                }
                             }
                         }
                         else
                             continue;
                     }
-                }
-            }
         }
 
         private void copyRooms()
@@ -307,14 +317,14 @@ namespace DW
                     }
                     if (map[i, u] == 0)
                     {
-                            if (u-1>=0 && i+1<=width && map[i, u - 1] == 2 && map[i + 1, u] == 2)
-                                map[i, u] = 2;
-                            if (u+1<=height && i+1<=width && map[i, u + 1] == 2 && map[i + 1, u] == 2)
-                                map[i, u] = 2;
-                            if (u+1<=height && i-1>=0 && map[i, u + 1] == 2 && map[i - 1, u] == 2)
-                                map[i, u] = 2;
-                            if (u-1>=0 && i-1>=0 && map[i, u - 1] == 2 && map[i - 1, u] == 2)
-                                map[i, u] = 2;
+                        if (u - 1 >= 0 && i + 1 <= width && map[i, u - 1] == 2 && map[i + 1, u] == 2)
+                            map[i, u] = 2;
+                        if (u + 1 <= height && i + 1 <= width && map[i, u + 1] == 2 && map[i + 1, u] == 2)
+                            map[i, u] = 2;
+                        if (u + 1 <= height && i - 1 >= 0 && map[i, u + 1] == 2 && map[i - 1, u] == 2)
+                            map[i, u] = 2;
+                        if (u - 1 >= 0 && i - 1 >= 0 && map[i, u - 1] == 2 && map[i - 1, u] == 2)
+                            map[i, u] = 2;
                     }
                 }
             }
@@ -381,6 +391,12 @@ namespace DW
                             map[i, o] = 1;
                         if (map[i, o] == 101 && map[i - 2, o - 2] == 100)
                             map[i, o] = 1;
+                        /*Remove useless wall*/
+                        if ((map[i + 1, o] == 1 && map[i - 1, o] == 1) || (map[i, o + 1] == 1 && map[i, o - 1] == 1))
+                        {
+                            map[i, o] = 1;
+                            //Console.WriteLine("Removed Useless Wall !");
+                        }
 
                     }
                     catch (Exception)
@@ -397,80 +413,102 @@ namespace DW
             }
         }
 
+        //<summary>
+        //Place des portes au niveau de certains couloirs
+        //</summary>
         public void genDoors()
         {
-            for (int i = 0; i < endlink.Length; i++)
+            for (int i = 0; i < rooms.Length; i++)
             {
-                Point b = endlink[i];
-                try
+                if(rooms[i] != null)
                 {
-                    if (rand.Next(1, 1) == 1 && map[b.X - 1, b.Y] != 0 && map[b.X + 1, b.Y] != 0 && map[b.X, b.Y + 1] != 0 && map[b.X, b.Y - 1] != 0 && ((map[b.X + 1, b.Y] == 2 && map[b.X - 1, b.Y] == 2) || (map[b.X, b.Y + 1] == 2 && map[b.X, b.Y - 1] == 2)))
+                    for (int u = 0; u < rooms[i].doors.Length; u++)
                     {
-                        Special s = (Special)new Door(map,b.X,b.Y);
-                        s.setPos(this, b.X, b.Y);
-                        set(1, b.X, b.Y);
-                        setSpecial(s, b.X, b.Y);
+                        if (rooms[i].doors[u] != Point.Empty)
+                        {
+                            if (rand.Next(0, 100) <= 70)
+                            {
+                                int x=rooms[i].doors[u].X + rooms[i].x;
+                                int y=rooms[i].doors[u].Y + rooms[i].y;
+                                if((map[x+1,y]==1 && map[x-1,y]==1) || (map[x ,y + 1]==1 && map[x ,y - 1]==1))
+                                {
+                                    map[rooms[i].doors[u].X + rooms[i].x, rooms[i].doors[u].Y + rooms[i].y] = 1;
+                                    Door d = new Door(map, rooms[i].doors[u].X + rooms[i].x, rooms[i].doors[u].Y + rooms[i].y);
+                                    d.setPos(this, rooms[i].doors[u].X + rooms[i].x, rooms[i].doors[u].Y + rooms[i].y);
+                                    setSpecial(d, rooms[i].doors[u].X + rooms[i].x, rooms[i].doors[u].Y + rooms[i].y);
+                                    Console.WriteLine("Door spawned at "+d.x+":"+d.y);
+                                }
+                                else
+                                    Console.WriteLine("Door useless !");
+                            }
+                        }
                     }
                 }
-                catch (Exception) { }
             }
         }
 
         private void pathfinding(Point a, Point b)
         {
-            endlink[doors] = new Point(a.X, a.Y);
-            doors += 1;
-            int t = 0;
-            while (a.X != b.X || a.Y != b.Y)
+            try
             {
-                if (t >= 500)
-                    break;
-                t += 1;
-                if (a.X <= width && a.X >= 0 && a.Y <= height && a.Y >= 0)
+                endlink[doors] = new Point(a.X, a.Y);
+                doors += 1;
+                int t = 0;
+                while (a.X != b.X || a.Y != b.Y)
                 {
-
-                    int poids = -1;
-                    Point goodnode = new Point();
-                    Point[] nodes = new Point[4];
-                    if (a.X - 1 <= width && a.X - 1 >= 0 && a.Y <= height && a.Y >= 0)
-                        nodes[0] = new Point(a.X - 1, a.Y);
-                    else
-                        nodes[0] = new Point(-1, -1);
-                    if (a.X + 1 <= width && a.X + 1 >= 0 && a.Y <= height && a.Y >= 0)
-                        nodes[1] = new Point(a.X + 1, a.Y);
-                    else
-                        nodes[1] = new Point(-1, -1);
-                    if (a.X <= width && a.X >= 0 && a.Y - 1 <= height && a.Y - 1 >= 0)
-                        nodes[2] = new Point(a.X, a.Y - 1);
-                    else
-                        nodes[2] = new Point(-1, -1);
-                    if (a.X <= width && a.X >= 0 && a.Y + 1 <= height && a.Y + 1 >= 0)
-                        nodes[3] = new Point(a.X, a.Y + 1);
-                    else
-                        nodes[3] = new Point(-1, -1);
-                    for (int p = 0; p < 4; p++)
+                    if (t >= 500)
+                        break;
+                    t += 1;
+                    if (a.X <= width && a.X >= 0 && a.Y <= height && a.Y >= 0)
                     {
-                        if (nodes[p].X != -1 && nodes[p].Y != -1)
+
+                        int poids = -1;
+                        Point goodnode = new Point();
+                        Point[] nodes = new Point[4];
+                        if (a.X - 1 <= width && a.X - 1 >= 0 && a.Y <= height && a.Y >= 0)
+                            nodes[0] = new Point(a.X - 1, a.Y);
+                        else
+                            nodes[0] = new Point(-1, -1);
+                        if (a.X + 1 <= width && a.X + 1 >= 0 && a.Y <= height && a.Y >= 0)
+                            nodes[1] = new Point(a.X + 1, a.Y);
+                        else
+                            nodes[1] = new Point(-1, -1);
+                        if (a.X <= width && a.X >= 0 && a.Y - 1 <= height && a.Y - 1 >= 0)
+                            nodes[2] = new Point(a.X, a.Y - 1);
+                        else
+                            nodes[2] = new Point(-1, -1);
+                        if (a.X <= width && a.X >= 0 && a.Y + 1 <= height && a.Y + 1 >= 0)
+                            nodes[3] = new Point(a.X, a.Y + 1);
+                        else
+                            nodes[3] = new Point(-1, -1);
+                        for (int p = 0; p < 4; p++)
                         {
-                            Point node = nodes[p];
-                            int h = Math.Abs(b.X - node.X) + Math.Abs(b.Y - node.Y);
-                            if (poids == -1 || h < poids)
+                            if (nodes[p].X != -1 && nodes[p].Y != -1)
                             {
-                                poids = h;
-                                goodnode = node;
+                                Point node = nodes[p];
+                                int h = Math.Abs(b.X - node.X) + Math.Abs(b.Y - node.Y);
+                                if (poids == -1 || h < poids)
+                                {
+                                    poids = h;
+                                    goodnode = node;
+                                }
                             }
                         }
-                    }
-                    a.X = goodnode.X;
-                    a.Y = goodnode.Y;
-                    map[a.X, a.Y] = 1;
-                    if ((a.Y == b.Y && (a.X + 1 == b.X || a.X - 1 == b.X)) || (a.X == b.X && (a.Y + 1 == b.Y || a.Y - 1 == b.Y)))
-                        break;
+                        a.X = goodnode.X;
+                        a.Y = goodnode.Y;
+                        map[a.X, a.Y] = 1;
+                        if ((a.Y == b.Y && (a.X + 1 == b.X || a.X - 1 == b.X)) || (a.X == b.X && (a.Y + 1 == b.Y || a.Y - 1 == b.Y)))
+                            break;
 
+                    }
                 }
+                endlink[doors] = new Point(b.X, b.Y);
+                doors += 1;
             }
-            endlink[doors] = new Point(b.X, b.Y);
-            doors += 1;
+            catch(Exception)
+            {
+
+            }
 
         }
 
@@ -609,41 +647,41 @@ namespace DW
             special = par1;
         }
 
-        public void removeSpecial(int par1x,int par2y)
+        public void removeSpecial(int par1x, int par2y)
         {
-            special[par1x,par2y]=null;
+            special[par1x, par2y] = null;
         }
 
         public bool spawnItem(Item par1item, int par2x, int par3y)
         {
 
-                ItemOnMap i = new ItemOnMap(par1item, this, par2x, par3y);
-                if (special[par2x, par3y] == null)
-                {
-                    i.setPos(par2x, par3y);
-                    special[par2x, par3y] = i;
-                }
-                else if (special[par2x + 1, par3y] == null && map[par2x + 1, par3y]==1)
-                {
-                    i.setPos(par2x + 1, par3y);
-                    special[par2x + 1, par3y] = i;
-                }
-                else if (special[par2x - 1, par3y] == null && map[par2x - 1, par3y] == 1)
-                {
-                    i.setPos(par2x - 1, par3y);
-                    special[par2x - 1, par3y] = i;
-                }
-                else if (special[par2x, par3y - 1] == null && map[par2x, par3y - 1] == 1)
-                {
-                    i.setPos(par2x, par3y - 1);
-                    special[par2x, par3y - 1] = i;
-                }
-                else if (special[par3y, par3y + 1] == null && map[par2x, par3y + 1] == 1)
-                {
-                    i.setPos(par2x, par3y + 1);
-                    special[par3y, par3y + 1] = i;
-                }
-                else return false;
+            ItemOnMap i = new ItemOnMap(par1item, this, par2x, par3y);
+            if (special[par2x, par3y] == null)
+            {
+                i.setPos(par2x, par3y);
+                special[par2x, par3y] = i;
+            }
+            else if (special[par2x + 1, par3y] == null && map[par2x + 1, par3y] == 1)
+            {
+                i.setPos(par2x + 1, par3y);
+                special[par2x + 1, par3y] = i;
+            }
+            else if (special[par2x - 1, par3y] == null && map[par2x - 1, par3y] == 1)
+            {
+                i.setPos(par2x - 1, par3y);
+                special[par2x - 1, par3y] = i;
+            }
+            else if (special[par2x, par3y - 1] == null && map[par2x, par3y - 1] == 1)
+            {
+                i.setPos(par2x, par3y - 1);
+                special[par2x, par3y - 1] = i;
+            }
+            else if (special[par3y, par3y + 1] == null && map[par2x, par3y + 1] == 1)
+            {
+                i.setPos(par2x, par3y + 1);
+                special[par3y, par3y + 1] = i;
+            }
+            else return false;
 
             return true;
         }

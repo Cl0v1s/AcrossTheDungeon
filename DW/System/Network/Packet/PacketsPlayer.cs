@@ -44,7 +44,7 @@ namespace DW
 
         public PacketPlayerMove(OtherPlayer par1)
         {
-            coords = new Point(par1.getX(), par1.getY());
+            coords = new Point(par1.x, par1.y);
             face = par1.getFace();
         }
 

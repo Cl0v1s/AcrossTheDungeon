@@ -207,7 +207,7 @@ namespace DW
                 {
                     for (int i = 0; i < others.Length; i++)
                     {
-                        if (others[i] != null && canSee(others[i].getX(), others[i].getY()) == true)
+                        if (others[i] != null && canSee(others[i].x, others[i].y) == true)
                         {
                             if (peur < 0 && others[i].getSpecies() != getSpecies())
                             {
@@ -240,14 +240,14 @@ namespace DW
         {
             if (worstEnemy != null)
             {
-                if (peur > 0 && canSee(worstEnemy.getX(), worstEnemy.getY()))
+                if (peur > 0 && canSee(worstEnemy.x, worstEnemy.y))
                 {
-                    escapeFrom(worstEnemy.getX(), worstEnemy.getY());
+                    escapeFrom(worstEnemy.x, worstEnemy.y);
                     return;
                 }
-                else if (canSee(worstEnemy.getX(), worstEnemy.getY()))
+                else if (canSee(worstEnemy.x, worstEnemy.y))
                 {
-                    moveTo(worstEnemy.getX(), worstEnemy.getY());
+                    moveTo(worstEnemy.x, worstEnemy.y);
                     return;
                 }
             }
@@ -263,9 +263,9 @@ namespace DW
                 moveTo(objective.X, objective.Y);
                 return;
             }
-            else if (bestFriend != null && canSee(bestFriend.getX(), bestFriend.getY()) && peur>0)
+            else if (bestFriend != null && canSee(bestFriend.x, bestFriend.y) && peur>0)
             {
-                moveTo(bestFriend.getX(), bestFriend.getY());
+                moveTo(bestFriend.x, bestFriend.y);
                 return;
             }
 
@@ -282,19 +282,19 @@ namespace DW
             int poids = -1;
             Point goodnode = new Point();
             Point[] nodes = new Point[4];
-            if (x - 1 <= stair.getW() && x - 1 >= 0 && y <= stair.getH() && y >= 0)
+            if (x - 1 <= stair.width && x - 1 >= 0 && y <= stair.height && y >= 0)
                 nodes[0] = new Point(x - 1, y);
             else
                 nodes[0] = new Point(-1, -1);
-            if (x + 1 <= stair.getW() && x + 1 >= 0 && y <= stair.getH() && y >= 0)
+            if (x + 1 <= stair.width && x + 1 >= 0 && y <= stair.height && y >= 0)
                 nodes[1] = new Point(x + 1, y);
             else
                 nodes[1] = new Point(-1, -1);
-            if (x <= stair.getW() && x >= 0 && y - 1 <= stair.getH() && y - 1 >= 0)
+            if (x <= stair.width && x >= 0 && y - 1 <= stair.height && y - 1 >= 0)
                 nodes[2] = new Point(x, y - 1);
             else
                 nodes[2] = new Point(-1, -1);
-            if (x <= stair.getW() && x >= 0 && y + 1 <= stair.getH() && y + 1 >= 0)
+            if (x <= stair.width && x >= 0 && y + 1 <= stair.height && y + 1 >= 0)
                 nodes[3] = new Point(x, y + 1);
             else
                 nodes[3] = new Point(-1, -1);
@@ -327,13 +327,13 @@ namespace DW
 
         protected void escapeFrom(int par1x, int par2y)
         {
-            if (par1x > x && stair.getMap()[x - 1, y] == 1)
+            if (par1x > x && stair.map[x - 1, y] == 1)
                 x -= 1;
-            else if (par1x < x && stair.getMap()[x + 1, y] == 1)
+            else if (par1x < x && stair.map[x + 1, y] == 1)
                 x += 1;
-            else if (par2y > y && stair.getMap()[x, y - 1] == 1)
+            else if (par2y > y && stair.map[x, y - 1] == 1)
                 y -= 1;
-            else if (par2y < y && stair.getMap()[x, y + 1] == 1)
+            else if (par2y < y && stair.map[x, y + 1] == 1)
                 y += 1;
         }
 
@@ -407,7 +407,7 @@ namespace DW
 
         public void lookTo(Entity par1)
         {
-            lookTo(par1.getX(), par1.getY());
+            lookTo(par1.x, par1.y);
         }
 
         public void lookTo(int par1x, int par2y)
@@ -430,7 +430,7 @@ namespace DW
 
         protected bool isOn(int par1)
         {
-            if (stair != null && stair.getMap()[x, y] == par1)
+            if (stair != null && stair.map[x, y] == par1)
                 return true;
             return false;
         }
@@ -456,7 +456,7 @@ namespace DW
             {
                 if (par1 != null)
                 {
-                    if (par1.getX() == getX() - 1 && par1.getY() == getY() || par1.getX() == getX() + 1 && par1.getY() == getY() || par1.getY() == getY() - 1 && par1.getX() == getX() || par1.getY() == getY() + 1 && par1.getX() == getX() || par1.getX() == getX() && par1.getY() == getY())
+                    if (par1.x == getX() - 1 && par1.y == getY() || par1.x == getX() + 1 && par1.y == getY() || par1.y == getY() - 1 && par1.x == getX() || par1.y == getY() + 1 && par1.x == getX() || par1.x == getX() && par1.y == getY())
                         return true;
                 }
             }
@@ -471,7 +471,7 @@ namespace DW
             {
                 if (stair != null)
                 {
-                    if (stair.getMap()[x + 1, y] == par1 || stair.getMap()[x - 1, y] == par1 || stair.getMap()[x, y + 1] == par1 || stair.getMap()[x, y - 1] == par1 || stair.getMap()[x, y] == par1)
+                    if (stair.map[x + 1, y] == par1 || stair.map[x - 1, y] == par1 || stair.map[x, y + 1] == par1 || stair.map[x, y - 1] == par1 || stair.map[x, y] == par1)
                         return true;
                 }
             }
@@ -492,8 +492,8 @@ namespace DW
                 {
                     if (e[i] != null)
                     {
-                        int h = Math.Abs(x - e[i].getX()) + Math.Abs(y - e[i].getY());
-                        if ((h < poids || poids == -1) && e[i].getSpecies() != getSpecies() && canSee(e[i].getX(), e[i].getY()) == true)
+                        int h = Math.Abs(x - e[i].x) + Math.Abs(y - e[i].y);
+                        if ((h < poids || poids == -1) && e[i].getSpecies() != getSpecies() && canSee(e[i].x, e[i].y) == true)
                         {
                             poids = h;
                             worstEnemy = e[i];
@@ -513,7 +513,7 @@ namespace DW
                 {
                     try
                     {
-                        if (stair.getMap()[i, u] == par1case && canSee(i, u))
+                        if (stair.map[i, u] == par1case && canSee(i, u))
                         {
                             objective = new Point(i, u);
                         }
@@ -607,7 +607,7 @@ namespace DW
         {
             try
             {
-                if (stair != null && stair.getMap()[par1x, par2y] == 1 || stair.getMap()[par1x, par2y] == 7 || stair.getMap()[par1x, par2y] == 100 || stair.getMap()[par1x, par2y] == 6 || stair.getMap()[par1x, par2y] == 3 || stair.getMap()[par1x, par2y] == 5 || stair.getMap()[par1x, par2y] == 101)
+                if (stair != null && stair.map[par1x, par2y] == 1 || stair.map[par1x, par2y] == 7 || stair.map[par1x, par2y] == 100 || stair.map[par1x, par2y] == 6 || stair.map[par1x, par2y] == 3 || stair.map[par1x, par2y] == 5 || stair.map[par1x, par2y] == 101)
                 {
                     if (stair != null && stair.getSpecial()[par1x, par2y] != null)
                         return stair.getSpecial()[par1x, par2y].canPass();
@@ -616,7 +616,7 @@ namespace DW
                         Entity[] e = stair.getEntities();
                         for (int i = 0; i < e.Length; i++)
                         {
-                            if (e[i] != null && e[i].getX() == par1x && e[i].getY() == par2y)
+                            if (e[i] != null && e[i].x == par1x && e[i].y == par2y)
                                 return false;
                         }
                         return true;
@@ -636,7 +636,7 @@ namespace DW
 
             try
             {
-                if (stair != null && stair.getMap()[par1x, par2y] == 1 || stair.getMap()[par1x, par2y] == 7 || stair.getMap()[par1x, par2y] == 100 || stair.getMap()[par1x, par2y] == 4 || stair.getMap()[par1x, par2y] == 3 || stair.getMap()[par1x, par2y] == 5)
+                if (stair != null && stair.map[par1x, par2y] == 1 || stair.map[par1x, par2y] == 7 || stair.map[par1x, par2y] == 100 || stair.map[par1x, par2y] == 4 || stair.map[par1x, par2y] == 3 || stair.map[par1x, par2y] == 5)
                 {
                     
                     if (stair != null && stair.getSpecial()[par1x, par2y] != null)
@@ -646,7 +646,7 @@ namespace DW
                         Entity[] e = stair.getEntities();
                         for (int i = 0; i < e.Length; i++)
                         {
-                            if (e[i] != null && e[i].getX() == par1x && e[i].getY() == par2y)
+                            if (e[i] != null && e[i].x == par1x && e[i].y == par2y)
                                 return false;
                         }
                         return true;
@@ -713,13 +713,13 @@ namespace DW
             {
                 if (e[i] != null && !(e[i] is Player) && isNear(e[i]))
                 {
-                    if (face == "left" && y == e[i].getY() && x > e[i].getX())
+                    if (face == "left" && y == e[i].y && x > e[i].x)
                         return e[i];
-                    else if (face == "right" && y == e[i].getY() && x < e[i].getX())
+                    else if (face == "right" && y == e[i].y && x < e[i].x)
                         return e[i];
-                    else if (face == "back" && y > e[i].getY() && x == e[i].getX())
+                    else if (face == "back" && y > e[i].y && x == e[i].x)
                         return e[i];
-                    else if (face == "front" && y < e[i].getY() && x == e[i].getX())
+                    else if (face == "front" && y < e[i].y && x == e[i].x)
                         return e[i];
                     break;
                 }

@@ -32,7 +32,7 @@ namespace DW
         //</summary>
         public override Special update()
         {
-            if (stair.getMap()[x, y] == 100)
+            if (stair.map[x, y] == 100)
                 return null;
 
             grow += (float)rand.NextDouble()*2;

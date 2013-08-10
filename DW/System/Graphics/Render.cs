@@ -41,8 +41,8 @@ namespace DW
 
         private int frame;
         private int entityFrame = 0;
-        private int x;
-        private int y;
+        public int x;
+        public int y;
         private StatUI statUI;
         private InventoryUI inventoryUI;
         private RecipeUI recipeUI;
@@ -381,13 +381,13 @@ namespace DW
         {
             if (par1.getStair() != null)
             {
-                int[,] par1map = par1.getStair().getMap();
+                int[,] par1map = par1.getStair().map;
                 Special[,] specials = par1.getStair().getSpecial();
-                for (int i = (int)(par1.getX() - par1.getRange()*2); i < par1.getX() + par1.getRange()*2; i++)
+                for (int i = (int)(par1.x - par1.getRange()*2); i < par1.x + par1.getRange()*2; i++)
                 {
-                    for (int u = (int)(par1.getY() - par1.getRange()*2); u < par1.getY() + par1.getRange()*2; u++)
+                    for (int u = (int)(par1.y - par1.getRange()*2); u < par1.y + par1.getRange()*2; u++)
                     {
-                        if (u >= 0 && i >= 0 && i <= par1.getStair().getW() && u <= par1.getStair().getH() && (Math.Abs(par1.getX() - i) + Math.Abs(par1.getY() - u))<9)
+                        if (u >= 0 && i >= 0 && i <= par1.getStair().width && u <= par1.getStair().height && (Math.Abs(par1.x - i) + Math.Abs(par1.y - u))<9)
                         {
                                 if (par1map[i, u] < 100)
                                 {
@@ -406,9 +406,9 @@ namespace DW
                             }
                             if (!par1.canSee(i, u))
                             {
-                                if (i <= par1.getX() - par1.getRange() || i >= par1.getX() + par1.getRange() || u <= par1.getY() - par1.getRange() || u >= par1.getY() + par1.getRange())
+                                if (i <= par1.x - par1.getRange() || i >= par1.x + par1.getRange() || u <= par1.y - par1.getRange() || u >= par1.y + par1.getRange())
                                 {
-                                        shadow.Alpha = (byte)(100 + (Math.Abs(par1.getX() - i) + Math.Abs(par1.getY() - u)) * 40);
+                                        shadow.Alpha = (byte)(100 + (Math.Abs(par1.x - i) + Math.Abs(par1.y - u)) * 40);
                                 }
                                 else
                                     shadow.Alpha = 100;
@@ -421,8 +421,8 @@ namespace DW
                 {
                     if (ent[i] != null)
                     {
-                        int xe = ent[i].getX();
-                        int ye = ent[i].getY();
+                        int xe = ent[i].x;
+                        int ye = ent[i].y;
                         if (par1.canSee(xe, ye))
                         {
                                 renderEntityAt(ent[i]);
@@ -446,7 +446,7 @@ namespace DW
                     try
                     {
                         /*Wall*/
-                        if (par1map[par2x - 1, par3y] != 2 && par1map[par2x + 1, par3y] != 2 && par1map[par2x, par3y + 1] != 2)
+                        if (par1map[par2x - 1, par3y] != 2 && par1map[par2x + 1, par3y] != 2 && par1map[par2x, par3y + 1] != 2 && par1map[par2x, par3y + 1] != 0)
                             idToRender = id[2];
                         else if (par1map[par2x, par3y + 1] != 2 && par1map[par2x, par3y + 1] != 0)
                             idToRender = id[2] + 1;
@@ -473,7 +473,7 @@ namespace DW
             AnimatedSprite e=(AnimatedSprite)getSprite(par1);
             if (e != null)
             {
-                Video.Screen.Blit(e, new Point(x + par1.getX() * 30, y + par1.getY() * 30));
+                Video.Screen.Blit(e, new Point(x + par1.x * 30, y + par1.y * 30));
                 if (par1 is Player && ((Player)par1).getItemInHand() != null)
                 {
                     Player p = ((Player)par1);
@@ -511,9 +511,9 @@ namespace DW
                         {
                             Point r;
                             if(p.getFace() != "left" && p.getFace() != "right")
-                                r=new Point(x + par1.getX() * 30 +14, y + par1.getY() * 30+10);
+                                r=new Point(x + par1.x * 30 +14, y + par1.y * 30+10);
                             else
-                                r=new Point(x + par1.getX() * 30 +5, y + par1.getY() * 30 + 10);
+                                r=new Point(x + par1.x * 30 +5, y + par1.y * 30 + 10);
 
                                 Video.Screen.Blit(handledItem[i].Value, r);
                             break;
@@ -524,7 +524,7 @@ namespace DW
                 }
             }
             else
-                Video.Screen.Blit(font.Render(par1.getChar(), par1.getColor()), new Point(x + par1.getX() * 30, y + par1.getY() * 30));
+                Video.Screen.Blit(font.Render(par1.getChar(), par1.getColor()), new Point(x + par1.x * 30, y + par1.y * 30));
         }
 
 
@@ -584,9 +584,9 @@ namespace DW
                 {
                     AnimatedSprite e = (AnimatedSprite)getSprite(par1[i]);
                     if (e != null)
-                        Video.Screen.Blit(e, new Point(x + par1[i].getX() * 30, y + par1[i].getY() * 30));
+                        Video.Screen.Blit(e, new Point(x + par1[i].x * 30, y + par1[i].y * 30));
                     else
-                        Video.Screen.Blit(font.Render(par1[i].getChar(), par1[i].getColor()), new Point(x + par1[i].getX() * 30, y + par1[i].getY() * 30));
+                        Video.Screen.Blit(font.Render(par1[i].getChar(), par1[i].getColor()), new Point(x + par1[i].x * 30, y + par1[i].y * 30));
                 }
             }
         }

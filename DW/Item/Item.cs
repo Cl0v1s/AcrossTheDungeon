@@ -225,13 +225,13 @@ namespace DW
             try
             {
                 if (par1.getFace() == "front")
-                    par1.getStair().getSpecial()[par1.getX(), par1.getY() + 1].interact(par1);
+                    par1.getStair().getSpecial()[par1.x, par1.y + 1].interact(par1);
                 else if (par1.getFace() == "back")
-                    par1.getStair().getSpecial()[par1.getX(), par1.getY() - 1].interact(par1);
+                    par1.getStair().getSpecial()[par1.x, par1.y - 1].interact(par1);
                 else if (par1.getFace() == "left")
-                    par1.getStair().getSpecial()[par1.getX() - 1, par1.getY()].interact(par1);
+                    par1.getStair().getSpecial()[par1.x - 1, par1.y].interact(par1);
                 else if (par1.getFace() == "right")
-                    par1.getStair().getSpecial()[par1.getX() + 1, par1.getY()].interact(par1);
+                    par1.getStair().getSpecial()[par1.x + 1, par1.y].interact(par1);
             }
             catch (Exception)
             { }

@@ -105,7 +105,7 @@ namespace DW
                     {
                         if (par3target == null)
                         {
-                            if (owner.getStair().spawnItem(contents[par1], owner.getX(), owner.getY()))
+                            if (owner.getStair().spawnItem(contents[par1], owner.x, owner.y))
                                 contents[par1] = null;
                             else
                             {
@@ -116,7 +116,7 @@ namespace DW
                         }
                         else
                         {
-                            if (owner.getStair().spawnItem(contents[par1], par3target.getX(), par3target.getY()))
+                            if (owner.getStair().spawnItem(contents[par1], par3target.x, par3target.y))
                                 contents[par1] = null;
                             else
                             {

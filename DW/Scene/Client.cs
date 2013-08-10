@@ -51,18 +51,18 @@ namespace DW
                     DW.render.openRecipe();
                 }
                 if (DW.input.equals(Key.UpArrow) == true)
-                    changePlayerPos(DW.player.getX(), DW.player.getY() - 1, "back");
+                    changePlayerPos(DW.player.x, DW.player.y - 1, "back");
                 else if (DW.input.equals(Key.DownArrow) == true)
-                    changePlayerPos(DW.player.getX(), DW.player.getY() + 1, "front");
+                    changePlayerPos(DW.player.x, DW.player.y + 1, "front");
                 else if (DW.input.equals(Key.RightArrow) == true)
-                    changePlayerPos(DW.player.getX() + 1, DW.player.getY(), "right");
+                    changePlayerPos(DW.player.x + 1, DW.player.y, "right");
                 else if (DW.input.equals(Key.LeftArrow) == true)
-                    changePlayerPos(DW.player.getX() - 1, DW.player.getY(), "left");
+                    changePlayerPos(DW.player.x - 1, DW.player.y, "left");
                 else if (DW.input.equals(Key.L))
                     ((OtherPlayer)DW.player).lap();
                 else if (DW.input.equals(Key.KeypadEnter) || DW.input.equals(Key.Return))
                     interactPlayer();
-                DW.render.move(DW.player.getX() * -30 + 640 / 2, DW.player.getY() * -30 + 480 / 2);
+                DW.render.move(DW.player.x * -30 + 640 / 2, DW.player.y * -30 + 480 / 2);
                 updateSpells();
             }
             catch (Exception)
