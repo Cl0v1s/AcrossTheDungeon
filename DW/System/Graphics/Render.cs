@@ -43,10 +43,18 @@ namespace DW
         private int entityFrame = 0;
         public int x;
         public int y;
+        private KeyValuePair<string, Surface>[] handledItem = new KeyValuePair<string, Surface>[2];
+
+        /*GUI*/
         private StatUI statUI;
         private InventoryUI inventoryUI;
         private RecipeUI recipeUI;
         public SpellsUI spellsUI;
+
+        /*Managers*/
+        public AnimationManager animationManager = new AnimationManager();
+
+        /*RenderMap*/
         private Surface shadow = new Surface(30, 30).Convert(Video.Screen);
         private Surface tileset = new Surface("Data/images/TileSet.png");
         private KeyValuePair<string, Sprite>[] spriteDictionnary = new KeyValuePair<string, Sprite>[500];
@@ -55,8 +63,6 @@ namespace DW
         protected AnimationCollection lavaAnimation;
         protected AnimatedSprite lava;
         private SdlDotNet.Graphics.Font font = new SdlDotNet.Graphics.Font(Directory.GetCurrentDirectory() + "\\Data\\" + "pixel.ttf", 30);
-        private KeyValuePair<string, Surface>[] handledItem = new KeyValuePair<string, Surface>[2];
-        private Animation[] animationsList = new Animation[50];
 
         public Render(int par1x, int par2y)
         {
@@ -66,31 +72,6 @@ namespace DW
             setAnimatedTile();
             registerDictionnary();
         }
-
-        private void updateAnimations()
-        {
-            for (int i = 0; i < animationsList.Length; i++)
-            {
-                if(animationsList[i] != null)
-                    animationsList[i] = animationsList[i].update();
-            }
-        }
-
-        public void addAnimation(Animation par0, int par1x, int par2y)
-        {
-            Animation a = par0.clone();
-            for (int i = 0; i < animationsList.Length; i++)
-            {
-                if (animationsList[i] == null)
-                {
-                    animationsList[i] = a;
-                    animationsList[i].start(par1x, par2y);
-                    return;
-                }
-            }
-        }
-
-
 
         //<summary>
         //Associe chaque caractère de texte à un sprite correspondant
@@ -106,6 +87,8 @@ namespace DW
             addToSpriteDictionnary("V", "Data/images/Entity/Bat.png");
             /*Pig*/
             addToSpriteDictionnary("P", "Data/images/Entity/Pig.png");
+            /*Pnj*/
+            addToSpriteDictionnary("Pnj", "Data/images/Entity/Pnj.png");
             /*************************************************Elements*/
             /*Door*/
             addToSpriteDictionnary("|", "Data/images/Elements/Door.png",false);
@@ -294,7 +277,7 @@ namespace DW
                 inventoryUI.update();
             if (recipeUI != null)
                 recipeUI.update();
-            updateAnimations();
+            animationManager.update();
         }
 
         //<summary>
@@ -447,7 +430,7 @@ namespace DW
                     {
                         /*Wall*/
                         if (par1map[par2x - 1, par3y] != 2 && par1map[par2x + 1, par3y] != 2 && par1map[par2x, par3y + 1] != 2 && par1map[par2x, par3y + 1] != 0)
-                            idToRender = id[2];
+                            idToRender = id[2]+1;
                         else if (par1map[par2x, par3y + 1] != 2 && par1map[par2x, par3y + 1] != 0)
                             idToRender = id[2] + 1;
                         else

@@ -226,7 +226,7 @@ namespace DW
         //</summary>
         public void move(int par1x, int par2y)
         {
-                if (canWalkOn(x + par1x, y + par2y))
+                if (canWalkOn(x + par1x, y + par2y) && canMove())
                 {
                     x = x + par1x;
                     y = y + par2y;

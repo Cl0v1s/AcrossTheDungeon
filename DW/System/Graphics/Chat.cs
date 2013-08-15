@@ -1,6 +1,7 @@
 ﻿using System;
 
 using System.Net.Sockets;
+using SdlDotNet.Graphics;
 
 namespace DW
 {
@@ -12,6 +13,8 @@ namespace DW
         private string[] history;
         private bool change = false;
         private TextInput input;
+        Surface background = new Surface("Data/images/GUI/Chat_background.png");
+        
 
         public Chat()
         {
@@ -20,10 +23,8 @@ namespace DW
             for (int i = 0; i < values.Length; i++)
             {
                 history[i] = "";
-                values[i] = new Text("pixel.ttf", 20, 10, 100 - i * 15, "");
+                values[i] = new Text("pixel.ttf", 20, 30, 29 - i * 15, "");
             }
-            input = new TextInput(10, 115, 100, 20, 100);
-            input.activate(false);
         }
 
         public void setOther(UdpClient par1)
@@ -69,11 +70,12 @@ namespace DW
 
         public void update()
         {
+            Video.Screen.Blit(background, new System.Drawing.Point(0, -40));
             if (change)
             {
                 for (int i = 0; i < (values.Length); i++)
                 {
-                    values[i].changeText(history[i]);
+                    values[i].changeText(history[i],10,10,10);
                 }
                 change = false;
             }

@@ -76,6 +76,15 @@ namespace DW
                 par1.showMsg("Et vous comptiez faire ca avec vos ongles ?");
         }
 
+        public override Special update()
+        {
+            if (stair.map[x, y] != 1)
+            {
+                y += 1;
+            }
+            return this;
+        }
+
         /*
          * Create a new rock by copying this rock and affect a new content
          */

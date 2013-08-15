@@ -82,20 +82,20 @@ namespace DW
                 switch (pos)
                 {
                     case 1:
-                        r = rand.Next(1, width - 1);
+                        r = rand.Next(2, width - 2);
                         p = new Point(r, 0);
                         break;
                     case 2:
-                        r = rand.Next(1, width - 1);
+                        r = rand.Next(2, width - 2);
                         p = new Point(r, height);
                         break;
                     case 3:
-                        r = rand.Next(1, height - 1);
+                        r = rand.Next(2, height - 2);
                         map[0, r] = 3;
                         p = new Point(0, r);
                         break;
                     case 4:
-                        r = rand.Next(1, height - 1);
+                        r = rand.Next(2, height - 2);
                         p = new Point(width, r);
                         break;
                     default:
@@ -112,6 +112,11 @@ namespace DW
                 return p;
         }
 
+        //<summary>
+        //Retourne si la salle courante contient le point passé en paramètre
+        //</sumary>
+        //<param name="par1x">Position x du point</param>
+        //<param name="par2y">Position y du point</param>
         public bool contains(int par1x, int par2y)
         {
             if (par1x >= x && par1x <= x + width && par2y >= y && par2y <= y + height)

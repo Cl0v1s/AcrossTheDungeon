@@ -9,7 +9,7 @@ namespace DW
     [Serializable]
     public class Spell
     {
-        public static Spell weaponAttack = new Spell(0,"Attaque", "Vous attaquez avec ce que vous avez dans les mains, tout simplement.", 0, Animation.Damage, -1, 50, 1, false);
+        public static Spell weaponAttack = new Spell(0,"Attaque", "Vous attaquez avec ce que vous avez dans les mains, tout simplement.", 0, Animation.weaponAttack, -1, 50, 1, false);
 
 
         public static Spell[] list = new Spell[]
@@ -152,7 +152,7 @@ namespace DW
                         par2victim.setFear(10);
                     }
                     coolDownFrame = coolDown;
-                    DW.render.addAnimation(animation,par2victim.x,par2victim.y);
+                    DW.render.animationManager.addAnimation(animation,par2victim.x,par2victim.y,par1caller.x,par1caller.y);
                     caller = null;
                     victim = null;
                     targetPoint = Point.Empty;

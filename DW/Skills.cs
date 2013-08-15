@@ -24,7 +24,8 @@ namespace DW
             "magie", 
             "survie", 
             "roublardise", 
-            "forge" 
+            "forge",
+            "esquive",
         };
         /*[AUTO]Tableau contenant l'xp par talent, même ordre que levels[]*/
         private float[] levelsTemp;
@@ -67,7 +68,7 @@ namespace DW
                 {
                     levelsTemp[index] = 0;
                     levels[index] += 1;
-                    owner.showMsg("Vous vous sentez plus a l'aise dans le domaine de la "+levelsName[index]);
+                    owner.showMsg("Vous vous sentez plus a l'aise dans le domaine de "+levelsName[index]);
                 }
             }
             return result;

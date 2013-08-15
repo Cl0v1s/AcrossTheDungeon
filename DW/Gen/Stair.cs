@@ -17,6 +17,7 @@ namespace DW
             new BiomeDungeon(),
             new BiomeGarden(),
             new BiomeCave(),
+            new BiomeVillage(),
         };
         public int[,] map;
         private Special[,] special;
@@ -72,6 +73,13 @@ namespace DW
                         special[i, u] = special[i, u].update();
                 }
             }
+            for (int i = 0; i < biomes.Length; i++)
+            {
+                if (biomes[i] != null && biomes[i] is BiomeVillage)
+                {
+                    ((BiomeVillage)biomes[i]).update();
+                }
+            }
         }
 
         //<summary>
@@ -112,7 +120,6 @@ namespace DW
                     {
                         nb += 1;
                         t = 0;
-                        Console.WriteLine("Room id " + nb + " ended");
                     }
                 }
                 else
@@ -151,11 +158,7 @@ namespace DW
                             }
                             old = rooms[i];
                             rooms[i].ended = true;
-                            if (r > -1)
-                            {
-                                Console.WriteLine("salle la plus proche " + r + " " + rooms[r].ended);
-                            }
-                            else
+                            if (r <= -1)
                                     return;
                             if (!rooms[i].Equals(rooms[r]) && rooms[r] != null)
                             {
@@ -184,6 +187,9 @@ namespace DW
                     }
         }
 
+        //<summary>
+        //Applique la map local des salles a la map générale de l'etage.
+        //</summary>
         private void copyRooms()
         {
             for (int i = 0; i < rooms.Length; i++)
@@ -253,8 +259,11 @@ namespace DW
                         }
                     }
                     biomes[i].setRooms(r);
-                    Console.WriteLine("Application...");
-                    biomes[i].apply();
+                    if (!(biomes[i] is BiomeVillage))
+                    {
+                        Console.WriteLine("Application...");
+                        biomes[i].apply();
+                    }
 
                 }
             }
@@ -395,20 +404,19 @@ namespace DW
                         if ((map[i + 1, o] == 1 && map[i - 1, o] == 1) || (map[i, o + 1] == 1 && map[i, o - 1] == 1))
                         {
                             map[i, o] = 1;
-                            //Console.WriteLine("Removed Useless Wall !");
                         }
 
                     }
                     catch (Exception)
                     { }
-
-
-
-
-
-
-
-
+                }
+            }
+            /*Apply Villages*/
+            for (int i = 0; i < biomes.Length; i++)
+            {
+                if (biomes[i] != null && biomes[i] is BiomeVillage)
+                {
+                    biomes[i].apply();
                 }
             }
         }
@@ -430,16 +438,19 @@ namespace DW
                             {
                                 int x=rooms[i].doors[u].X + rooms[i].x;
                                 int y=rooms[i].doors[u].Y + rooms[i].y;
-                                if((map[x+1,y]==1 && map[x-1,y]==1) || (map[x ,y + 1]==1 && map[x ,y - 1]==1))
+                                try
                                 {
-                                    map[rooms[i].doors[u].X + rooms[i].x, rooms[i].doors[u].Y + rooms[i].y] = 1;
-                                    Door d = new Door(map, rooms[i].doors[u].X + rooms[i].x, rooms[i].doors[u].Y + rooms[i].y);
-                                    d.setPos(this, rooms[i].doors[u].X + rooms[i].x, rooms[i].doors[u].Y + rooms[i].y);
-                                    setSpecial(d, rooms[i].doors[u].X + rooms[i].x, rooms[i].doors[u].Y + rooms[i].y);
-                                    Console.WriteLine("Door spawned at "+d.x+":"+d.y);
+                                    if ((map[x + 1, y] == 1 && map[x - 1, y] == 1) || (map[x, y + 1] == 1 && map[x, y - 1] == 1))
+                                    {
+                                        map[rooms[i].doors[u].X + rooms[i].x, rooms[i].doors[u].Y + rooms[i].y] = 1;
+                                        Door d = new Door(map, rooms[i].doors[u].X + rooms[i].x, rooms[i].doors[u].Y + rooms[i].y);
+                                        d.setPos(this, rooms[i].doors[u].X + rooms[i].x, rooms[i].doors[u].Y + rooms[i].y);
+                                        setSpecial(d, rooms[i].doors[u].X + rooms[i].x, rooms[i].doors[u].Y + rooms[i].y);
+                                        Console.WriteLine("Door spawned at " + d.x + ":" + d.y);
+                                    }
                                 }
-                                else
-                                    Console.WriteLine("Door useless !");
+                                catch (Exception)
+                                { }
                             }
                         }
                     }
@@ -550,27 +561,17 @@ namespace DW
             catch (Exception) { }
         }
 
-        public bool contains(int par1)
-        {
-            for (int i = 0; i < width; i++)
-            {
-                for (int u = 0; u < height; u++)
-                {
-                    if (map[i, u] == par1)
-                    {
-                        Console.WriteLine("trouvé en " + i + ":" + u);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
+        //<summary>
+        //Retourne la liste d'entités de l'etage
+        //</summary>
         public Entity[] getEntities()
         {
             return entities;
         }
 
+        //<summary>
+        //Ajoute une entité a la liste d'entitiés de l'etage
+        //</summary>
         public bool putEntity(Entity par1)
         {
             for (int i = 0; i < entities.Length; i++)
@@ -582,28 +583,6 @@ namespace DW
                 }
             }
             return false;
-        }
-
-        public void updateEntity(Entity par1)
-        {
-            for (int i = 0; i < entities.Length; i++)
-            {
-                if (entities[i] != null && entities[i].getName() == par1.getName())
-                {
-                    Console.WriteLine(par1.getName());
-                    entities[i] = par1;
-                }
-            }
-        }
-
-        public void setEntities(Entity[] par1)
-        {
-            entities = par1;
-            for (int i = 0; i < par1.Length; i++)
-            {
-                if (par1[0] != null)
-                    Console.WriteLine(par1[0].getName());
-            }
         }
 
         //<summary>
@@ -652,6 +631,12 @@ namespace DW
             special[par1x, par2y] = null;
         }
 
+        //<summary>
+        //Fait apparaitre un item sur le sol de la map
+        //</summary>
+        //<param name="par1item">L'item a faire apparaitre</param>
+        //<param name="par2x">La position x du point a laquelle l'item doit apparaitre</param>
+        //<param name="par3y">La position y du point a laquelle l'item doit apparaitre</param>
         public bool spawnItem(Item par1item, int par2x, int par3y)
         {
 

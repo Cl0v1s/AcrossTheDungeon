@@ -78,7 +78,7 @@ namespace DW
                         part = d.Split(";".ToCharArray()).Length - 1;
                         for (int y = 0; y < part; y++)
                         {
-                            new Text("pixel.ttf", 20, 300, 240 + y * 18, (d.Split(";".ToCharArray())[y])).update();
+                            Video.Screen.Blit(DW.render.getSprite(d.Split(";".ToCharArray())[y]),new Point(300+25*y,240));
                         }
                         if (canCraftSelected == false)
                             new Text("pixel.ttf", 25, 450, 350, "  Assembler", 100, 100, 100).update();

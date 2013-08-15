@@ -45,6 +45,7 @@ namespace DW
         protected bool isburning = false;
         protected int attempt = 0;
         public bool WantFight = false;
+        protected Point old_Pos = Point.Empty;
 
 
         public Entity(String par1name, int par3force, int par4endurance, int par5volonte, int par6agilite, Stair par7stair)
@@ -130,6 +131,9 @@ namespace DW
             return dead;
         }
 
+        //<summary>
+        //Manage le tour de l'entité
+        //</summary>
         public virtual void turn()
         {
             if (stair != null)
@@ -163,6 +167,9 @@ namespace DW
             }
         }
 
+        //<summary>
+        //Intelligence Articficielle chargée de répondre aux besoins primaires des entités.
+        //</summary>
         protected void survivalIA()
         {
             lookForOther();
@@ -227,16 +234,26 @@ namespace DW
                             }
                         }
                     }
-                    if (worstEnemy != null && worstEnemy.getPower() > getPower())
+                    if (worstEnemy != null && worstEnemy.WantFight)
                     {
-                        peur = peur + (worstEnemy.getPower()-getPower())/10;
-                        Console.WriteLine("peur : " + peur);
+                        if (worstEnemy.getPower() > getPower())
+                        {
+                            peur = peur + (worstEnemy.getPower() - getPower()) / 10;
+                            Console.WriteLine("peur : " + peur);
+                        }
+                        else if (worstEnemy.getPower() < getPower())
+                        {
+                            peur = peur - (worstEnemy.getPower() - getPower()) / 10;
+                        }
                     }
                 }
             }
         }
 
-        protected void choiceIA()
+        //<summary>
+        //Intelligence artificielle chargée de faire des choix
+        //</summary>
+        protected virtual void choiceIA()
         {
             if (worstEnemy != null)
             {
@@ -273,56 +290,60 @@ namespace DW
             objective = p;
             moveTo(objective.X, objective.Y);
             return;
-
-
         }
 
+        //<summary>
+        //Calcule la nouvelle position de l'entité courante en fonction de la position souhaitée
+        //</summary>
         protected void moveTo(int par1x, int par2y)
         {
-            int poids = -1;
-            Point goodnode = new Point();
-            Point[] nodes = new Point[4];
-            if (x - 1 <= stair.width && x - 1 >= 0 && y <= stair.height && y >= 0)
-                nodes[0] = new Point(x - 1, y);
-            else
-                nodes[0] = new Point(-1, -1);
-            if (x + 1 <= stair.width && x + 1 >= 0 && y <= stair.height && y >= 0)
-                nodes[1] = new Point(x + 1, y);
-            else
-                nodes[1] = new Point(-1, -1);
-            if (x <= stair.width && x >= 0 && y - 1 <= stair.height && y - 1 >= 0)
-                nodes[2] = new Point(x, y - 1);
-            else
-                nodes[2] = new Point(-1, -1);
-            if (x <= stair.width && x >= 0 && y + 1 <= stair.height && y + 1 >= 0)
-                nodes[3] = new Point(x, y + 1);
-            else
-                nodes[3] = new Point(-1, -1);
-            for (int p = 0; p < 4; p++)
+            if (canMove())
             {
-                if (nodes[p].X != -1 && nodes[p].Y != -1)
+                int poids = -1;
+                Point goodnode = new Point();
+                Point[] nodes = new Point[4];
+                if (x - 1 <= stair.width && x - 1 >= 0 && y <= stair.height && y >= 0)
+                    nodes[0] = new Point(x - 1, y);
+                else
+                    nodes[0] = new Point(-1, -1);
+                if (x + 1 <= stair.width && x + 1 >= 0 && y <= stair.height && y >= 0)
+                    nodes[1] = new Point(x + 1, y);
+                else
+                    nodes[1] = new Point(-1, -1);
+                if (x <= stair.width && x >= 0 && y - 1 <= stair.height && y - 1 >= 0)
+                    nodes[2] = new Point(x, y - 1);
+                else
+                    nodes[2] = new Point(-1, -1);
+                if (x <= stair.width && x >= 0 && y + 1 <= stair.height && y + 1 >= 0)
+                    nodes[3] = new Point(x, y + 1);
+                else
+                    nodes[3] = new Point(-1, -1);
+                for (int p = 0; p < 4; p++)
                 {
-                    Point node = nodes[p];
-                    int h = Math.Abs(par1x - node.X) + Math.Abs(par2y - node.Y);
-                    if ((poids == -1 || h < poids) && canWalkOn(node.X, node.Y))
+                    if (nodes[p].X != -1 && nodes[p].Y != -1)
                     {
-                        poids = h;
-                        goodnode = node;
+                            Point node = nodes[p];
+                            int h = Math.Abs(par1x - node.X) + Math.Abs(par2y - node.Y);
+                            if ((poids == -1 || h < poids) && canWalkOn(node.X, node.Y))
+                            {
+                                poids = h;
+                                goodnode = node;
+                            }
                     }
                 }
+                if (nodes[0].Equals(goodnode))
+                    face = "left";
+                else if (nodes[1].Equals(goodnode))
+                    face = "right";
+                else if (nodes[2].Equals(goodnode))
+                    face = "back";
+                else if (nodes[3].Equals(goodnode))
+                    face = "front";
+                x = goodnode.X;
+                y = goodnode.Y;
+                if (x == objective.X && y == objective.Y)
+                    objective = new Point(-1, -1);
             }
-            if (nodes[0].Equals(goodnode))
-                face = "left";
-            else if (nodes[1].Equals(goodnode))
-                face = "right";
-            else if (nodes[2].Equals(goodnode))
-                face = "back";
-            else if (nodes[3].Equals(goodnode))
-                face = "front";
-            x = goodnode.X;
-            y = goodnode.Y;
-            if (x == objective.X && y == objective.Y)
-                objective = new Point(-1, -1);
         }
 
         protected void escapeFrom(int par1x, int par2y)
@@ -725,6 +746,27 @@ namespace DW
                 }
             }
             return null;
+        }
+
+        //<summary>
+        //Retourne si l'entité courante peut se mouvoir suite à la présence d'ennemis.
+        //</summary>
+        public bool canMove()
+        {
+            for (int i = 0; i < stair.getEntities().Length; i++)
+            {
+                if (stair.getEntities()[i] != null && stair.getEntities()[i] != this && isNear(stair.getEntities()[i]) && stair.getEntities()[i].WantFight)
+                {
+                    Entity e = stair.getEntities()[i];
+                    if (e.agilite > agilite)
+                    {
+
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }
